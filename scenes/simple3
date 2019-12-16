@@ -1,0 +1,37 @@
+[scene]:
+camera position: 0 10 0
+1	camera rotation: -10 0 0
+2	background color: 5 5 5
+
+[figure]:
+0	type:plane
+1	position:0 0 0
+2	direction:0 1 0
+3	rotation:0 0 0
+4	radius:0
+5	angle:0
+6	color:50 50 250
+7	specular:0
+8	reflection:0
+
+[figure]:
+0	type:conus
+1	position: 0 10 60
+2	direction:0 1 0
+3	rotation:0 0 0
+4	radius:0
+5	angle:30
+6	color:255 255 100
+7	specular:0
+8	reflection:0
+
+[light]:
+0	type:ambient
+1	position:0 0 0
+2	direction:0 0 0
+3	intens:0.1
+[light]:
+0	type:point
+1	position:100 40 -10
+2	direction:0 0 0
+3	intens:0.9

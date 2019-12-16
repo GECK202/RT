@@ -1,0 +1,197 @@
+[scene]:
+camera position: 0 40 -40
+1	camera rotation: 0 0 0
+2	background color: 255 255 255
+
+[figure]:
+0	type:sphere
+1	position:50 0 160
+2	direction:0 0 0
+3	rotation:0 0 0
+4	radius:20
+5	angle:0
+6	color: 127 127 127
+7	specular:100
+8	reflection:0
+
+[figure]:
+0	type:sphere
+1	position:50 0 80
+2	direction:0 0 0
+3	rotation:0 0 0
+4	radius:20
+5	angle:0
+6	color: 127 127 127
+7	specular:100
+8	reflection:0
+
+[figure]:
+0	type:sphere
+1	position:-50 0 160
+2	direction:0 0 0
+3	rotation:0 0 0
+4	radius:20
+5	angle:0
+6	color: 127 127 127
+7	specular:100
+8	reflection:0
+
+[figure]:
+0	type:sphere
+1	position:-50 0 80
+2	direction:0 0 0
+3	rotation:0 0 0
+4	radius:20
+5	angle:0
+6	color: 127 127 127
+7	specular:100
+8	reflection:0
+
+
+[figure]:
+0	type:sphere
+1	position:50 100 160
+2	direction:0 0 0
+3	rotation:0 0 0
+4	radius:20
+5	angle:0
+6	color: 127 127 127
+7	specular:100
+8	reflection:0
+
+[figure]:
+0	type:sphere
+1	position:50 100 80
+2	direction:0 0 0
+3	rotation:0 0 0
+4	radius:20
+5	angle:0
+6	color: 127 127 127
+7	specular:100
+8	reflection:0
+
+[figure]:
+0	type:sphere
+1	position:-50 100 160
+2	direction:0 0 0
+3	rotation:0 0 0
+4	radius:20
+5	angle:0
+6	color: 127 127 127
+7	specular:100
+8	reflection:0
+
+[figure]:
+0	type:sphere
+1	position:-50 100 80
+2	direction:0 0 0
+3	rotation:0 0 0
+4	radius:20
+5	angle:0
+6	color: 127 127 127
+7	specular:100
+8	reflection:0
+
+[figure]:
+0	type:cylinder
+1	position:-50 0 80
+2	direction:0 1 0
+3	rotation:0 0 0
+4	radius:10
+5	angle:0
+6	color: 127 127 127
+7	specular:100
+8	reflection:0
+
+[figure]:
+0	type:cylinder
+1	position:-50 0 160
+2	direction:0 1 0
+3	rotation:0 0 0
+4	radius:10
+5	angle:0
+6	color: 127 127 127
+7	specular:100
+8	reflection:0
+
+[figure]:
+0	type:cylinder
+1	position:50 0 80
+2	direction:0 1 0
+3	rotation:0 0 0
+4	radius:10
+5	angle:0
+6	color: 127 127 127
+7	specular:100
+8	reflection:0
+
+[figure]:
+0	type:cylinder
+1	position:50 0 160
+2	direction:0 1 0
+3	rotation:0 0 0
+4	radius:10
+5	angle:0
+6	color: 127 127 127
+7	specular:100
+8	reflection:0
+
+[figure]:
+0	type:plane
+1	position:0 0 0
+2	direction:0 1 0
+3	rotation:0 0 0
+4	radius:0
+5	angle:0
+6	color:100 100 100
+7	specular:100
+8	reflection:0
+
+[figure]:
+0	type:plane
+1	position:0 100 0
+2	direction:0 -1 0
+3	rotation:0 0 0
+4	radius:0
+5	angle:0
+6	color:100 100 100
+7	specular:100
+8	reflection:0
+
+[figure]:
+0	type:plane
+1	position:0 0 240
+2	direction:0 0 -1
+3	rotation:0 0 0
+4	radius:0
+5	angle:0
+6	color:0 0 100
+7	specular:100
+8	reflection:0
+
+[figure]:
+0	type:sphere
+1	position: 0 11 80
+2	direction:0 0 0
+3	rotation:0 0 0
+4	radius:8
+5	angle:0
+6	color:105 0 0
+7	specular:100
+8	reflection:0
+
+[light]:
+0	type:ambient
+1	position:0 0 0
+2	direction:0 0 0
+3	intens:0.2
+[light]:
+0	type:point
+1	position:100 40 -10
+2	direction:0 0 0
+3	intens:0.9
+[light]:
+0	type:point
+1	position:-100 40 -10
+2	direction:0 0 0
+3	intens:0.9
