@@ -6,7 +6,7 @@
 #    By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/09/23 17:12:18 by vkaron            #+#    #+#              #
-#    Updated: 2019/11/30 18:54:33 by vkaron           ###   ########.fr        #
+#    Updated: 2019/12/16 19:40:31 by vkaron           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ O_FILES = $(C_FILES:.c=.o)
 
 H_DIR = -Ilibft -Iusr/L -Iinclude
 
-LIBS = -Llibft -lft -lmlx -framework OpenGL -framework AppKit
+LIBS = -Llibft -lft -lmlx -framework OpenGL -framework AppKit -framework OpenCL
 
 S_DIR = src
 

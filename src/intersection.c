@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 13:12:56 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/22 20:54:50 by vkaron           ###   ########.fr       */
+/*   Updated: 2019/12/16 18:39:32 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,14 @@ void	intersec_cyl(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *cyl)
 	k.x *= 2;
 	t->x = (discr - k.y) / k.x;
 	t->y = (-discr - k.y) / k.x;
+
+	// t_vec3	m;
+	// m.x = dot(d, mult_vec3f(cyl->dir, t->x)) + dot(minus_vec3(cyl->pos, o), cyl->dir);
+	// if (m.x < cyl->pos.y || m.x > 5 + cyl->pos.y)
+	// 	t->x = INFINITY;
+	// m.y = dot(d, mult_vec3f(cyl->dir, t->y)) + dot(minus_vec3(cyl->pos, o), cyl->dir);
+	// if (m.y < cyl->pos.y || m.y > cyl->pos.y + 5)
+	// 	t->y = INFINITY;
 }
 
 /*
@@ -124,4 +132,12 @@ void	intersec_con(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *con)
 	k.x *= 2;
 	t->x = (discr - k.y) / k.x;
 	t->y = (-discr - k.y) / k.x;
+
+	// t_vec3	m;
+	// m.x = dot(d, mult_vec3f(con->dir, t->x)) + dot(minus_vec3(con->pos, o), con->dir);
+	// if (m.x < 0 || m.x > 5)//con->pos.y
+	// 	t->x = INFINITY;
+	// m.y = dot(d, mult_vec3f(con->dir, t->y)) + dot(minus_vec3(con->pos, o), con->dir);
+	// if (m.y < 0 || m.y > 5)
+	// 	t->y = INFINITY;
 }
