@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 18:40:54 by vkaron            #+#    #+#             */
-/*   Updated: 2019/12/22 18:46:51 by vkaron           ###   ########.fr       */
+/*   Updated: 2019/12/22 19:08:18 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@
 # include <stdlib.h>
 
 const char *g_kernel_source =
-"#define S_W (800)\n"
-"#define S_H (800)\n"
-"#define H_W (S_W / 2)\n"
-"#define H_H (S_H / 2)\n"
+// "#define S_W (800)\n"
+// "#define S_H (800)\n"
+// "#define H_W (S_W / 2)\n"
+// "#define H_H (S_H / 2)\n"
 "#define RATIO ((cl_float)S_W / (cl_float)S_H)\n"
 "#define POT (16)\n"
 ""
@@ -197,16 +197,16 @@ const char *g_kernel_source =
 "	return (color);"
 "}"
 ""
-"__kernel void mul(__global float3 *input, __global int *output, int num)"
+"__kernel void mul(__global float3 *input, __global int *output, int4 size)"
 "{"
 "	int i = get_global_id(0);"
-"	int y = i / S_H;"
-"	int x = (i - (y * S_H));"
-"	y = H_H - y;"
-"	x = x - H_W;"
+"	int y = i / size.x;"
+"	int x = (i - (y * size.y));"
+"	y = size.w - y;"
+"	x = x - size.z;"
 "	output[i] = 0;"
 "	float3	O = {0,0,0};"
-"	float3	D = (float3)((float)x/S_W, (float)y/S_H, 1);"
+"	float3	D = (float3)((float)x/size.x, (float)y/size.y, 1);"
 "	t_obj	obj[5];"
 ""
 "	obj[0].tr.pos = (float3)(0, 0, 0);"
