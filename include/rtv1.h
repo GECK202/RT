@@ -6,16 +6,16 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2019/12/16 18:56:52 by vkaron           ###   ########.fr       */
+/*   Updated: 2019/12/22 18:47:08 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RTV1_H
 # define RTV1_H
 
-# define S_W (400)
-# define S_H (400)
-# define SIZE 400 * 400
+# define S_W (800)
+# define S_H (800)
+# define SIZE S_W * S_H
 # define H_W (S_W / 2)
 # define H_H (S_H / 2)
 # define RATIO ((float)S_W / (float)S_H)

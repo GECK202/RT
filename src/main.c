@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:06 by vabraham          #+#    #+#             */
-/*   Updated: 2019/12/16 21:38:56 by vkaron           ###   ########.fr       */
+/*   Updated: 2019/12/22 18:27:24 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void					run_opencl(t_fig *obj, cl_int *new_array)
 	//launch the kernel on the device
 	size_t work_group_size[1] = {SIZE};
 	
-	clEnqueueWriteBuffer(queue, in_buf, CL_FALSE, 0, sizeof(cl_float3), &(obj), 0, NULL, NULL);	
+	clEnqueueWriteBuffer(queue, in_buf, CL_FALSE, 0, sizeof(cl_float3), &(obj->pos), 0, NULL, NULL);	
 	
 	clEnqueueNDRangeKernel(queue, mulkernel, 1, NULL, work_group_size, NULL,
 		0, NULL, NULL);

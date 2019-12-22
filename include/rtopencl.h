@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 18:40:54 by vkaron            #+#    #+#             */
-/*   Updated: 2019/12/16 22:48:05 by vkaron           ###   ########.fr       */
+/*   Updated: 2019/12/22 18:46:51 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,36 +17,9 @@
 # include <stdio.h>
 # include <stdlib.h>
 
-
-
-// "//typedef struct s_fig t_fig;\n"
-// "\n"
-// "//struct s_fig\n"
-// "//{\n"
-// "//	float3	pos;\n"
-// "//	float3	up;\n"
-// "//	int		type;\n"
-// "//};\n"
-
-//"__kernel void mul(__global t_fig *figs, int num)\n"
-
-// (figs->pos.x + figs->pos.y + figs->pos.z) * 
-
-
-// "struct s_transf\n"
-// "{\n"
-// "	cl_float4	pos;\n"
-// "	cl_float4	up;\n"
-// "	cl_float4	look;\n"
-// "	cl_float4	right;\n"
-// "};\n"
-
-
-// "\n"
-
 const char *g_kernel_source =
-"#define S_W (400)\n"
-"#define S_H (400)\n"
+"#define S_W (800)\n"
+"#define S_H (800)\n"
 "#define H_W (S_W / 2)\n"
 "#define H_H (S_H / 2)\n"
 "#define RATIO ((cl_float)S_W / (cl_float)S_H)\n"
@@ -57,6 +30,13 @@ const char *g_kernel_source =
 "typedef struct s_mat		t_mat;\n"
 "typedef struct s_obj		t_obj;\n"
 "typedef enum e_type_obj	t_type_obj;\n"
+"typedef struct s_intersect	t_intersect;\n"
+""
+"struct	s_intersect"
+"{"
+"	float	t;"
+"	t_obj	*obj;"
+"};"
 ""
 "enum	e_type_obj"
 "{"
@@ -65,15 +45,16 @@ const char *g_kernel_source =
 "	cylinder,"
 "	conus,"
 "	ambient,"
-"	direction,"
+"	directional,"
 "	point"
 "};"
 ""
 "struct s_mat"
 "{"
-"	int		color;"
+"	float4	color;"
 "	int		specular;"
 "	float	reflection;"
+"   float   intensity;"
 "};"
 ""
 "struct s_transf"
@@ -82,6 +63,7 @@ const char *g_kernel_source =
 "	float3	up;"
 "	float3	look;"
 "	float3	right;"
+"   float3  direction;"
 "};"
 ""
 "struct s_obj"
@@ -102,8 +84,10 @@ const char *g_kernel_source =
 "	int		lghts;"
 "};"
 ""
-"int	Trace(t_obj *obj, float3 O, float3 D, float tmin, float tmax);"
-"float2	IntersectRaySphere(float3 O, float3 D, t_obj *obj);"
+"float4         Trace(t_obj *obj, t_obj *light, float3 O, float3 D, float tmin, float tmax);"
+"float2         IntersectRaySphere(float3 O, float3 D, t_obj *obj);"
+"t_intersect	ClosestIntersection(t_obj *obj, float3 O, float3 D, float tmin, float tmax);"
+"t_intersect	ClosestIntersection(t_obj *obj, float3 O, float3 D, float tmin, float tmax);"
 ""
 "float2	IntersectRaySphere(float3 O, float3 D, t_obj *obj)"
 "{"
@@ -122,26 +106,95 @@ const char *g_kernel_source =
 "	return (t);"
 "}"
 ""
-"int	Trace(t_obj *obj, float3 O, float3 D, float tmin, float tmax){"
-"	int BGC = 0xffffff;"
-"	t_obj *closest_sphere = 0;"
-"	float closest_t = INFINITY;"
+"t_intersect	ClosestIntersection(t_obj *obj, float3 O, float3 D, float tmin, float tmax)"
+"{"
 "	float2 t;"
-"	for (int i = 0; i < 4; i++)"
+"	t_intersect	intersect;"
+"	intersect.t = INFINITY;"
+"	intersect.obj = 0;"
+"	++obj;"
+"	for (int i = 1; i < 5; i++)"
 "	{"
-"		t = IntersectRaySphere(O, D, &(obj[i]));"
-"		if (t.x >= tmin && t.x <= tmax && t.x < closest_t)"
-"			{closest_t = t.x;"
-"			closest_sphere = &(obj[i]);}"
-"		if (t.y >= tmin && t.y <= tmax && t.y < closest_t)"
-"			{closest_t = t.y;"
-"			closest_sphere = &(obj[i]);}"
+"		t = IntersectRaySphere(O, D, obj);"
+"		if (t.x >= tmin && t.x <= tmax && t.x < intersect.t)"
+"			{intersect.t = t.x;"
+"			intersect.obj = obj;}"
+"		if (t.y >= tmin && t.y <= tmax && t.y < intersect.t)"
+"			{intersect.t = t.y;"
+"			intersect.obj = obj;}"
+"		++obj;"
 "	}"
-"	if (closest_sphere == 0)"
+"	return(intersect);"
+"}"
+""
+"float	ComputeLighting(t_obj *obj, t_obj *light, float3 P, float3 N, float3 V, int s)"
+"{"
+"	float 	intens = 0.0;"
+"	float3 	L;"
+"	float	n_dot_l;"
+"	float3	R;"
+"	float	r_dot_v;"
+"	t_intersect shadow;"
+"	float	tmax;"
+""
+"	for (int i = 1; i < 4; i++)"
+"	{"
+"		if (light[i].type == ambient)"
+"			intens += light[i].mat.intensity;"
+"		else"
+"		{"
+"			if (light[i].type == point){"
+"				L = light[i].tr.pos - P;"
+"				tmax = 1.0f;"
+"			} else {"
+"				L = light[i].tr.direction;"
+"				tmax = INFINITY;"
+"			}"
+""
+"			/* shadow */"
+""
+"			shadow = ClosestIntersection(obj, P, L, 0.001, tmax);"
+"			if (shadow.obj != 0)"
+"				continue;"
+""
+"			/* diffuse */"
+""
+"			n_dot_l = dot(N, L);"
+"			if (n_dot_l > 0)"
+"				intens += (light[i].mat.intensity * n_dot_l / (length(N) * length(L)));"
+""
+"			/* specular */"
+""
+"			if (s != -1)"
+"			{"
+"				R = (N * (2 * dot(N, L))) - L;"
+"				r_dot_v = dot(R, V);"
+"				if (r_dot_v > 0)"
+"					intens += (light[i].mat.intensity * pown(r_dot_v / (length(R) * length(V)), s));"
+"			}"
+"		}"
+"	}"
+"	return (intens);"
+"}"
+""
+"float4	Trace(t_obj *obj, t_obj *light, float3 O, float3 D, float tmin, float tmax){"
+"	float4 BGC = (float4)(200,255,255,255);"
+"	t_intersect	isec;"
+"	isec = ClosestIntersection(obj, O, D, tmin, tmax);"
+"	if (isec.obj == 0)"
 "	{"
 "		return (BGC);"
 "	}"
-"	return (closest_sphere->mat.color);"
+"	float3	P = O + (isec.t * D);"
+"	float3	N = P - isec.obj->tr.pos;"
+"	N = N / length(N);"
+"	float intens = ComputeLighting(obj, light, P, N, -D, isec.obj->mat.specular);"
+"	float4	color = (float4)(255,255,255,255);"
+"	color.x = fmin(isec.obj->mat.color.x * intens, 255);"
+"	color.y = fmin(isec.obj->mat.color.y * intens, 255);"
+"	color.z = fmin(isec.obj->mat.color.z * intens, 255);"
+"	color.w = 255;"
+"	return (color);"
 "}"
 ""
 "__kernel void mul(__global float3 *input, __global int *output, int num)"
@@ -154,55 +207,48 @@ const char *g_kernel_source =
 "	output[i] = 0;"
 "	float3	O = {0,0,0};"
 "	float3	D = (float3)((float)x/S_W, (float)y/S_H, 1);"
-"	t_obj	obj[4];"
+"	t_obj	obj[5];"
+""
 "	obj[0].tr.pos = (float3)(0, 0, 0);"
 "	obj[0].radius = 0;"
-"	obj[0].mat.color = 0;"
+"	obj[0].mat.color = (float4)(0,0,0,0);"
+"	obj[0].mat.specular = -1;"
+""
 "	obj[1].tr.pos = (float3)(0, -1, 3);"
 "	obj[1].radius = 1;"
-"	obj[1].mat.color = 0xff0000;"
+"	obj[1].mat.color = (float4)(255, 0, 0, 255);"
+"	obj[1].mat.specular = 500;"
+""
 "	obj[2].tr.pos = (float3)(2, 0, 4);"
 "	obj[2].radius = 1;"
-"	obj[2].mat.color = 0xff;"
+"	obj[2].mat.color = (float4)(0, 0, 255, 255);"
+"	obj[2].mat.specular = 500;"
+""
 "	obj[3].tr.pos = (float3)(-2, 0, 4);"
 "	obj[3].radius = 1;"
-"	obj[3].mat.color = 0xff00;"
+"	obj[3].mat.color = (float4)(0, 255, 0, 255);"
+"	obj[3].mat.specular = 10;"
+""
+"	obj[4].tr.pos = (float3)(0, -5001, 0);"
+"	obj[4].radius = 5000;"
+"	obj[4].mat.color = (float4)(255, 255, 0, 255);"
+"	obj[4].mat.specular = 1000;"
+""
+"	t_obj	light[4];"
+"	light[0].type = ambient;"
+"	light[0].mat.intensity = 0;"
+"	light[1].type = ambient;"
+"	light[1].mat.intensity = 0.2;"
+"	light[2].type = point;"
+"	light[2].mat.intensity = 0.6;"
+"	light[2].tr.pos = (float3)(2, 1, 0);"
+"	light[3].type = directional;"
+"	light[3].mat.intensity = 0.2;"
+"	light[3].tr.direction = (float3)(1, 4, 4);"
 
-"	int color = Trace(obj, O, D, 1, INFINITY);"
-"	output[i] = color;"
+"	float4 color = Trace(obj, light, O, D, 1, INFINITY);"
+"	output[i] = (((int)(color.x) << 16) & 0xff0000) | (((int)(color.y) << 8) & 0xff00) | ((int)(color.z) & 0xff);"
 "}";
-
-// "	if (color == 0xffffff)"
-// "	{"
-// "		if (y > 0)"
-// "			color = 0xff;"
-// "		else"
-// "			color = 0xff00;"
-// "	}"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #endif
