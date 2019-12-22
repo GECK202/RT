@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:06 by vabraham          #+#    #+#             */
-/*   Updated: 2019/12/22 19:07:12 by vkaron           ###   ########.fr       */
+/*   Updated: 2019/12/22 20:50:51 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void					run_opencl(t_fig *obj, cl_int *new_array)
 	cl_program			program;
 	cl_kernel			mulkernel;
 	cl_int4				size;
+	cl_int				depth;
 
 	//get first available OpenCL platform
 	clGetPlatformIDs(1, &platform, NULL);
@@ -58,9 +59,11 @@ void					run_opencl(t_fig *obj, cl_int *new_array)
 	size.s[1] = S_H;
 	size.s[2] = H_W;
 	size.s[3] = H_H;
+	depth = RECURCE_DEPTH;
 	clSetKernelArg(mulkernel, 0, sizeof(cl_mem), (void*)&(in_buf));
 	clSetKernelArg(mulkernel, 1, sizeof(cl_mem), (void*)&out_buf);
 	clSetKernelArg(mulkernel, 2, sizeof(cl_int4), (void*)&size);
+	clSetKernelArg(mulkernel, 3, sizeof(cl_int), (void*)&depth);
 	
 	//launch the kernel on the device
 	size_t work_group_size[1] = {SIZE};

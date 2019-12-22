@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2019/12/22 19:09:53 by vkaron           ###   ########.fr       */
+/*   Updated: 2019/12/22 21:37:05 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 # define INFINITY (1e999)
 # define MIN_OFFSET (0.01f)
-# define RECURCE_DEPTH (1)
+# define RECURCE_DEPTH (2)
 
 # include <pthread.h>
 # include <math.h>
