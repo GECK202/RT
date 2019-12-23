@@ -6,14 +6,13 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 18:40:54 by vkaron            #+#    #+#             */
-/*   Updated: 2019/12/22 21:37:52 by vkaron           ###   ########.fr       */
+/*   Updated: 2019/12/23 17:38:40 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RTOPENCL_H
 # define RTOPENCL_H
 
-# include <OpenCL/cl.h>
 # include <stdio.h>
 # include <stdlib.h>
 
@@ -208,11 +207,13 @@ const char *g_kernel_source =
 "		O = P;"
 "		D = ReflectRay(-D, N);"
 "		depth -= 1;"
+"		tmin = 0.1f;"
+"		tmax = INFINITY;"
 "		isec = ClosestIntersection(obj, O, D, tmin, tmax);"
 "		if (isec.obj == 0)"
 "		{"
-"			r_color = BGC;"
-"			return(color * (1 - rf) + r_color * rf);"
+// "			r_color = BGC;"
+"			return(color * (1 - rf) + BGC * rf);"
 "		}"
 "		"
 "		P = O + (isec.t * D);"
