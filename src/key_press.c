@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 22:07:39 by vabraham          #+#    #+#             */
-/*   Updated: 2019/11/23 16:06:52 by vabraham         ###   ########.fr       */
+/*   Updated: 2019/12/23 19:35:42 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,10 @@ int		key_press(int key, void *l)
 
 	lst = (t_lst*)l;
 	if (key == 53)
-		exit(1);
+	{
+		clean_opencl(&lst->ocl);
+		exit(0);
+	}
 	else if (key == 123)
 		lst->scn->cam_pos0.x -= 1;
 	else if (key == 124)

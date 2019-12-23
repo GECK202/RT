@@ -3,18 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   events.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 22:08:27 by vabraham          #+#    #+#             */
-/*   Updated: 2019/11/21 22:08:30 by vabraham         ###   ########.fr       */
+/*   Updated: 2019/12/23 19:37:33 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-int		close_window(void *lst)
+int		close_window(void *l)
 {
-	(void)lst;
+	t_lst	*lst;
+
+	lst = (t_lst*)l;
+	clean_opencl(&lst->ocl);
 	exit(0);
 }
 

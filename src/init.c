@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:37:19 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/30 19:00:19 by vkaron           ###   ########.fr       */
+/*   Updated: 2019/12/23 19:36:41 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	init_mlx(t_lst *lst)
 	lst->data = (int *)mlx_get_data_addr(lst->img,
 		&bpp, &sline, &endian);
 	mlx_hook(lst->win, 2, 0, key_press, (void *)lst);
-	mlx_hook(lst->win, 17, 0, close_window, (void *)0);
+	mlx_hook(lst->win, 17, 0, close_window, (void *)lst);
 	mlx_hook(lst->win, 6, 0, mouse_move, (void *)lst);
 	mlx_hook(lst->win, 4, 0, mouse_press, (void *)lst);
 }

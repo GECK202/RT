@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2019/12/23 17:31:12 by vkaron           ###   ########.fr       */
+/*   Updated: 2019/12/23 22:58:37 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 # define INFINITY (1e999)
 # define MIN_OFFSET (0.01f)
-# define RECURCE_DEPTH (2)
+# define RECURCE_DEPTH (3)
 
 # include <pthread.h>
 # include <math.h>
@@ -37,11 +37,21 @@ typedef struct			s_opencl
 {
 	cl_program			program;
 	cl_context			context;
-	cl_command_queue	queue;
+	cl_command_queue	queue[2];
 	cl_mem				in_buf;
 	cl_mem				out_buf;
 	cl_kernel			mulkernel;
+	size_t 				work_group_size[1];
 }						t_opencl;
+
+typedef struct			s_transf
+{
+	float			pos[3];
+	float			up[3];
+	float			look[3];
+	float			right[3];
+	float			direction[3];
+}						t_transf;
 
 typedef struct			s_col
 {
@@ -257,5 +267,7 @@ void					multy_x(t_lst *lst, int tmp);
 void					multy_y(t_lst *lst, int tmp);
 void					multy_z(t_lst *lst, int tmp);
 void					ret(t_lst *lst);
+
+void	clean_opencl(t_opencl *ocl);
 
 #endif

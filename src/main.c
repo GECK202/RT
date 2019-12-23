@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:06 by vabraham          #+#    #+#             */
-/*   Updated: 2019/12/23 17:39:04 by vkaron           ###   ########.fr       */
+/*   Updated: 2019/12/23 23:07:42 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,127 +16,76 @@
 
 extern const char	*g_kernel_source;
 
-t_opencl				init_opencl()
+void				init_opencl(t_opencl *ocl, float *inp)
 {
 	cl_platform_id		platform;
 	cl_device_id		device;
 	char				device_name[1024];
-	cl_int4				size;
-	cl_int				depth;
-	
-	t_opencl			ocl;
-	// cl_command_queue	queue;
-	// cl_mem				in_buf;
-	// cl_mem				out_buf;
-	// cl_kernel			mulkernel;
 
-	//get first available OpenCL platform
 	clGetPlatformIDs(1, &platform, NULL);
-	//get first available device
 	clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device, NULL);
-	//get device name
 	clGetDeviceInfo(device, CL_DEVICE_NAME, sizeof(device_name),
 		&device_name, NULL);
 	printf("CL_DEVICE_NAME: %s\n", device_name);
 	cl_context_properties properties[] = {CL_CONTEXT_PLATFORM,
 		(cl_context_properties)platform, 0};
-	//create a context
-	ocl.context = clCreateContext(properties, 1, &device, NULL, NULL, NULL);
-	//create a command-queue on the device
-	ocl.queue = clCreateCommandQueue(ocl.context, device, 0, NULL);
-	//allocate device memory
-	ocl.in_buf = clCreateBuffer(ocl.context, CL_MEM_READ_ONLY, sizeof(cl_float3), NULL, NULL);
-	ocl.out_buf = clCreateBuffer(ocl.context, CL_MEM_WRITE_ONLY, sizeof(cl_int) * SIZE, NULL, NULL);
-	//create OpenCL program from source code
-	ocl.program = clCreateProgramWithSource(ocl.context, 1,
+	ocl->context = clCreateContext(properties, 1, &device, NULL, NULL, NULL);
+	ocl->queue[0] = clCreateCommandQueue(ocl->context, device, 0, NULL);
+	ocl->queue[1] = clCreateCommandQueue(ocl->context, device, 0, NULL);
+	ocl->in_buf = clCreateBuffer(ocl->context, CL_MEM_READ_ONLY, sizeof(cl_float3), NULL, NULL);
+	ocl->out_buf = clCreateBuffer(ocl->context, CL_MEM_WRITE_ONLY, sizeof(cl_int) * SIZE, NULL, NULL);
+	cl_mem in_gbuf = clCreateBuffer(ocl->context, CL_MEM_READ_ONLY, sizeof(cl_float3), NULL, NULL);
+	ocl->program = clCreateProgramWithSource(ocl->context, 1,
 		&g_kernel_source, NULL, NULL);
-	//build program
-	clBuildProgram(ocl.program, 0, NULL, NULL, NULL, NULL);
-	//get compiled OpenCL kernel
-	ocl.mulkernel = clCreateKernel(ocl.program, "mul", NULL);
-	//set up kernel arguments
+	clBuildProgram(ocl->program, 0, NULL, NULL, NULL, NULL);
+	ocl->work_group_size[0] = SIZE;
+	cl_int err;
+	
+	cl_kernel load_kernel = clCreateKernel(ocl->program, "loadd", &err);
+	printf("err = %d\n", err);
+	clSetKernelArg(load_kernel, 0, sizeof(cl_mem), (void*)&(in_gbuf));
+	clEnqueueWriteBuffer(ocl->queue[0], in_gbuf, CL_FALSE, 0, sizeof(cl_float3), inp, 0, NULL, NULL);	
+	clEnqueueNDRangeKernel(ocl->queue[0], load_kernel, 1, NULL, ocl->work_group_size, NULL, 0, NULL, NULL);
+	// clEnqueueBarrier (ocl->queue[1]);
+
+	ocl->mulkernel = clCreateKernel(ocl->program, "mul", &err);
+	printf("err = %d\n", err);
+}
+
+void					run_opencl(t_opencl *ocl, t_transf *tr, cl_int *new_array)
+{
+	cl_int4				size;
+	cl_int				depth;
+
 	size.s[0] = S_W;
 	size.s[1] = S_H;
 	size.s[2] = H_W;
 	size.s[3] = H_H;
 	depth = RECURCE_DEPTH;
-	clSetKernelArg(ocl.mulkernel, 0, sizeof(cl_mem), (void*)&(ocl.in_buf));
-	clSetKernelArg(ocl.mulkernel, 1, sizeof(cl_mem), (void*)&(ocl.out_buf));
-	clSetKernelArg(ocl.mulkernel, 2, sizeof(cl_int4), (void*)&size);
-	clSetKernelArg(ocl.mulkernel, 3, sizeof(cl_int), (void*)&depth);
+	clSetKernelArg(ocl->mulkernel, 0, sizeof(cl_mem), (void*)&(ocl->in_buf));
+	clSetKernelArg(ocl->mulkernel, 1, sizeof(cl_mem), (void*)&(ocl->out_buf));
+	clSetKernelArg(ocl->mulkernel, 2, sizeof(cl_int4), (void*)&size);
+	clSetKernelArg(ocl->mulkernel, 3, sizeof(cl_int), (void*)&depth);
 	
-	return (ocl);
+	clEnqueueWriteBuffer(ocl->queue[1], ocl->in_buf, CL_FALSE, 0, sizeof(cl_float3), &(tr->pos), 0, NULL, NULL);	
+	clEnqueueNDRangeKernel(ocl->queue[1], ocl->mulkernel, 1, NULL, ocl->work_group_size, NULL,
+		0, NULL, NULL);	
+	clEnqueueReadBuffer(ocl->queue[1], ocl->out_buf, CL_TRUE, 0, SIZE * sizeof(cl_int),
+		new_array, 0, NULL, NULL);
+	printf("READ OK: \n");
 }
 
-void					run_opencl(t_opencl ocl, t_fig *obj, cl_int *new_array)
+void	clean_opencl(t_opencl *ocl)
 {
-	// cl_platform_id		platform;
-	// cl_device_id		device;
-	// char				device_name[1024];
-	// cl_context			context;
-	// cl_int4				size;
-	// cl_int				depth;
-	// cl_program			program;
-	
-	// cl_command_queue	queue;
-	// cl_mem				in_buf;
-	// cl_mem				out_buf;
-	// cl_kernel			mulkernel;
-
-	// //get first available OpenCL platform
-	// clGetPlatformIDs(1, &platform, NULL);
-	// //get first available device
-	// clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device, NULL);
-	// //get device name
-	// clGetDeviceInfo(device, CL_DEVICE_NAME, sizeof(device_name),
-	// 	&device_name, NULL);
-	// printf("CL_DEVICE_NAME: %s\n", device_name);
-	// cl_context_properties properties[] = {CL_CONTEXT_PLATFORM,
-	// 	(cl_context_properties)platform, 0};
-	// //create a context
-	// context = clCreateContext(properties, 1, &device, NULL, NULL, NULL);
-	// //create a command-queue on the device
-	// queue = clCreateCommandQueue(context, device, 0, NULL);
-	// //allocate device memory
-	// in_buf = clCreateBuffer(context, CL_MEM_READ_ONLY, sizeof(cl_float3), NULL, NULL);
-	// out_buf = clCreateBuffer(context, CL_MEM_WRITE_ONLY, sizeof(cl_int) * SIZE, NULL, NULL);
-	// //create OpenCL program from source code
-	// program = clCreateProgramWithSource(context, 1,
-	// 	&g_kernel_source, NULL, NULL);
-	// //build program
-	// clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
-	// //get compiled OpenCL kernel
-	// mulkernel = clCreateKernel(program, "mul", NULL);
-	// //set up kernel arguments
-	// size.s[0] = S_W;
-	// size.s[1] = S_H;
-	// size.s[2] = H_W;
-	// size.s[3] = H_H;
-	// depth = RECURCE_DEPTH;
-	// clSetKernelArg(mulkernel, 0, sizeof(cl_mem), (void*)&(in_buf));
-	// clSetKernelArg(mulkernel, 1, sizeof(cl_mem), (void*)&out_buf);
-	// clSetKernelArg(mulkernel, 2, sizeof(cl_int4), (void*)&size);
-	// clSetKernelArg(mulkernel, 3, sizeof(cl_int), (void*)&depth);
-	
-	//launch the kernel on the device
-	size_t work_group_size[1] = {SIZE};
-	
-	clEnqueueWriteBuffer(ocl.queue, ocl.in_buf, CL_FALSE, 0, sizeof(cl_float3), &(obj->pos), 0, NULL, NULL);	
-	
-	clEnqueueNDRangeKernel(ocl.queue, ocl.mulkernel, 1, NULL, work_group_size, NULL,
-		0, NULL, NULL);
-	//copy output from device to host memory
-	
-	clEnqueueReadBuffer(ocl.queue, ocl.out_buf, CL_TRUE, 0, SIZE * sizeof(cl_int),
-		new_array, 0, NULL, NULL);
 	//cleanup
 	
-	// clReleaseMemObject(ocl.out_buf);
-	// clReleaseMemObject(ocl.in_buf);
-	// clReleaseKernel(ocl.mulkernel);
-	// clReleaseProgram(ocl.program);
-	// clReleaseCommandQueue(ocl.queue);
-	// clReleaseContext(ocl.context);
+	clReleaseMemObject(ocl->out_buf);
+	clReleaseMemObject(ocl->in_buf);
+	clReleaseKernel(ocl->mulkernel);
+	clReleaseProgram(ocl->program);
+	clReleaseCommandQueue(ocl->queue[0]);
+	clReleaseCommandQueue(ocl->queue[1]);
+	clReleaseContext(ocl->context);
 }
 
 void	mult(t_lst *lst, t_trc *trc, int x, int y)
@@ -178,12 +127,13 @@ void	*pixel(void *l)
 
 void rain(t_lst *lst)
 {
-	t_fig fig;
+	t_transf tr;
 
-	fig.pos.x = 10;
-	fig.pos.x = 20;
-	fig.pos.x = 30;
-	run_opencl(lst->ocl, &fig, lst->data);
+	tr.pos[0] = 150;
+	tr.pos[1] = 150;
+	tr.pos[2] = 250;
+	
+	run_opencl(&lst->ocl, &tr, lst->data);
 	// for (int i=0; i< SIZE; i++)
 	// {
 	// 	printf("%d=%d\n",i, lst->data[i]);
@@ -224,7 +174,11 @@ int		main(int ac, char *av[])
 		{
 			init_mlx(lst);
 			lst->norm = 0;
-			lst->ocl = init_opencl();
+			float	inp[3];
+			inp[0] = 255;
+			inp[1] = 0;
+			inp[2] = 150;
+			init_opencl(&lst->ocl, inp);
 			rain(lst);
 			mlx_put_image_to_window(lst->mlx, lst->win, lst->img, 0, 0);
 			mlx_loop(lst->mlx);
