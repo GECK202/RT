@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:06 by vabraham          #+#    #+#             */
-/*   Updated: 2019/12/23 23:07:42 by vkaron           ###   ########.fr       */
+/*   Updated: 2019/12/30 22:52:20 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 extern const char	*g_kernel_source;
 
-void				init_opencl(t_opencl *ocl, float *inp)
+void				init_opencl(t_opencl *ocl, cl_float3 *inp)
 {
 	cl_platform_id		platform;
 	cl_device_id		device;
@@ -34,44 +34,52 @@ void				init_opencl(t_opencl *ocl, float *inp)
 	ocl->queue[1] = clCreateCommandQueue(ocl->context, device, 0, NULL);
 	ocl->in_buf = clCreateBuffer(ocl->context, CL_MEM_READ_ONLY, sizeof(cl_float3), NULL, NULL);
 	ocl->out_buf = clCreateBuffer(ocl->context, CL_MEM_WRITE_ONLY, sizeof(cl_int) * SIZE, NULL, NULL);
-	cl_mem in_gbuf = clCreateBuffer(ocl->context, CL_MEM_READ_ONLY, sizeof(cl_float3), NULL, NULL);
+	ocl->in_gbuf = clCreateBuffer(ocl->context, CL_MEM_READ_ONLY, sizeof(cl_float3), NULL, NULL);
+	ocl->obj_buf = clCreateBuffer(ocl->context, CL_MEM_READ_WRITE, sizeof(struct s_obj) * 5, NULL, NULL);
 	ocl->program = clCreateProgramWithSource(ocl->context, 1,
 		&g_kernel_source, NULL, NULL);
 	clBuildProgram(ocl->program, 0, NULL, NULL, NULL, NULL);
 	ocl->work_group_size[0] = SIZE;
 	cl_int err;
 	
+	ocl->inp = *inp;
+	
 	cl_kernel load_kernel = clCreateKernel(ocl->program, "loadd", &err);
 	printf("err = %d\n", err);
-	clSetKernelArg(load_kernel, 0, sizeof(cl_mem), (void*)&(in_gbuf));
-	clEnqueueWriteBuffer(ocl->queue[0], in_gbuf, CL_FALSE, 0, sizeof(cl_float3), inp, 0, NULL, NULL);	
+	float c_fig = 5;
+	clSetKernelArg(load_kernel, 0, sizeof(float), (void*)&(c_fig));
+	clSetKernelArg(load_kernel, 1, sizeof(cl_mem), (void*)&(ocl->in_gbuf));
+	clSetKernelArg(load_kernel, 2, sizeof(cl_mem), (void*)&(ocl->obj_buf));
+	clEnqueueWriteBuffer(ocl->queue[0], ocl->in_gbuf, CL_FALSE, 0, sizeof(cl_float3), &(ocl->inp), 0, NULL, NULL);	
 	clEnqueueNDRangeKernel(ocl->queue[0], load_kernel, 1, NULL, ocl->work_group_size, NULL, 0, NULL, NULL);
 	// clEnqueueBarrier (ocl->queue[1]);
+	
 
+	
 	ocl->mulkernel = clCreateKernel(ocl->program, "mul", &err);
 	printf("err = %d\n", err);
-}
 
-void					run_opencl(t_opencl *ocl, t_transf *tr, cl_int *new_array)
-{
 	cl_int4				size;
 	cl_int				depth;
-
 	size.s[0] = S_W;
 	size.s[1] = S_H;
 	size.s[2] = H_W;
 	size.s[3] = H_H;
-	depth = RECURCE_DEPTH;
+	ocl->depth = RECURCE_DEPTH;
+	clSetKernelArg(ocl->mulkernel, 2, sizeof(cl_int4), (void*)&size);
+	clSetKernelArg(ocl->mulkernel, 3, sizeof(cl_int), (void*)&(ocl->depth));
+	clSetKernelArg(ocl->mulkernel, 4, sizeof(cl_mem), (void*)&(ocl->in_gbuf));
 	clSetKernelArg(ocl->mulkernel, 0, sizeof(cl_mem), (void*)&(ocl->in_buf));
 	clSetKernelArg(ocl->mulkernel, 1, sizeof(cl_mem), (void*)&(ocl->out_buf));
-	clSetKernelArg(ocl->mulkernel, 2, sizeof(cl_int4), (void*)&size);
-	clSetKernelArg(ocl->mulkernel, 3, sizeof(cl_int), (void*)&depth);
+	clSetKernelArg(ocl->mulkernel, 5, sizeof(cl_mem), (void*)&(ocl->obj_buf));
 	
-	clEnqueueWriteBuffer(ocl->queue[1], ocl->in_buf, CL_FALSE, 0, sizeof(cl_float3), &(tr->pos), 0, NULL, NULL);	
-	clEnqueueNDRangeKernel(ocl->queue[1], ocl->mulkernel, 1, NULL, ocl->work_group_size, NULL,
-		0, NULL, NULL);	
-	clEnqueueReadBuffer(ocl->queue[1], ocl->out_buf, CL_TRUE, 0, SIZE * sizeof(cl_int),
-		new_array, 0, NULL, NULL);
+}
+
+void					run_opencl(t_opencl *ocl, t_transf *tr, cl_int *new_array)
+{
+	clEnqueueWriteBuffer(ocl->queue[0], ocl->in_buf, CL_FALSE, 0, sizeof(cl_float3), &(tr->pos), 0, NULL, NULL);
+	clEnqueueNDRangeKernel(ocl->queue[0], ocl->mulkernel, 1, NULL, ocl->work_group_size, NULL, 0, NULL, NULL);	
+	clEnqueueReadBuffer(ocl->queue[0], ocl->out_buf, CL_TRUE, 0, SIZE * sizeof(cl_int), new_array, 0, NULL, NULL);
 	printf("READ OK: \n");
 }
 
@@ -84,7 +92,7 @@ void	clean_opencl(t_opencl *ocl)
 	clReleaseKernel(ocl->mulkernel);
 	clReleaseProgram(ocl->program);
 	clReleaseCommandQueue(ocl->queue[0]);
-	clReleaseCommandQueue(ocl->queue[1]);
+	// clReleaseCommandQueue(ocl->queue[1]);
 	clReleaseContext(ocl->context);
 }
 
@@ -174,10 +182,11 @@ int		main(int ac, char *av[])
 		{
 			init_mlx(lst);
 			lst->norm = 0;
-			float	inp[3];
-			inp[0] = 255;
-			inp[1] = 0;
-			inp[2] = 150;
+			cl_float3	*inp;
+			inp = malloc(sizeof(cl_float3));
+			inp->s[0] = 255;
+			inp->s[1] = 0;
+			inp->s[2] = 150;
 			init_opencl(&lst->ocl, inp);
 			rain(lst);
 			mlx_put_image_to_window(lst->mlx, lst->win, lst->img, 0, 0);

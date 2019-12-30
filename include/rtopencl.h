@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 18:40:54 by vkaron            #+#    #+#             */
-/*   Updated: 2019/12/23 23:06:32 by vkaron           ###   ########.fr       */
+/*   Updated: 2019/12/30 22:53:43 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ const char *g_kernel_source =
 "	float4	color;"
 "	int		specular;"
 "	float	reflective;"
-"   float   intensity;"
+"	float	intensity;"
 "};"
 ""
 "struct s_transf"
@@ -82,7 +82,7 @@ const char *g_kernel_source =
 "float4			Trace(t_obj *obj, t_obj *light, float3 O, float3 D, float tmin, float tmax, int depth);"
 "float2			IntersectRaySphere(float3 O, float3 D, t_obj *obj);"
 "t_intersect	ClosestIntersection(t_obj *obj, float3 O, float3 D, float tmin, float tmax);"
-"t_intersect	ClosestIntersection(t_obj *obj, float3 O, float3 D, float tmin, float tmax);"
+"float			ComputeLighting(t_obj *obj, t_obj *light, float3 P, float3 N, float3 V, int s);"
 "float3			ReflectRay(float3 R, float3 N);"
 ""
 "float3			ReflectRay(float3 R, float3 N)"
@@ -234,12 +234,56 @@ const char *g_kernel_source =
 ""
 
 ""
-"__kernel void loadd(__global float3 *inp, __global float3 *outp)"
+"__kernel void loadd(	int count_fig,"
+"						__global float3 *inp,"
+"						__global t_obj *obj)"
 "{"
-"	outp = inp;"
+"	inp->x = 0;"
+
+// "	obj[0].tr.pos = (float3)(0, 0, 0);"
+// "	obj[0].radius = 0;"
+// "	obj[0].mat.color = (float4)(0,0,0,0);"
+// "	obj[0].mat.specular = -1;"
+// "	obj[0].mat.reflective = 0;"
+// "	obj[0].next = &(obj[1]);"
+
+"	obj[1].tr.pos = (float3)(0, -1, 3);"
+"	obj[1].radius = 1;"
+"	obj[1].mat.color = (float4)(255, 0, 0, 255);"
+"	obj[1].mat.specular = 500;"
+"	obj[1].mat.reflective = 0;"
+
+// "	obj[1].next = &(obj[2]);"
+// ""
+// "	obj[2].tr.pos = (float3)(2, 0, 4);"
+// "	obj[2].radius = 1;"
+// "	obj[2].mat.color = (float4)(0, 0, 255, 255);"
+// "	obj[2].mat.specular = 1000;"
+// "	obj[2].mat.reflective = 0.2;"
+// "	obj[2].next = &(obj[3]);"
+// ""
+// "	obj[3].tr.pos = (float3)(-2, 0, 4);"
+// "	obj[3].radius = 1;"
+// "	obj[3].mat.color = (float4)(0, 255, 0, 255);"
+// "	obj[3].mat.specular = 500;"
+// "	obj[3].mat.reflective = 0.2;"
+// // "	obj[3].next = 0;"
+// "	obj[3].next = &(obj[4]);"
+// ""
+// "	obj[4].tr.pos = (float3)(0, -5001, 0);"
+// "	obj[4].radius = 5000;"
+// "	obj[4].mat.color = (float4)(255, 255, 0, 255);"
+// "	obj[4].mat.specular = 1000;"
+// "	obj[4].mat.reflective = 0.5;"
+// "	obj[4].next = 0;"
 "}"
 ""
-"__kernel void mul(__global float3 *input, __global int *output, int4 size, int depth)"
+"__kernel void mul(	__global float3 *input,"
+"					__global int *output,"
+"					int4 size,"
+"					int depth,"
+"					__global float3 *inp,"
+"					__global t_obj *obj2)"
 "{"
 "	int i = get_global_id(0);"
 "	int y = i / size.x;"
@@ -250,7 +294,8 @@ const char *g_kernel_source =
 "	float3	O = {0,0,0};"
 "	float3	D = (float3)((float)x/size.x, (float)y/size.y, 1);"
 "	t_obj	obj[5];"
-""
+// "	obj = obj2;"
+"	"
 "	obj[0].tr.pos = (float3)(0, 0, 0);"
 "	obj[0].radius = 0;"
 "	obj[0].mat.color = (float4)(0,0,0,0);"
@@ -258,11 +303,14 @@ const char *g_kernel_source =
 "	obj[0].mat.reflective = 0;"
 "	obj[0].next = &(obj[1]);"
 ""
-"	obj[1].tr.pos = (float3)(0, -1, 3);"
-"	obj[1].radius = 1;"
-"	obj[1].mat.color = (float4)(255, 0, 0, 255);"
-"	obj[1].mat.specular = 500;"
-"	obj[1].mat.reflective = 0;"
+// "	obj[1].tr.pos = (float3)(0, -1, 3);"
+// "	obj[1].radius = 1;"
+// "	obj[1].mat.color = (float4)(255, 0, 0, 255);"
+// "	obj[1].mat.specular = 500;"
+// "	obj[1].mat.reflective = 0;"
+"	obj[1] = obj2[1];"
+
+
 "	obj[1].next = &(obj[2]);"
 ""
 "	obj[2].tr.pos = (float3)(2, 0, 4);"
@@ -298,7 +346,10 @@ const char *g_kernel_source =
 "	light[3].mat.intensity = 0.2;"
 "	light[3].tr.direction = (float3)(1, 4, 4);"
 
-"	float4 color = (float4)(outp->x, input->y, input->z, 255);"//Trace(obj, light, O, D, 1, INFINITY, depth);"//
+
+// "	float4 color = (float4)(inp->x, inp->y, inp->z, 255);"
+"	float4 color = Trace(obj, light, O, D, 1, INFINITY, depth);"
+// "	float4 color = (float4)(input->x, input->y, input->z, 255);"
 "	output[i] = (((int)(color.x) << 16) & 0xff0000) | (((int)(color.y) << 8) & 0xff00) | ((int)(color.z) & 0xff);"
 "}";
 

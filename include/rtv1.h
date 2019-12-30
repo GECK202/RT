@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2019/12/23 22:58:37 by vkaron           ###   ########.fr       */
+/*   Updated: 2019/12/30 22:52:46 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,13 @@
 # include <mlx.h>
 # include <OpenCL/cl.h>
 
-typedef struct			s_opencl
+struct s_mat
 {
-	cl_program			program;
-	cl_context			context;
-	cl_command_queue	queue[2];
-	cl_mem				in_buf;
-	cl_mem				out_buf;
-	cl_kernel			mulkernel;
-	size_t 				work_group_size[1];
-}						t_opencl;
+	cl_float4	color;
+	cl_int		specular;
+	cl_float	reflective;
+	cl_float	intensity;
+};
 
 typedef struct			s_transf
 {
@@ -52,6 +49,53 @@ typedef struct			s_transf
 	float			right[3];
 	float			direction[3];
 }						t_transf;
+
+typedef struct			s_trans
+{
+	cl_float3			pos;
+	cl_float3			up;
+	cl_float3			look;
+	cl_float3			right;
+	cl_float3			direction;
+}						t_trans;
+
+enum	e_type_obj
+{
+	sphere1,
+	plane1,
+	cylinder1,
+	conus1,
+	ambient1,
+	directional1,
+	point1
+};
+
+typedef struct			s_obj
+{
+	struct s_trans		tr;
+	cl_float			radius;
+	struct s_mat		mat;
+	enum e_type_obj		type;
+	struct s_obj		*next;
+}						t_obj;
+
+
+typedef struct			s_opencl
+{
+	cl_program			program;
+	cl_context			context;
+	cl_command_queue	queue[2];
+	cl_mem				in_buf;
+	cl_mem				out_buf;
+	cl_kernel			mulkernel;
+	size_t 				work_group_size[1];
+	cl_mem				in_gbuf;
+	cl_float3			inp;
+	cl_mem				obj_buf;
+	cl_int				depth;
+}						t_opencl;
+
+
 
 typedef struct			s_col
 {
