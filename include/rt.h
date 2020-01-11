@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/01/09 21:56:34 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/11 21:50:23 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,16 @@
 # define MIN_OFFSET (0.01f)
 # define RECURCE_DEPTH (3)
 
+# define TAGS (4)
+# define SCENE (0)
+# define FIGURE (1)
+# define LIGHT (2)
+# define MATERIAL (3)
+
+# define SCENE_LINES (3)
+# define FIGURE_LINES (9)
+# define LIGHT_LINES (4)
+
 # include <pthread.h>
 # include <math.h>
 # include <stdlib.h>
@@ -34,12 +44,12 @@
 # include <SDL2/SDL_image.h>
 # include <SDL2/SDL_ttf.h>
 
-typedef struct		s_col
+typedef struct		s_tag
 {
-	int				r;
-	int				g;
-	int				b;
-}					t_col;
+	int				read_tag;
+	int				cur_tag;
+	int				count;
+}					t_tag;
 
 typedef	struct		s_vec3
 {
@@ -55,6 +65,25 @@ typedef struct		s_mat3
 	t_vec3			f2;
 	t_vec3			f3;
 }					t_mat3;
+
+typedef struct		s_map
+{
+	SDL_Surface		map;
+	int				*data;
+}					t_map;
+
+
+typedef struct		s_mat
+{
+	char			name[18];
+	SDL_Color		col;
+	t_map			diff_map;
+	t_map			norm_map;
+	int				spec;
+	float			refl;
+	struct smap		*next;
+}					t_mat;
+
 
 typedef enum		e_tfig
 {
@@ -78,7 +107,8 @@ typedef struct		s_fig
 	t_mat3			mat_x;
 	t_mat3			mat_y;
 	t_mat3			mat_z;
-	t_col			col;
+	t_mat			mat;
+	SDL_Color		col;
 	int				spec;
 	float			refl;
 	struct s_fig	*next;
@@ -114,6 +144,7 @@ typedef struct		s_scn
 {
 	t_fig			*figs;
 	t_lght			*lghts;
+	t_mat			*mats;
 	t_fig			*cur_fig;
 	t_lght			*cur_lght;
 	t_vec3			cam_pos;
@@ -187,7 +218,7 @@ typedef struct		s_l_prm
 
 int					scene_init(t_lst *lst, char *file);
 void				init_f_read(t_lst *lst);
-int					check_tag(t_lst *l, char **word, t_col *iter);
+int					check_tag(t_lst *l, char **word, t_tag *ctag);
 int					read_scene(t_lst *l, char *file);
 
 int					init_sdl(t_lst *lst);
@@ -203,7 +234,7 @@ int					close_dir(int fd, char **line, int ret);
 int					key_press(SDL_Keycode key, t_lst *lst);
 int					close_window(void *lst);
 void				mouse_move(SDL_MouseMotionEvent *e, t_lst *lst);
-void				mouse_press(SDL_MouseButtonEvent *e, t_lst *lst);//int b, int x, int y, void *l);
+void				mouse_press(SDL_MouseButtonEvent *e, t_lst *lst);
 void				mouse_weel(Sint32 y, t_lst *lst);
 
 int					clamp(int n, int min, int max);
@@ -217,7 +248,7 @@ t_vec3				plus_vec3(t_vec3 src1, t_vec3 src2);
 t_vec3				mult_vec3f(t_vec3 src, float n);
 t_vec3				div_vec3f(t_vec3 src, float n);
 t_vec3				invert_vec3(t_vec3 src);
-t_col				set_col(int r, int g, int b);
+SDL_Color			set_col(int r, int g, int b, int a);
 t_vec3				refl_r(t_vec3 l, t_vec3 n);
 
 void				sel_fig_check(t_vec3 *t, t_vec3 o, t_vec3 d,

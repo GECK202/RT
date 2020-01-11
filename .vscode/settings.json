@@ -3,6 +3,7 @@
 	"editor.detectIndentation": false,
 	"editor.renderWhitespace": "all",
 	"files.associations": {
-		"algorithm": "c"
+		"algorithm": "c",
+		"iterator": "c"
 	}
 }

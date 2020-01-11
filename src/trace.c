@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 21:30:06 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/09 22:22:53 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/11 20:20:59 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,10 @@ t_vec3	get_normal(t_isec *cisec, t_trc trc)
 ** calculate reflection color for dot
 */
 
-t_col	get_refl_col(t_lst *lst, t_trc trc, t_vec3 n, int depth)
+SDL_Color	get_refl_col(t_lst *lst, t_trc trc, t_vec3 n, int depth)
 {
-	int		r_col;
-	t_col	refl_col;
+	int			r_col;
+	SDL_Color	refl_col;
 
 	trc.min = MIN_OFFSET;
 	trc.max = INFINITY;
@@ -151,11 +151,11 @@ t_vec3	get_normal_from_file(t_isec *cisec, t_lst *lst)
 
 int		trace(t_lst *lst, t_trc trc, int depth)
 {
-	t_col	res;
-	t_vec3	n;
-	float	l;
-	t_isec	cisec;
-	t_col	refl_col;
+	SDL_Color	res;
+	t_vec3		n;
+	float		l;
+	t_isec		cisec;
+	SDL_Color	refl_col;
 
 	cisec = cls_isec(lst, trc);
 	if (cisec.fig == NULL)

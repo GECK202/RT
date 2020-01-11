@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 13:39:18 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/09 18:24:44 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/11 20:24:12 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,14 @@ t_vec3	set_vec3(t_vec3 src)
 	return (dst);
 }
 
-t_col	set_col(int r, int g, int b)
+SDL_Color	set_col(int r, int g, int b, int a)
 {
-	t_col c;
+	SDL_Color	c;
 
 	c.r = r;
 	c.g = g;
 	c.b = b;
+	c.a = a;
 	return (c);
 }
 
