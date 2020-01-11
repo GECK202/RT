@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 21:30:06 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/11 20:20:59 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/12 00:51:29 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,11 +134,15 @@ t_l_prm	set_l_prm(t_trc trc, t_vec3 n)
 t_vec3	get_normal_from_file(t_isec *cisec, t_lst *lst)
 {
 	t_vec3	norm;
+	int		w;
+	int		h;
 
-	int index_x = cisec->uv.x * lst->w_tex;
-	int index_y = cisec->uv.y * lst->h_tex;
-	int index = clamp(index_x + index_y * lst->nw_tex, 0, lst->nw_tex*lst->nh_tex -1);
-	int n = lst->ndata_tex[index];
+	w = cisec->fig->mat->norm_map.map->w;
+	h = cisec->fig->mat->norm_map.map->h;
+	int index_x = cisec->uv.x * w;
+	int index_y = cisec->uv.y * h;
+	int index = clamp(index_x + index_y * w, 0, w * h -1);
+	int n = cisec->fig->mat->norm_map.data[index];
 	norm.x = ((n & 0xff0000)>>16) / 255.0f;
 	norm.y = ((n & 0xff00)>>8) / 255.0f;
 	norm.z = (n & 0xff) / 255.0f;
@@ -163,7 +167,7 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	trc.p = plus_vec3(mult_vec3f(trc.d, cisec.t), (trc.o));
 	
 	n = get_normal(&cisec, trc);
-	if (lst->ntex && cisec.uv.x && cisec.uv.x != INFINITY)
+	if (cisec.fig->mat->norm_map.map && cisec.uv.x && cisec.uv.x != INFINITY)
 		n = minus_vec3(get_normal_from_file(&cisec, lst), n);
 	n = div_vec3f(n, len_vec3(n));
 	trc.d = invert_vec3(trc.d);
@@ -171,30 +175,32 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	
 	
 
-	if (lst->tex && cisec.uv.x && cisec.uv.x != INFINITY)
+	if (cisec.fig->mat->diff_map.map && cisec.uv.x && cisec.uv.x != INFINITY)
 	{
-		int index_x = cisec.uv.x * lst->w_tex;
-		int index_y = cisec.uv.y * lst->h_tex;
-		int index = clamp(index_x + index_y * lst->w_tex, 0, lst->w_tex*lst->h_tex -1);
-		int n = lst->data_tex[index];
+		int w = cisec.fig->mat->diff_map.map->w;
+		int h = cisec.fig->mat->diff_map.map->h;
+		int index_x = cisec.uv.x * w;
+		int index_y = cisec.uv.y * h;
+		int index = clamp(index_x + index_y * w, 0, w * h - 1);
+		int n = cisec.fig->mat->diff_map.data[index];
 		res.b = clamp(((n & 0xff0000)>>16) * l, 0, 255);
 		res.g = clamp(((n & 0xff00)>>8) * l, 0, 255);
 		res.r = clamp((n & 0xff) * l, 0, 255);
 	}
 	else
 	{
-		res.r = clamp(cisec.fig->col.r * l, 0, 255);
-		res.g = clamp(cisec.fig->col.g * l, 0, 255);
-		res.b = clamp(cisec.fig->col.b * l, 0, 255);
+		res.r = clamp(cisec.fig->mat->col.r * l, 0, 255);
+		res.g = clamp(cisec.fig->mat->col.g * l, 0, 255);
+		res.b = clamp(cisec.fig->mat->col.b * l, 0, 255);
 	}
 	
 	
-	if (depth <= 0 || cisec.fig->refl <= 0)
+	if (depth <= 0 || cisec.fig->mat->refl <= 0)
 		return ((res.r << 16) + (res.g << 8) + res.b);
 	trc.o = set_vec3(trc.p);
 	refl_col = get_refl_col(lst, trc, n, depth - 1);
-	res.r = res.r * (1 - cisec.fig->refl) + refl_col.r * cisec.fig->refl;
-	res.g = res.g * (1 - cisec.fig->refl) + refl_col.g * cisec.fig->refl;
-	res.b = res.b * (1 - cisec.fig->refl) + refl_col.b * cisec.fig->refl;
+	res.r = res.r * (1 - cisec.fig->mat->refl) + refl_col.r * cisec.fig->mat->refl;
+	res.g = res.g * (1 - cisec.fig->mat->refl) + refl_col.g * cisec.fig->mat->refl;
+	res.b = res.b * (1 - cisec.fig->mat->refl) + refl_col.b * cisec.fig->mat->refl;
 	return ((res.r << 16) + (res.g << 8) + res.b);
 }

@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 14:02:07 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/09 18:24:10 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/12 00:53:16 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ float	light(t_lst *lst, t_l_prm b, t_fig *fig)
 			if (!get_shadow(lst, &trc, b, c_lght))
 			{
 				ints += get_diffuse(trc, b, c_lght);
-				ints += get_specular(trc, b, fig->spec, c_lght->ints);
+				ints += get_specular(trc, b, fig->mat->spec, c_lght->ints);
 			}
 		}
 		c_lght = c_lght->next;

@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:43:40 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/11 23:44:44 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/12 01:18:44 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,12 +128,34 @@ int		set_rot_fig(t_lst *lst, char *word)
 	return (free_words(coord, 0));
 }
 
-// int		set_mat_fig(t_lst *lst, char *word)
-// {
-// 	if (!word || !(*word))
-// 		return (0);
-// 	if (ft_strlen(word) > 17)
-// 		return (0);
-// 	ft_strncpy(lst->scn->cur_mat->name, word, 18);
-// 	return (1);
-// }
+int		set_mat_fig(t_lst *lst, char *word)
+{
+	char	**name;
+	t_mat	*mat;
+	char	mat_name[18];
+	int		flag;
+
+	if (!word || !(*word))
+		return (0);
+	if (!(name = ft_strsplit(word, ' ')) || !(name[0]))
+	{
+		lst->scn->cur_fig->mat = lst->scn->mats;
+		return (free_words(name, 1));
+	}
+	ft_strncpy(mat_name, name[0], 18);
+	mat = lst->scn->mats;
+	flag = 0;
+	while (mat)
+	{
+		if (ft_strcmp(mat_name, mat->name) == 0)
+		{
+			lst->scn->cur_fig->mat = mat;
+			flag = 1;
+			break; 
+		}
+		mat = mat->next;
+	}
+	if (!flag)
+		lst->scn->cur_fig->mat = lst->scn->mats;
+	return (free_words(name, 1));
+}

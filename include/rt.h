@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/01/11 23:42:28 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/12 00:55:08 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # define MATERIAL (1)
 
 # define SCENE_LINES (3)
-# define FIGURE_LINES (9)
+# define FIGURE_LINES (7)
 # define LIGHT_LINES (4)
 # define MATERIAL_LINES (6)
 
@@ -108,10 +108,7 @@ typedef struct		s_fig
 	t_mat3			mat_x;
 	t_mat3			mat_y;
 	t_mat3			mat_z;
-	t_mat			mat;
-	SDL_Color		col;
-	int				spec;
-	float			refl;
+	t_mat			*mat;
 	struct s_fig	*next;
 }					t_fig;
 
@@ -162,16 +159,6 @@ typedef struct		s_lst
 	SDL_Surface		*img;
 	int				*data;
 	
-	SDL_Surface		*tex;
-	int				w_tex;
-	int				h_tex;
-	int				*data_tex;
-	
-	SDL_Surface		*ntex;
-	int				nw_tex;
-	int				nh_tex;
-	int				*ndata_tex;
-
 	SDL_Point		cursor;
 	
 	int				n0;
@@ -200,7 +187,7 @@ typedef struct		s_read
 	int				(*cre_mat)(t_lst*);
 	t_r_mat			f_mat[6];
 	int				(*cre_fig)(t_lst*);
-	t_r_fig			f_fig[10];
+	t_r_fig			f_fig[7];
 	int				(*cre_lght)(t_lst*);
 	t_r_lght		f_lght[4];
 }					t_read;
@@ -297,9 +284,7 @@ int					set_dir_fig(t_lst *lst, char *word);
 int					set_rot_fig(t_lst *lst, char *word);
 int					set_rad_fig(t_lst *lst, char *word);
 int					set_ang_fig(t_lst *lst, char *word);
-int					set_spec_fig(t_lst *lst, char *word);
-int					set_refl_fig(t_lst *lst, char *word);
-int					set_col_fig(t_lst *lst, char *word);
+int					set_mat_fig(t_lst *lst, char *word);
 
 int					cre_lght(t_lst *lst);
 int					set_type_lght(t_lst *lst, char *word);

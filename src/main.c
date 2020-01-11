@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:06 by vabraham          #+#    #+#             */
-/*   Updated: 2020/01/09 22:13:33 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/12 01:00:54 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,26 +72,6 @@ void	rain(t_lst *lst)
 		rc = pthread_join(threads[lst->pot], &status);
 }
 
-void	load_tex_sdl(t_lst *lst)
-{
-	lst->tex = 0;
-	lst->tex = IMG_Load("res/fig1_dif.png");
-	if (lst->tex)
-	{
-		lst->w_tex = lst->tex->w;
-		lst->h_tex = lst->tex->h;
-		lst->data_tex = (int *)(lst->tex->pixels);
-		lst->ntex = 0;
-		lst->ntex = IMG_Load("res/fig1_nm.png");
-		if (lst->ntex)
-		{
-			lst->ndata_tex = (int *)(lst->ntex->pixels);
-			lst->nw_tex = lst->ntex->w;
-			lst->nh_tex = lst->ntex->h;
-		}
-	}
-}
-
 void close_sdl(t_lst *lst)
 {
 	SDL_FreeSurface(lst->img);
@@ -115,7 +95,7 @@ int		main(int ac, char *av[])
 		if (scene_init(lst, av[1]) && init_sdl(lst))
 		{
 			lst->norm = 0;
-			load_tex_sdl(lst);
+			//load_tex_sdl(lst);
 			quit = 0;
 			first = 1;
 			while (!quit)

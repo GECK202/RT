@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:37:19 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/11 23:19:04 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/12 00:54:52 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,7 @@ void	init_f_read(t_lst *lst)
 	lst->set->f_fig[3] = set_rot_fig;
 	lst->set->f_fig[4] = set_rad_fig;
 	lst->set->f_fig[5] = set_ang_fig;
-	lst->set->f_fig[6] = set_col_fig;
-	lst->set->f_fig[7] = set_spec_fig;
-	lst->set->f_fig[8] = set_refl_fig;
+	lst->set->f_fig[6] = set_mat_fig;
 	lst->set->cre_lght = cre_lght;
 	lst->set->f_lght[0] = set_type_lght;
 	lst->set->f_lght[1] = set_pos_lght;
