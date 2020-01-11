@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/01/11 23:21:02 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/11 23:42:28 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ typedef struct		s_read
 	int				(*cre_mat)(t_lst*);
 	t_r_mat			f_mat[6];
 	int				(*cre_fig)(t_lst*);
-	t_r_fig			f_fig[9];
+	t_r_fig			f_fig[10];
 	int				(*cre_lght)(t_lst*);
 	t_r_lght		f_lght[4];
 }					t_read;

@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:43:40 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/09 18:24:23 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/11 23:44:44 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,3 +127,13 @@ int		set_rot_fig(t_lst *lst, char *word)
 	}
 	return (free_words(coord, 0));
 }
+
+// int		set_mat_fig(t_lst *lst, char *word)
+// {
+// 	if (!word || !(*word))
+// 		return (0);
+// 	if (ft_strlen(word) > 17)
+// 		return (0);
+// 	ft_strncpy(lst->scn->cur_mat->name, word, 18);
+// 	return (1);
+// }

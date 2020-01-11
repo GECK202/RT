@@ -64,16 +64,22 @@ int		set_name_mat(t_lst *lst, char *word)
 
 int		set_diff_map_mat(t_lst *lst, char *word)
 {
+	char **filename;
+
 	if (!word || !(*word))
 		return (0);
-	load_map(&(lst->scn->cur_mat->diff_map), word);
-	return (1);
+	filename = ft_strsplit(word, ' ');
+	load_map(&(lst->scn->cur_mat->diff_map), filename[0]);
+	return (free_words(filename, 1));
 }
 
 int		set_norm_map_mat(t_lst *lst, char *word)
 {
+	char **filename;
+
 	if (!word || !(*word))
 		return (0);
-	load_map(&(lst->scn->cur_mat->norm_map), word);
-	return (1);
+	filename = ft_strsplit(word, ' ');
+	load_map(&(lst->scn->cur_mat->norm_map), filename[0]);
+	return (free_words(filename, 1));
 }

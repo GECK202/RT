@@ -5,8 +5,8 @@
 [material]:
 0	name: earth
 1	color: 0 0 255
-2	diffuse: res/fig1_dif.png
-3	normal: res/fig1_nm.png
+2	diffuse:  res/fig1_dif.png  
+3	normal:res/fig1_nm.png
 4	specular: 1500
 5	reflection: 0.3
 [figure]:
