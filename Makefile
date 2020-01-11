@@ -6,13 +6,14 @@
 #    By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/09/23 17:12:18 by vkaron            #+#    #+#              #
-#    Updated: 2019/11/30 18:54:33 by vkaron           ###   ########.fr        #
+#    Updated: 2020/01/09 20:47:36 by vkaron           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 .PHONY: all, clean, fclean, re, libr
 
-FLAGS = -Wall -Wextra -Werror
+#FLAGS = -Wall -Wextra -Werror
+FLAGS = -g
 
 C_FILES =	key_press.c move_multy.c main.c light.c events.c scene.c trace.c\
 			matrix.c init.c clear.c	read_fig1.c read_fig2.c read_light.c\
@@ -22,13 +23,13 @@ O_FILES = $(C_FILES:.c=.o)
 
 H_DIR = -Ilibft -Iusr/L -Iinclude
 
-LIBS = -Llibft -lft -lmlx -framework OpenGL -framework AppKit
+LIBS = -Llibft -lft -Llib -lSDL2 -lSDL2_image -lSDL2_ttf
 
 S_DIR = src
 
 OBJ = $(addprefix $(S_DIR)/, $(O_FILES))
 
-NAME = RTv1
+NAME = RT
 
 all: libr $(NAME)
 
@@ -38,7 +39,7 @@ libr:
 $(NAME): $(OBJ)
 	gcc $(FLAGS) -o $@ $^ $(H_DIR) $(LIBS)
 
-$(S_DIR)/%.o: $(S_DIR)/%.c include/rtv1.h
+$(S_DIR)/%.o: $(S_DIR)/%.c include/rt.h
 	gcc $(FLAGS) -c $< -o $@ $(H_DIR)
 
 clean:

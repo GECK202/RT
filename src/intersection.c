@@ -6,11 +6,11 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 13:12:56 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/22 20:54:50 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/09 20:49:14 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 /*
 ** selection figure for check
@@ -40,17 +40,34 @@ void	intersec_sph(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *sph)
 
 	t->x = INFINITY;
 	t->y = INFINITY;
+	t->z = INFINITY;
 	oc = minus_vec3(o, sph->pos);
 	k.x = dot(d, d);
-	k.y = 2 * dot(oc, d);
+	k.y = dot(oc, d);
 	k.z = dot(oc, oc) - sph->rad * sph->rad;
-	discr = k.y * k.y - 4 * k.x * k.z;
+	discr = k.y * k.y - k.x * k.z;
 	if (discr < 0)
 		return ;
 	discr = sqrt(discr);
-	k.x *= 2;
-	t->x = (discr - k.y) / k.x;
-	t->y = (-discr - k.y) / k.x;
+	k.x = 1 / k.x;
+	t->x = (discr - k.y) * k.x;
+	t->y = (-discr - k.y) * k.x;
+	
+	if (t->x > t->y)
+		t->x = t->y;
+	
+	t_vec3 Vn = cre_vec3(0, 1, 0);
+	t_vec3 Ve = cre_vec3(0, 0, 1);
+	t_vec3 Vp = minus_vec3(sph->pos, plus_vec3(o, mult_vec3f(d, t->x)));
+	float lenvp = len_vec3(Vp);
+	Vp = div_vec3f(Vp, lenvp);
+	float x = -dot(sph->dir, Vp);
+	t->z = acos(x);
+	x = sin(t->z);
+	t->w = (acos(dot(Vp, sph->look)/x)) / (2 * M_PI);
+	if (dot(cross(sph->dir, sph->look), Vp) > 0)
+		t->w = 1.0 - t->w;
+	t->z = t->z / M_PI;
 }
 
 /*

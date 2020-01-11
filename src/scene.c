@@ -6,11 +6,11 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 00:01:56 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/30 19:00:34 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/09 18:24:35 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 int		check_valid_count(t_col *iter)
 {

@@ -6,11 +6,11 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 14:44:55 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/21 21:23:16 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/09 18:24:29 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 int		cre_lght(t_lst *lst)
 {

@@ -6,11 +6,11 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 14:02:07 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/23 15:06:29 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/09 18:24:10 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 /*
 ** calculate vector of reflection

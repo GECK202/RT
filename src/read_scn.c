@@ -6,11 +6,11 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 15:30:34 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/22 19:52:08 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/09 18:24:32 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 int		set_pos_cam(t_lst *lst, char *word)
 {

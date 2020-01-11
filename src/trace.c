@@ -6,11 +6,12 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 21:30:06 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/22 20:54:02 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/09 22:22:53 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
+#include "stdio.h"
 
 /*
 ** calculate intersection and return figure and distatnce of intersection
@@ -27,17 +28,42 @@ t_isec	cls_isec(t_lst *lst, t_trc trc)
 	cur_fig = lst->scn->figs;
 	while (cur_fig)
 	{
+		
 		sel_fig_check(&t, trc.o, trc.d, cur_fig);
+		
 		if (t.x >= trc.min && t.x <= trc.max && t.x < cisec.t)
 		{
 			cisec.t = t.x;
 			cisec.fig = cur_fig;
+			if (cisec.fig->type == sphere && t.z != INFINITY)
+			{
+				cisec.uv.x = t.w;
+				cisec.uv.y = t.z;
+			}
+			else
+			{
+				cisec.uv.x = INFINITY;
+				cisec.uv.y = INFINITY;
+			}
 		}
 		if (t.y >= trc.min && t.y <= trc.max && t.y < cisec.t)
 		{
 			cisec.t = t.y;
 			cisec.fig = cur_fig;
+			if (cisec.fig->type == sphere && t.z != INFINITY)
+			{
+				cisec.uv.x = t.w;
+				cisec.uv.y = t.z;
+			}
+			else
+			{
+				cisec.uv.x = INFINITY;
+				cisec.uv.y = INFINITY;
+			}
 		}
+		
+		
+		
 		cur_fig = cur_fig->next;
 	}
 	return (cisec);
@@ -104,6 +130,21 @@ t_l_prm	set_l_prm(t_trc trc, t_vec3 n)
 	return (b);
 }
 
+
+t_vec3	get_normal_from_file(t_isec *cisec, t_lst *lst)
+{
+	t_vec3	norm;
+
+	int index_x = cisec->uv.x * lst->w_tex;
+	int index_y = cisec->uv.y * lst->h_tex;
+	int index = clamp(index_x + index_y * lst->nw_tex, 0, lst->nw_tex*lst->nh_tex -1);
+	int n = lst->ndata_tex[index];
+	norm.x = ((n & 0xff0000)>>16) / 255.0f;
+	norm.y = ((n & 0xff00)>>8) / 255.0f;
+	norm.z = (n & 0xff) / 255.0f;
+	return (norm);
+}
+
 /*
 ** ray trace function
 */
@@ -120,12 +161,34 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	if (cisec.fig == NULL)
 		return (lst->scn->bgc);
 	trc.p = plus_vec3(mult_vec3f(trc.d, cisec.t), (trc.o));
+	
 	n = get_normal(&cisec, trc);
+	if (lst->ntex && cisec.uv.x && cisec.uv.x != INFINITY)
+		n = minus_vec3(get_normal_from_file(&cisec, lst), n);
+	n = div_vec3f(n, len_vec3(n));
 	trc.d = invert_vec3(trc.d);
 	l = light(lst, set_l_prm(trc, n), cisec.fig);
-	res.r = clamp(cisec.fig->col.r * l, 0, 255);
-	res.g = clamp(cisec.fig->col.g * l, 0, 255);
-	res.b = clamp(cisec.fig->col.b * l, 0, 255);
+	
+	
+
+	if (lst->tex && cisec.uv.x && cisec.uv.x != INFINITY)
+	{
+		int index_x = cisec.uv.x * lst->w_tex;
+		int index_y = cisec.uv.y * lst->h_tex;
+		int index = clamp(index_x + index_y * lst->w_tex, 0, lst->w_tex*lst->h_tex -1);
+		int n = lst->data_tex[index];
+		res.b = clamp(((n & 0xff0000)>>16) * l, 0, 255);
+		res.g = clamp(((n & 0xff00)>>8) * l, 0, 255);
+		res.r = clamp((n & 0xff) * l, 0, 255);
+	}
+	else
+	{
+		res.r = clamp(cisec.fig->col.r * l, 0, 255);
+		res.g = clamp(cisec.fig->col.g * l, 0, 255);
+		res.b = clamp(cisec.fig->col.b * l, 0, 255);
+	}
+	
+	
 	if (depth <= 0 || cisec.fig->refl <= 0)
 		return ((res.r << 16) + (res.g << 8) + res.b);
 	trc.o = set_vec3(trc.p);

@@ -6,11 +6,11 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 15:14:53 by vkaron            #+#    #+#             */
-/*   Updated: 2019/12/01 17:22:35 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/01/09 18:24:38 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 float	ft_atof(char *f)
 {

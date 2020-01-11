@@ -6,11 +6,11 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:37:19 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/30 19:00:19 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/09 20:35:47 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 void	init_f_read(t_lst *lst)
 {
@@ -34,21 +34,17 @@ void	init_f_read(t_lst *lst)
 	lst->set->f_lght[3] = set_ints_lght;
 }
 
-void	init_mlx(t_lst *lst)
+int	init_sdl(t_lst *lst)
 {
-	int	bpp;
-	int	sline;
-	int	endian;
-
-	lst->mlx = mlx_init();
-	lst->win = mlx_new_window(lst->mlx, S_W, S_H, "RTV1");
-	lst->img = mlx_new_image(lst->mlx, S_W, S_H);
-	lst->data = (int *)mlx_get_data_addr(lst->img,
-		&bpp, &sline, &endian);
-	mlx_hook(lst->win, 2, 0, key_press, (void *)lst);
-	mlx_hook(lst->win, 17, 0, close_window, (void *)0);
-	mlx_hook(lst->win, 6, 0, mouse_move, (void *)lst);
-	mlx_hook(lst->win, 4, 0, mouse_press, (void *)lst);
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		return (0);
+	lst->win = 0;
+	lst->win = SDL_CreateWindow("RT", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, S_W, S_H, SDL_WINDOW_SHOWN);
+	if (!lst->win)
+		return (0);
+	lst->img = SDL_GetWindowSurface(lst->win);
+	lst->data = (int *)lst->img->pixels;
+	return (1);
 }
 
 int		scene_init(t_lst *lst, char *file)

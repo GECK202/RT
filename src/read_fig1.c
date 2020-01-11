@@ -6,11 +6,11 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:43:40 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/22 19:33:27 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/09 18:24:23 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 int		cre_fig(t_lst *lst)
 {
@@ -94,6 +94,7 @@ int		set_dir_fig(t_lst *lst, char *word)
 		fig->dir.x = fig->begin.x;
 		fig->dir.y = fig->begin.y;
 		fig->dir.z = fig->begin.z;
+		fig->look = cre_vec3(0,0,1);
 		return (free_words(coord, 1));
 	}
 	return (free_words(coord, 0));

@@ -6,11 +6,11 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 13:39:53 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/22 13:40:02 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/09 18:24:48 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 t_vec3	minus_vec3(t_vec3 src1, t_vec3 src2)
 {

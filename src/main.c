@@ -6,11 +6,11 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:06 by vabraham          #+#    #+#             */
-/*   Updated: 2019/12/01 17:28:44 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/01/09 22:13:33 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 void	mult(t_lst *lst, t_trc *trc, int x, int y)
 {
@@ -72,23 +72,96 @@ void	rain(t_lst *lst)
 		rc = pthread_join(threads[lst->pot], &status);
 }
 
+void	load_tex_sdl(t_lst *lst)
+{
+	lst->tex = 0;
+	lst->tex = IMG_Load("res/fig1_dif.png");
+	if (lst->tex)
+	{
+		lst->w_tex = lst->tex->w;
+		lst->h_tex = lst->tex->h;
+		lst->data_tex = (int *)(lst->tex->pixels);
+		lst->ntex = 0;
+		lst->ntex = IMG_Load("res/fig1_nm.png");
+		if (lst->ntex)
+		{
+			lst->ndata_tex = (int *)(lst->ntex->pixels);
+			lst->nw_tex = lst->ntex->w;
+			lst->nh_tex = lst->ntex->h;
+		}
+	}
+}
+
+void close_sdl(t_lst *lst)
+{
+	SDL_FreeSurface(lst->img);
+	lst->img = 0;
+	SDL_DestroyWindow(lst->win);
+	lst->win = 0;
+	SDL_Quit();
+}
+
 int		main(int ac, char *av[])
 {
-	t_lst	*lst;
-
+	t_lst		*lst;
+	int			quit;
+	SDL_Event	e;
+	int			repaint;
+	int			first;
+	
 	if (ac == 2)
 	{
 		lst = (t_lst *)malloc(sizeof(t_lst));
-		if (scene_init(lst, av[1]))
+		if (scene_init(lst, av[1]) && init_sdl(lst))
 		{
-			init_mlx(lst);
 			lst->norm = 0;
+			load_tex_sdl(lst);
+			quit = 0;
+			first = 1;
+			while (!quit)
+			{
+				repaint = 0;
+				while( SDL_PollEvent( &e ) != 0 )
+				{
+					if(e.type == SDL_QUIT)
+						quit = 1;
+					else if (e.type == SDL_KEYDOWN)
+					{
+						if (e.key.keysym.sym == SDLK_ESCAPE)
+							quit = 1;
+						else
+						{
+							key_press(e.key.keysym.sym, lst);
+							repaint = 1;
+						}
+					}
+					else if (e.type == SDL_MOUSEBUTTONDOWN)
+					{
+						mouse_press(&(e.button), lst);
+						repaint = 1;
+					}
+					else if (e.type == SDL_MOUSEMOTION)
+					{
+						mouse_move(&(e.motion), lst);
+						repaint = 1;
+					}
+					else if (e.type == SDL_MOUSEWHEEL)
+					{
+						mouse_weel(e.wheel.y, lst);
+						repaint = 1;
+					}
+					if (repaint || first)
+					{
+						rain(lst);
+						SDL_UpdateWindowSurface(lst->win);
+						first = 0;
+					}
+				}
+			}
 			rain(lst);
-			mlx_put_image_to_window(lst->mlx, lst->win, lst->img, 0, 0);
-			mlx_loop(lst->mlx);
 		}
+		close_sdl(lst);
 		free_l(lst);
 	}
-	ft_putstr("Usage : ./RTv1 scene_file\n");
 	return (0);
 }
