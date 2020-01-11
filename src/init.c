@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:37:19 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/09 20:35:47 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/11 23:19:04 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,13 @@ void	init_f_read(t_lst *lst)
 	lst->set->f_lght[1] = set_pos_lght;
 	lst->set->f_lght[2] = set_dir_lght;
 	lst->set->f_lght[3] = set_ints_lght;
+	lst->set->cre_mat = cre_mat;
+	lst->set->f_mat[0] = set_name_mat;
+	lst->set->f_mat[1] = set_col_mat;
+	lst->set->f_mat[2] = set_diff_map_mat;
+	lst->set->f_mat[3] = set_norm_map_mat;
+	lst->set->f_mat[4] = set_spec_mat;
+	lst->set->f_mat[5] = set_refl_mat;
 }
 
 int	init_sdl(t_lst *lst)
@@ -57,6 +64,7 @@ int		scene_init(t_lst *lst, char *file)
 	lst->scn->bgc = 0;
 	lst->scn->cur_fig = NULL;
 	lst->scn->cur_lght = NULL;
+	lst->scn->mats = NULL;
 	lst->scn->figs = NULL;
 	lst->scn->lghts = NULL;
 	lst->scn->shadow = 1;

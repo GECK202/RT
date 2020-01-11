@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/23 17:12:02 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/21 17:42:53 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/11 22:13:25 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,6 @@ void	*ft_memcpy(void *dst, const void *src, size_t n);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putstr(char *s);
 int		ft_strcmp(const char *s1, const char *s2);
+char	*ft_strcpy(char *dst, char *src);
 
 #endif

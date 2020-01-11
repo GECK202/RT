@@ -8,7 +8,7 @@
 			"name": "gcc build and debug active file",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/RTv1",
+			"program": "${workspaceFolder}/RT",
 			"args": ["scenes/scene2"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",

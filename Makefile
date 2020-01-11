@@ -6,7 +6,7 @@
 #    By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/09/23 17:12:18 by vkaron            #+#    #+#              #
-#    Updated: 2020/01/09 20:47:36 by vkaron           ###   ########.fr        #
+#    Updated: 2020/01/11 22:54:27 by vkaron           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ FLAGS = -g
 
 C_FILES =	key_press.c move_multy.c main.c light.c events.c scene.c trace.c\
 			matrix.c init.c clear.c	read_fig1.c read_fig2.c read_light.c\
-			read_scn.c tools.c intersection.c vec1.c vec2.c
+			read_scn.c tools.c intersection.c vec1.c vec2.c read_material1.c\
+			read_material2.c
 
 O_FILES = $(C_FILES:.c=.o)
 

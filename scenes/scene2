@@ -5,10 +5,10 @@
 [material]:
 0	name: earth
 1	color: 0 0 255
-2	diffuse: fig1_dif.png
-3	normal: fig1_nm.png
-1	specular: 1500
-2	reflection: 0.3
+2	diffuse: res/fig1_dif.png
+3	normal: res/fig1_nm.png
+4	specular: 1500
+5	reflection: 0.3
 [figure]:
 0	type:cylinder
 1	position:-2 1 0

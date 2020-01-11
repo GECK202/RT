@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/01/11 21:50:23 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/11 23:21:02 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,14 @@
 
 # define TAGS (4)
 # define SCENE (0)
-# define FIGURE (1)
-# define LIGHT (2)
-# define MATERIAL (3)
+# define FIGURE (2)
+# define LIGHT (3)
+# define MATERIAL (1)
 
 # define SCENE_LINES (3)
 # define FIGURE_LINES (9)
 # define LIGHT_LINES (4)
+# define MATERIAL_LINES (6)
 
 # include <pthread.h>
 # include <math.h>
@@ -68,7 +69,7 @@ typedef struct		s_mat3
 
 typedef struct		s_map
 {
-	SDL_Surface		map;
+	SDL_Surface		*map;
 	int				*data;
 }					t_map;
 
@@ -81,7 +82,7 @@ typedef struct		s_mat
 	t_map			norm_map;
 	int				spec;
 	float			refl;
-	struct smap		*next;
+	struct s_mat	*next;
 }					t_mat;
 
 
@@ -147,6 +148,7 @@ typedef struct		s_scn
 	t_mat			*mats;
 	t_fig			*cur_fig;
 	t_lght			*cur_lght;
+	t_mat			*cur_mat;
 	t_vec3			cam_pos;
 	t_vec3			cam_pos0;
 	int				bgc;
@@ -188,12 +190,15 @@ typedef struct		s_lst
 }					t_lst;
 
 typedef int			(*t_r_fig)(t_lst*, char*);
+typedef int			(*t_r_mat)(t_lst*, char*);
 typedef int			(*t_r_lght)(t_lst*, char*);
 typedef int			(*t_r_scn)(t_lst*, char*);
 
 typedef struct		s_read
 {
 	t_r_scn			f_scn[4];
+	int				(*cre_mat)(t_lst*);
+	t_r_mat			f_mat[6];
 	int				(*cre_fig)(t_lst*);
 	t_r_fig			f_fig[9];
 	int				(*cre_lght)(t_lst*);
@@ -225,6 +230,7 @@ int					init_sdl(t_lst *lst);
 
 void				free_figs(t_fig *figs);
 void				free_lghts(t_lght *lghts);
+void				free_mats(t_mat *mats);
 void				free_l(t_lst *lst);
 int					free_word_line(char **line, char **word);
 int					close_free(int fd, char **line, char **word, int ret);
@@ -275,6 +281,14 @@ float				ft_atof(char *f);
 int					set_pos_cam(t_lst *lst, char *word);
 int					set_rot_cam(t_lst *lst, char *word);
 int					set_col_bgc(t_lst *lst, char *word);
+
+int					cre_mat(t_lst *lst);
+int					set_name_mat(t_lst *lst, char *word);
+int					set_col_mat(t_lst *lst, char *word);
+int					set_diff_map_mat(t_lst *lst, char *word);
+int					set_norm_map_mat(t_lst *lst, char *word);
+int					set_spec_mat(t_lst *lst, char *word);
+int					set_refl_mat(t_lst *lst, char *word);
 
 int					cre_fig(t_lst *lst);
 int					set_type_fig(t_lst *lst, char *word);

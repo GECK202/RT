@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 15:16:15 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/09 18:23:36 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/11 23:01:48 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,23 @@ void	free_figs(t_fig *figs)
 	if (!figs)
 		return ;
 	prev = figs;
+	while (prev->next)
+	{
+		cur = prev->next;
+		free(prev);
+		prev = cur;
+	}
+	free(prev);
+}
+
+void	free_mats(t_mat *mats)
+{
+	t_mat *cur;
+	t_mat *prev;
+
+	if (!mats)
+		return ;
+	prev = mats;
 	while (prev->next)
 	{
 		cur = prev->next;
@@ -67,6 +84,8 @@ void	free_l(t_lst *lst)
 			free_figs(lst->scn->figs);
 		if (lst->scn->lghts)
 			free_lghts(lst->scn->lghts);
+		if (lst->scn->mats)
+			free_mats(lst->scn->mats);
 		free(lst->scn);
 	}
 	free(lst);

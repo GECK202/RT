@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 00:01:56 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/11 21:43:41 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/11 23:33:17 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,23 +16,29 @@ int		check_valid_count(t_tag *ctag)
 {
 	if ((ctag->read_tag == SCENE && ctag->count < SCENE_LINES)
 		|| (ctag->read_tag == FIGURE && ctag->count < FIGURE_LINES)
-		|| (ctag->read_tag == LIGHT && ctag->count < LIGHT_LINES))
+		|| (ctag->read_tag == LIGHT && ctag->count < LIGHT_LINES)
+		|| (ctag->read_tag == MATERIAL && ctag->count < MATERIAL_LINES))
 		return (0);
 	return (1);
 }
 
 int		cre_cur_obj(t_lst *l, t_tag *ctag)
 {
-	if (ctag->cur_tag == FIGURE || ctag->cur_tag == LIGHT)
+	if (ctag->cur_tag > 0)
 	{
 		if (!(check_valid_count(ctag)))
 			return (0);
+		if (ctag->cur_tag == MATERIAL)
+		{
+			if (!(l->set->cre_mat(l)))
+				return (0);
+		}
 		if (ctag->cur_tag == FIGURE)
 		{
 			if (!(l->set->cre_fig(l)))
 				return (0);
 		}
-		else
+		else if (ctag->cur_tag == LIGHT)
 		{
 			if (!(l->set->cre_lght(l)))
 				return (0);
@@ -45,14 +51,15 @@ int		check_valid_iter(t_tag *ctag)
 {
 	if ((ctag->read_tag == SCENE && ctag->count > (SCENE_LINES - 1))
 		|| (ctag->read_tag == FIGURE && ctag->count > (FIGURE_LINES - 1))
-		|| (ctag->read_tag == LIGHT && ctag->count > (LIGHT_LINES - 1)))
+		|| (ctag->read_tag == LIGHT && ctag->count > (LIGHT_LINES - 1))
+		|| (ctag->read_tag == MATERIAL && ctag->count > (MATERIAL_LINES - 1)))
 		return (0);
 	return (1);
 }
 
 int		check_tag(t_lst *l, char **word, t_tag *ctag)
 {
-	const char	tag[TAGS][11] = {"[scene]", "[figure]", "[light]", "[material]"};
+	const char	tag[TAGS][11] = {"[scene]", "[material]", "[figure]", "[light]"};
 
 	ctag->cur_tag = SCENE;
 	while (ctag->cur_tag < TAGS)
@@ -71,6 +78,8 @@ int		check_tag(t_lst *l, char **word, t_tag *ctag)
 		return (0);
 	if (ctag->read_tag == SCENE)
 		l->set->f_scn[ctag->count](l, word[1]);
+	else if (ctag->read_tag == MATERIAL)
+		l->set->f_mat[ctag->count](l, word[1]);
 	else if (ctag->read_tag == FIGURE)
 		l->set->f_fig[ctag->count](l, word[1]);
 	else if (ctag->read_tag == LIGHT)
@@ -88,14 +97,13 @@ void	reset_ctag(t_tag *ctag)
 
 int		read_scene(t_lst *l, char *file)
 {
-	int			tag_count[4];
 	t_tag		ctag;
 	char		**line;
 	int			fd;
 	char		**word;
 	int			ch;
 
-	if ((fd = open(file, 0x0000)) < 0)
+	if (!cre_mat(l) || (fd = open(file, 0x0000)) < 0)
 		return (0);
 	line = malloc(sizeof(char*));
 	reset_ctag(&ctag);
