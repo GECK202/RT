@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:06 by vabraham          #+#    #+#             */
-/*   Updated: 2020/01/12 01:00:54 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/14 16:24:50 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,8 @@ int		main(int ac, char *av[])
 			}
 			rain(lst);
 		}
+		else
+			write(1, "Usage:./RT filename\n", 20);
 		close_sdl(lst);
 		free_l(lst);
 	}

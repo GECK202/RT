@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/01/12 00:55:08 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/14 16:50:14 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # define LIGHT (3)
 # define MATERIAL (1)
 
-# define SCENE_LINES (3)
+# define SCENE_LINES (4)
 # define FIGURE_LINES (7)
 # define LIGHT_LINES (4)
 # define MATERIAL_LINES (6)
@@ -150,6 +150,7 @@ typedef struct		s_scn
 	t_vec3			cam_pos0;
 	int				bgc;
 	int				shadow;
+	t_map			diff_map;
 }					t_scn;
 
 typedef struct		s_lst
@@ -183,7 +184,7 @@ typedef int			(*t_r_scn)(t_lst*, char*);
 
 typedef struct		s_read
 {
-	t_r_scn			f_scn[4];
+	t_r_scn			f_scn[5];
 	int				(*cre_mat)(t_lst*);
 	t_r_mat			f_mat[6];
 	int				(*cre_fig)(t_lst*);
@@ -212,6 +213,7 @@ int					scene_init(t_lst *lst, char *file);
 void				init_f_read(t_lst *lst);
 int					check_tag(t_lst *l, char **word, t_tag *ctag);
 int					read_scene(t_lst *l, char *file);
+int					set_diff_map_scn(t_lst *lst, char *word);
 
 int					init_sdl(t_lst *lst);
 
@@ -234,6 +236,7 @@ int					clamp(int n, int min, int max);
 float				dot(t_vec3 v1, t_vec3 v2);
 t_vec3				cross(t_vec3 v1, t_vec3 v2);
 float				len_vec3(t_vec3 v);
+float				modul(t_vec3 v);
 t_vec3				set_vec3(t_vec3 src);
 t_vec3				cre_vec3(float x, float y, float z);
 t_vec3				minus_vec3(t_vec3 src1, t_vec3 src2);
@@ -270,6 +273,7 @@ int					set_rot_cam(t_lst *lst, char *word);
 int					set_col_bgc(t_lst *lst, char *word);
 
 int					cre_mat(t_lst *lst);
+void				load_map(t_map *map, char *filename);
 int					set_name_mat(t_lst *lst, char *word);
 int					set_col_mat(t_lst *lst, char *word);
 int					set_diff_map_mat(t_lst *lst, char *word);
