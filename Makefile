@@ -25,6 +25,7 @@ O_FILES = $(C_FILES:.c=.o)
 H_DIR = -Ilibft -Iusr/L -Iinclude
 
 LIBS = -Llibft -lft -Llib -lSDL2 -lSDL2_image -lSDL2_ttf
+#-dynamiclib -o libSDL2.dylib -o libSDL2_image.dylib
 
 S_DIR = src
 
