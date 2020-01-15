@@ -168,85 +168,32 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	cisec = cls_isec(lst, trc);
 	if (cisec.fig == NULL)
 	{
-<<<<<<< HEAD
 		if (!lst->scn->diff_map.map)
 			return (lst->scn->bgc);
 
 		t_vec3 up_cam = cre_vec3(0,1,0);
-		mult_m3(&up_cam, up_cam, lst->camera_z);
-		mult_m3(&up_cam, up_cam, lst->camera_x);
-		mult_m3(&up_cam, up_cam, lst->camera_y);
-		up_cam = div_vec3f(up_cam, len_vec3(up_cam));
-		
-
 		t_vec3 look_cam = cre_vec3(0,0,1);
-		mult_m3(&look_cam, look_cam, lst->camera_z);
-		mult_m3(&look_cam, look_cam, lst->camera_x);
-		mult_m3(&look_cam, look_cam, lst->camera_y);
-		look_cam = div_vec3f(look_cam, len_vec3(look_cam));
-		
 		t_vec3 dt = trc.d;
-
 		dt = div_vec3f(dt, len_vec3(dt));
 		
-		float x = -dot(up_cam, dt);
+		float x = dot(up_cam, dt);
 		float u = acos(x);
 		x = sin(u);
 				
 		float v = (acos(dot(dt, look_cam)/x)) / (2 * M_PI);
 		if (dot(cross(up_cam, look_cam), dt) > 0)
 			v = 1.0 - v;
-		u = u / M_PI;
+		u = u / M_PI ;
 		int w = lst->scn->diff_map.map->w;
 		int h = lst->scn->diff_map.map->h;
 		int index_x = v * w;
 		int index_y = u * h;
 		int index = clamp(index_x + index_y * w, 0, w * h - 1);
 		int n = lst->scn->diff_map.data[index];
-		res.b = clamp(((n & 0xff0000)>>16) * l, 0, 255);
-		res.g = clamp(((n & 0xff00)>>8) * l, 0, 255);
-		res.r = clamp((n & 0xff) * l, 0, 255);
+		res.r = clamp(((n & 0xff0000)>>16), 0, 255);
+		res.g = clamp(((n & 0xff00)>>8), 0, 255);
+		res.b = clamp((n & 0xff), 0, 255);
 		return ((res.r << 16) + (res.g << 8) + res.b);
-=======
-		// if (!lst->scn->diff_map.map)
-			return (lst->scn->bgc);
-
-		// t_vec3 up_cam = cre_vec3(0,1,0);
-		// mult_m3(&up_cam, up_cam, lst->camera_z);
-		// mult_m3(&up_cam, up_cam, lst->camera_x);
-		// mult_m3(&up_cam, up_cam, lst->camera_y);
-		// up_cam = div_vec3f(up_cam, len_vec3(up_cam));
-		
-
-		// t_vec3 look_cam = cre_vec3(0,0,1);
-		// mult_m3(&look_cam, look_cam, lst->camera_z);
-		// mult_m3(&look_cam, look_cam, lst->camera_x);
-		// mult_m3(&look_cam, look_cam, lst->camera_y);
-		// look_cam = div_vec3f(look_cam, len_vec3(look_cam));
-		
-		// t_vec3 dt = trc.d;
-
-		// dt = div_vec3f(dt, len_vec3(dt));
-		
-		// float x = -dot(up_cam, dt);
-		// float u = acos(x);
-		// x = sin(u);
-				
-		// float v = (acos(dot(dt, look_cam)/x)) / (2 * M_PI);
-		// if (dot(cross(up_cam, look_cam), dt) > 0)
-		// 	v = 1.0 - v;
-		// u = u / M_PI;
-		// int w = lst->scn->diff_map.map->w;
-		// int h = lst->scn->diff_map.map->h;
-		// int index_x = v * w;
-		// int index_y = u * h;
-		// int index = clamp(index_x + index_y * w, 0, w * h - 1);
-		// int n = lst->scn->diff_map.data[index];
-		// res.b = clamp(((n & 0xff0000)>>16) * l, 0, 255);
-		// res.g = clamp(((n & 0xff00)>>8) * l, 0, 255);
-		// res.r = clamp((n & 0xff) * l, 0, 255);
-		// return ((res.r << 16) + (res.g << 8) + res.b);
->>>>>>> Vkaron2
 	}
 	trc.p = plus_vec3(mult_vec3f(trc.d, cisec.t), (trc.o));
 	

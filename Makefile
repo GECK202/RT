@@ -31,11 +31,10 @@ LIBS =		-Llibft -lft
 FRAME =		-F ./Frameworks/ -framework SDL2 -framework SDL2_image\
 			-framework SDL2_ttf 
 
-<<<<<<< HEAD
-LIBS = -Llibft -lft -Llib -lSDL2 -lSDL2_image -lSDL2_ttf
+LIBS = -Llibft -lft 
+#-Llib 
+#-lSDL2 -lSDL2_image -lSDL2_ttf
 #-dynamiclib -o libSDL2.dylib -o libSDL2_image.dylib
-=======
->>>>>>> Vkaron2
 
 S_DIR = src
 
