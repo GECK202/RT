@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 00:01:56 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/11 23:33:17 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/14 16:21:03 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,9 @@ int		check_valid_iter(t_tag *ctag)
 int		check_tag(t_lst *l, char **word, t_tag *ctag)
 {
 	const char	tag[TAGS][11] = {"[scene]", "[material]", "[figure]", "[light]"};
+	int res;
 
+	res = 0;
 	ctag->cur_tag = SCENE;
 	while (ctag->cur_tag < TAGS)
 	{
@@ -77,15 +79,15 @@ int		check_tag(t_lst *l, char **word, t_tag *ctag)
 	if (!check_valid_iter(ctag))
 		return (0);
 	if (ctag->read_tag == SCENE)
-		l->set->f_scn[ctag->count](l, word[1]);
+		res = l->set->f_scn[ctag->count](l, word[1]);
 	else if (ctag->read_tag == MATERIAL)
-		l->set->f_mat[ctag->count](l, word[1]);
+		res = l->set->f_mat[ctag->count](l, word[1]);
 	else if (ctag->read_tag == FIGURE)
-		l->set->f_fig[ctag->count](l, word[1]);
+		res = l->set->f_fig[ctag->count](l, word[1]);
 	else if (ctag->read_tag == LIGHT)
-		l->set->f_lght[ctag->count](l, word[1]);
+		res = l->set->f_lght[ctag->count](l, word[1]);
 	ctag->count += 1;
-	return (1);
+	return (res);
 }
 
 void	reset_ctag(t_tag *ctag)

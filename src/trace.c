@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 21:30:06 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/12 00:51:29 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/14 17:37:21 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ t_isec	cls_isec(t_lst *lst, t_trc trc)
 	t_isec	cisec;
 
 	cisec.t = INFINITY;
+	cisec.uv.x = INFINITY;
+	cisec.uv.y = INFINITY;
 	cisec.fig = NULL;
 	cur_fig = lst->scn->figs;
 	while (cur_fig)
@@ -35,7 +37,7 @@ t_isec	cls_isec(t_lst *lst, t_trc trc)
 		{
 			cisec.t = t.x;
 			cisec.fig = cur_fig;
-			if (cisec.fig->type == sphere && t.z != INFINITY)
+			if (t.z != INFINITY)//cisec.fig->type == sphere && 
 			{
 				cisec.uv.x = t.w;
 				cisec.uv.y = t.z;
@@ -50,7 +52,7 @@ t_isec	cls_isec(t_lst *lst, t_trc trc)
 		{
 			cisec.t = t.y;
 			cisec.fig = cur_fig;
-			if (cisec.fig->type == sphere && t.z != INFINITY)
+			if (t.z != INFINITY)//cisec.fig->type == sphere && 
 			{
 				cisec.uv.x = t.w;
 				cisec.uv.y = t.z;
@@ -134,20 +136,22 @@ t_l_prm	set_l_prm(t_trc trc, t_vec3 n)
 t_vec3	get_normal_from_file(t_isec *cisec, t_lst *lst)
 {
 	t_vec3	norm;
-	int		w;
-	int		h;
 
-	w = cisec->fig->mat->norm_map.map->w;
-	h = cisec->fig->mat->norm_map.map->h;
+	int w = cisec->fig->mat->norm_map.map->w;
+	int h = cisec->fig->mat->norm_map.map->h;
 	int index_x = cisec->uv.x * w;
 	int index_y = cisec->uv.y * h;
-	int index = clamp(index_x + index_y * w, 0, w * h -1);
-	int n = cisec->fig->mat->norm_map.data[index];
+	int index = clamp(index_x + index_y * w, 0, w * h - 1);
+	uint n = cisec->fig->mat->norm_map.data[index];
+	
 	norm.x = ((n & 0xff0000)>>16) / 255.0f;
 	norm.y = ((n & 0xff00)>>8) / 255.0f;
 	norm.z = (n & 0xff) / 255.0f;
 	return (norm);
 }
+
+
+
 
 /*
 ** ray trace function
@@ -163,7 +167,46 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 
 	cisec = cls_isec(lst, trc);
 	if (cisec.fig == NULL)
-		return (lst->scn->bgc);
+	{
+		// if (!lst->scn->diff_map.map)
+			return (lst->scn->bgc);
+
+		// t_vec3 up_cam = cre_vec3(0,1,0);
+		// mult_m3(&up_cam, up_cam, lst->camera_z);
+		// mult_m3(&up_cam, up_cam, lst->camera_x);
+		// mult_m3(&up_cam, up_cam, lst->camera_y);
+		// up_cam = div_vec3f(up_cam, len_vec3(up_cam));
+		
+
+		// t_vec3 look_cam = cre_vec3(0,0,1);
+		// mult_m3(&look_cam, look_cam, lst->camera_z);
+		// mult_m3(&look_cam, look_cam, lst->camera_x);
+		// mult_m3(&look_cam, look_cam, lst->camera_y);
+		// look_cam = div_vec3f(look_cam, len_vec3(look_cam));
+		
+		// t_vec3 dt = trc.d;
+
+		// dt = div_vec3f(dt, len_vec3(dt));
+		
+		// float x = -dot(up_cam, dt);
+		// float u = acos(x);
+		// x = sin(u);
+				
+		// float v = (acos(dot(dt, look_cam)/x)) / (2 * M_PI);
+		// if (dot(cross(up_cam, look_cam), dt) > 0)
+		// 	v = 1.0 - v;
+		// u = u / M_PI;
+		// int w = lst->scn->diff_map.map->w;
+		// int h = lst->scn->diff_map.map->h;
+		// int index_x = v * w;
+		// int index_y = u * h;
+		// int index = clamp(index_x + index_y * w, 0, w * h - 1);
+		// int n = lst->scn->diff_map.data[index];
+		// res.b = clamp(((n & 0xff0000)>>16) * l, 0, 255);
+		// res.g = clamp(((n & 0xff00)>>8) * l, 0, 255);
+		// res.r = clamp((n & 0xff) * l, 0, 255);
+		// return ((res.r << 16) + (res.g << 8) + res.b);
+	}
 	trc.p = plus_vec3(mult_vec3f(trc.d, cisec.t), (trc.o));
 	
 	n = get_normal(&cisec, trc);
@@ -183,9 +226,9 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 		int index_y = cisec.uv.y * h;
 		int index = clamp(index_x + index_y * w, 0, w * h - 1);
 		int n = cisec.fig->mat->diff_map.data[index];
-		res.b = clamp(((n & 0xff0000)>>16) * l, 0, 255);
+		res.r = clamp(((n & 0xff0000)>>16) * l, 0, 255);
 		res.g = clamp(((n & 0xff00)>>8) * l, 0, 255);
-		res.r = clamp((n & 0xff) * l, 0, 255);
+		res.b = clamp((n & 0xff) * l, 0, 255);
 	}
 	else
 	{

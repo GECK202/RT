@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 15:30:34 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/11 20:22:04 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/14 16:47:30 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,15 @@ int		set_col_bgc(t_lst *lst, char *word)
 		return (free_words(col, 1));
 	}
 	return (free_words(col, 0));
+}
+
+int		set_diff_map_scn(t_lst *lst, char *word)
+{
+	char **filename;
+
+	if (!word || !(*word))
+		return (0);
+	filename = ft_strsplit(word, ' ');
+	load_map(&(lst->scn->diff_map), filename[0]);
+	return (free_words(filename, 1));
 }

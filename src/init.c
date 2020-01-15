@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:37:19 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/12 00:54:52 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/14 16:50:42 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	init_f_read(t_lst *lst)
 	lst->set->f_scn[0] = set_pos_cam;
 	lst->set->f_scn[1] = set_rot_cam;
 	lst->set->f_scn[2] = set_col_bgc;
+	lst->set->f_scn[3] = set_diff_map_scn;
 	lst->set->cre_fig = cre_fig;
 	lst->set->f_fig[0] = set_type_fig;
 	lst->set->f_fig[1] = set_pos_fig;

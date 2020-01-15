@@ -20,11 +20,17 @@ C_FILES =	key_press.c move_multy.c main.c light.c events.c scene.c trace.c\
 			read_scn.c tools.c intersection.c vec1.c vec2.c read_material1.c\
 			read_material2.c
 
-O_FILES = $(C_FILES:.c=.o)
+O_FILES =	$(C_FILES:.c=.o)
 
-H_DIR = -Ilibft -Iusr/L -Iinclude
+H_DIR =		-Ilibft -Iusr/L -Iinclude
 
-LIBS = -Llibft -lft -Llib -lSDL2 -lSDL2_image -lSDL2_ttf
+LIBS =		-Llibft -lft
+#-Llib -lSDL2 -lSDL2_image -lSDL2_ttf
+#-dynamiclib -o lib/libSDL2.dylib -o lib/libSDL2_image.dylib
+
+FRAME =		-F ./Frameworks/ -framework SDL2 -framework SDL2_image\
+			-framework SDL2_ttf 
+
 
 S_DIR = src
 
@@ -38,7 +44,7 @@ libr:
 	make -C libft/ all
 
 $(NAME): $(OBJ)
-	gcc $(FLAGS) -o $@ $^ $(H_DIR) $(LIBS)
+	gcc -v $(FLAGS) -o $@ $^ $(H_DIR) $(LIBS) $(FRAME)
 
 $(S_DIR)/%.o: $(S_DIR)/%.c include/rt.h
 	gcc $(FLAGS) -c $< -o $@ $(H_DIR)

@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 13:39:18 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/11 20:24:12 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/14 15:00:02 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,14 @@ float	dot(t_vec3 v1, t_vec3 v2)
 	float d;
 
 	d = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+	return (d);
+}
+
+float	modul(t_vec3 v)
+{
+	float d;
+
+	d = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 	return (d);
 }
 
