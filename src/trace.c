@@ -133,9 +133,10 @@ t_l_prm	set_l_prm(t_trc trc, t_vec3 n)
 }
 
 
-t_vec3	get_normal_from_file(t_isec *cisec, t_lst *lst)
+t_vec3	get_normal_from_file(t_isec *cisec, t_lst *lst, t_vec3 norml)
 {
 	t_vec3	norm;
+	float koeff = 0.1;
 
 	int w = cisec->fig->mat->norm_map.map->w;
 	int h = cisec->fig->mat->norm_map.map->h;
@@ -144,9 +145,9 @@ t_vec3	get_normal_from_file(t_isec *cisec, t_lst *lst)
 	int index = clamp(index_x + index_y * w, 0, w * h - 1);
 	uint n = cisec->fig->mat->norm_map.data[index];
 	
-	norm.x = ((n & 0xff0000)>>16) / 255.0f;
-	norm.y = ((n & 0xff00)>>8) / 255.0f;
-	norm.z = (n & 0xff) / 255.0f;
+	norm.x = 0.5 - ((n & 0xff0000)>>16) /255.0f;
+	norm.y = 0.5 - ((n & 0xff00)>>8) /255.0f;
+	norm.z = 1.0 - (n & 0xff) /255.0f;//(n & 0xff) / 255.0f + norml.z * (koeff);
 	return (norm);
 }
 
@@ -198,9 +199,15 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	trc.p = plus_vec3(mult_vec3f(trc.d, cisec.t), (trc.o));
 	
 	n = get_normal(&cisec, trc);
-	if (cisec.fig->mat->norm_map.map && cisec.uv.x && cisec.uv.x != INFINITY)
-		n = minus_vec3(get_normal_from_file(&cisec, lst), n);
 	n = div_vec3f(n, len_vec3(n));
+	if (cisec.fig->mat->norm_map.map && cisec.uv.x && cisec.uv.x != INFINITY)
+	{
+		t_vec3 gn = get_normal_from_file(&cisec, lst, n);
+		n = minus_vec3(n, gn);
+		//n = div_vec3f(n, len_vec3(n));
+	}
+		
+
 	trc.d = invert_vec3(trc.d);
 	l = light(lst, set_l_prm(trc, n), cisec.fig);
 	
@@ -210,8 +217,8 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	{
 		int w = cisec.fig->mat->diff_map.map->w;
 		int h = cisec.fig->mat->diff_map.map->h;
-		int index_x = cisec.uv.x * w;
-		int index_y = cisec.uv.y * h;
+		int index_x = (cisec.uv.x) * w;
+		int index_y = (cisec.uv.y) * h;
 		int index = clamp(index_x + index_y * w, 0, w * h - 1);
 		int n = cisec.fig->mat->diff_map.data[index];
 		res.r = clamp(((n & 0xff0000)>>16) * l, 0, 255);

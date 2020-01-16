@@ -6,11 +6,11 @@
 
 [material]:
 0	name: earth
-1	color: 255 255 255
+1	color: 250 255 250
 2	diffuse: res/fig1_dif.png
 3	normal: res/fig1_nm.png
 4	specular: 1500
-5	reflection: 0.5
+5	reflection: 0.4
 
 [material]:
 0	name: blue_cyl
@@ -30,11 +30,11 @@
 
 [material]:
 0	name: water
-1	color: 255 255 0
+1	color: 255 200 150
 2	diffuse: res/water3.png
-3	normal: res/water3_nm.png
+3	normal: res/water3_nm.png1
 4	specular: 100
-5	reflection: 0.3
+5	reflection: 0.6
 
 [figure]:
 0	type:cylinder
