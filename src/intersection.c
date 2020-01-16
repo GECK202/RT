@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "rt.h"
+#include "stdio.h"
 
 /*
 ** selection figure for check
@@ -94,6 +95,27 @@ void	intersec_cyl(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *cyl)
 	k.x *= 2;
 	t->x = (discr - k.y) / k.x;
 	t->y = (-discr - k.y) / k.x;
+
+	if (t->x > t->y)
+		t->x = t->y;
+	
+	float	scale = 0.1f;
+
+	t_vec3 dir = mult_vec3f(cyl->dir, -1);
+	t_vec3 vt = mult_vec3f(dir, t->x);
+	t_vec3 c = set_vec3(cyl->pos);
+	float m = dot(d, vt) + dot(dir, minus_vec3(o, c));
+	t_vec3 p = plus_vec3(mult_vec3f(d, t->x), o);
+	t_vec3 n = minus_vec3(minus_vec3(p, c), mult_vec3f(dir, m));
+	n = div_vec3f(n, len_vec3(n));
+	
+	t->z = (acos(dot(cyl->look, n)) / (M_PI));
+	m *= scale;
+	m -= (int)m;
+	t->w = m;
+	if (m < 0)
+		t->w = - m;
+
 }
 
 /*
@@ -163,4 +185,24 @@ void	intersec_con(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *con)
 	k.x *= 2;
 	t->x = (discr - k.y) / k.x;
 	t->y = (-discr - k.y) / k.x;
+
+		if (t->x > t->y)
+		t->x = t->y;
+	
+	float	scale = 0.1f;
+
+	t_vec3 dir = mult_vec3f(con->dir, -1);
+	t_vec3 vt = mult_vec3f(dir, t->x);
+	t_vec3 c = set_vec3(con->pos);
+	float m = dot(d, vt) + dot(dir, minus_vec3(o, c));
+	t_vec3 p = plus_vec3(mult_vec3f(d, t->x), o);
+	t_vec3 n = minus_vec3(minus_vec3(p, c), mult_vec3f(dir, m));
+	n = div_vec3f(n, len_vec3(n));
+	
+	t->z = (acos(dot(con->look, n)) / (M_PI));
+	m *= scale;
+	m -= (int)m;
+	t->w = m;
+	if (m < 0)
+		t->w = - m;
 }
