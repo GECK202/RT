@@ -172,8 +172,8 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 		if (!lst->scn->diff_map.map)
 			return (lst->scn->bgc);
 
-		t_vec3 up_cam = cre_vec3(0,1,0);
-		t_vec3 look_cam = cre_vec3(0,0,1);
+		t_vec3 up_cam = cre_vec3(0.0,0.9999,0.0);
+		t_vec3 look_cam = cre_vec3(0.0,0.0,1.0);
 		t_vec3 dt = trc.d;
 		dt = div_vec3f(dt, len_vec3(dt));
 		
@@ -199,14 +199,13 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	trc.p = plus_vec3(mult_vec3f(trc.d, cisec.t), (trc.o));
 	
 	n = get_normal(&cisec, trc);
-	n = div_vec3f(n, len_vec3(n));
+	
 	if (cisec.fig->mat->norm_map.map && cisec.uv.x && cisec.uv.x != INFINITY)
 	{
 		t_vec3 gn = get_normal_from_file(&cisec, lst, n);
 		n = minus_vec3(n, gn);
-		//n = div_vec3f(n, len_vec3(n));
 	}
-		
+	n = div_vec3f(n, len_vec3(n));
 
 	trc.d = invert_vec3(trc.d);
 	l = light(lst, set_l_prm(trc, n), cisec.fig);

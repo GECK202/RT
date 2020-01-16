@@ -2,7 +2,7 @@
 0	camera position: 1 0 -20
 1	camera rotation: 0 0 0
 2	background color: 255 255 200
-3	diffuse map: res/HDRI_sky.png
+3	diffuse map: res/HDRI_sky2.jpg
 
 [material]:
 0	name: earth
@@ -32,7 +32,7 @@
 0	name: water
 1	color: 255 200 150
 2	diffuse: res/water3.png
-3	normal: res/water3_nm.png1
+3	normal: res/water3_nm.png
 4	specular: 100
 5	reflection: 0.6
 

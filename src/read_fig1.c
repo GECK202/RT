@@ -94,7 +94,7 @@ int		set_dir_fig(t_lst *lst, char *word)
 		fig->dir.x = fig->begin.x;
 		fig->dir.y = fig->begin.y;
 		fig->dir.z = fig->begin.z;
-		fig->look = cre_vec3(0,0,1);
+		fig->look = cre_vec3(0,0,1.0);
 		return (free_words(coord, 1));
 	}
 	return (free_words(coord, 0));
