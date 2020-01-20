@@ -62,6 +62,7 @@ int		key_press1(SDL_Keycode key, t_lst *lst)
 			lst->scn->cur_fig = lst->scn->cur_fig->next;
 		else
 			lst->scn->cur_fig = lst->scn->figs;
+		return (0);
 	}
 	else if (key == SDLK_SPACE)
 		lst->scn->shadow = (lst->scn->shadow) ? 0 : 1;
@@ -75,7 +76,7 @@ int		key_press1(SDL_Keycode key, t_lst *lst)
 		return (0);
 	//rain(lst);
 	//mlx_put_image_to_window(lst->mlx, lst->win, lst->img, 0, 0);
-	return (0);
+	return (1);
 }
 
 int		key_press0(SDL_Keycode key, t_lst *lst)
@@ -107,6 +108,183 @@ int		key_press0(SDL_Keycode key, t_lst *lst)
 	return (key_press1(key, lst));
 }
 
+void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
+{
+    int bpp = surface->format->BytesPerPixel;
+    /* Here p is the address to the pixel we want to set */
+    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+
+    switch(bpp) {
+    case 1:
+        *p = pixel;
+        break;
+
+    case 2:
+        *(Uint16 *)p = pixel;
+        break;
+
+    case 3:
+        if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {
+            p[0] = (pixel >> 16) & 0xff;
+            p[1] = (pixel >> 8) & 0xff;
+            p[2] = pixel & 0xff;
+        } else {
+            p[0] = pixel & 0xff;
+            p[1] = (pixel >> 8) & 0xff;
+            p[2] = (pixel >> 16) & 0xff;
+        }
+        break;
+
+    case 4:
+        *(Uint32 *)p = pixel;
+        break;
+    }
+}
+
+Uint32 getpixel(SDL_Surface *surface, int x, int y)
+{
+    int bpp = surface->format->BytesPerPixel;
+    /* Here p is the address to the pixel we want to retrieve */
+    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+
+    switch(bpp) {
+    case 1:
+        return *p;
+        break;
+
+    case 2:
+        return *(Uint16 *)p;
+        break;
+
+    case 3:
+        if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+            return p[0] << 16 | p[1] << 8 | p[2];
+        else
+            return p[0] | p[1] << 8 | p[2] << 16;
+        break;
+
+    case 4:
+        return *(Uint32 *)p;
+        break;
+
+    default:
+        return 0;       /* shouldn't happen, but avoids warnings */
+    }
+}
+
+char	*get_nbr(int n)
+{
+	char	*str;
+	int		i;
+	int		tmp;
+
+	tmp = n;
+	i = 1;
+	while (tmp / 10 > 0)
+	{
+		tmp /= 10;
+		i++;
+	}
+	if (!(str = malloc(sizeof(char) * (i + 1))))
+		return ("none");
+	str[i] = '\0';
+	str[0] = '0';
+	while (n > 0)
+	{
+		str[--i] = n % 10 + 48;
+		n /= 10;
+	}
+	return (str);
+}
+
+void	*ft_memset(void *dest, int n, size_t size)//почему нет в либе??
+{
+	char *str;
+
+	str = (char *)dest;
+	while (size > 0)
+	{
+		str[size - 1] = (char)n;
+		size--;
+	}
+	return (dest);
+}
+
+void	*ft_memalloc(size_t size)//почему нет в либе??
+{
+	void *str;
+
+	if (size + 1 <= 0)
+		return (NULL);
+	str = malloc((size));
+	if (!str)
+		return (NULL);
+	ft_memset(str, 0, size);
+	return (str);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)//почему нет в либе??
+{
+	char	*str;
+	int		i;
+	int		k;
+
+	if (!s1 || !s2)
+		return (NULL);
+	str = ft_memalloc(ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1);
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (s1[i])
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	k = 0;
+	while (s2[k])
+		str[i++] = s2[k++];
+	str[i] = '\0';
+	return (str);
+}
+
+int		scrin(t_lst *lst)
+{
+
+	SDL_Surface	*surface;
+	char		*str;
+	char		*tmp;
+	
+	surface = SDL_CreateRGBSurfaceFrom(lst->img->pixels, lst->img->w, lst->img->h, lst->img->format->BitsPerPixel, lst->img->w * lst->img->format->BytesPerPixel, lst->img->format->Rmask, lst->img->format->Gmask, lst->img->format->Bmask, lst->img->format->Amask);
+	int i = 0;
+    int j = 0;
+    for(i = 0; i < surface->h; i++){
+        for(j = 0; j < surface->w;j++){
+            Uint8 red = 0;
+            Uint8 green = 0;
+            Uint8 blue = 0;
+            Uint32 pixel = getpixel(surface,j,i);
+            SDL_GetRGB(pixel, surface->format, &red, &green, &blue);
+            pixel = SDL_MapRGB(surface->format, red, green, blue);
+            putpixel(surface,j,i,pixel);
+        }
+    }
+    while (1)
+    {
+    	str = get_nbr(lst->num_file_for_screen);
+    	tmp = ft_strjoin("screenshots/screen", str);
+    	free(str);
+    	if (open(tmp, O_RDONLY) == -1)//проверить на утечки
+    		break ;
+    	free(tmp);
+    	lst->num_file_for_screen += 1;
+	}
+	IMG_SavePNG(surface, tmp);
+	free(tmp);
+	SDL_FreeSurface(surface);
+	lst->num_file_for_screen += 1;
+	return (0);
+}
+
 int		key_press(SDL_Keycode key, t_lst *lst)
 {
 	//t_lst	*lst;
@@ -115,7 +293,24 @@ int		key_press(SDL_Keycode key, t_lst *lst)
 	//if (key == 53)
 	//	exit(1);
 	//else 
-	if (key == SDLK_LEFT)//123)
+	// printf("%d\n", key);
+
+	if (key == 13)//скриншот на enter
+		return (scrin(lst));
+	else if (key == 91){//смена пост-еффекта
+		lst->postEffects -= 1;
+		if (lst->postEffects < 0)
+			lst->postEffects = END_FOR_POST_EFFECTS;
+		return (0);
+	}
+	else if (key == 93){//смена пост-еффекта
+		lst->postEffects += 1;
+		if (lst->postEffects > END_FOR_POST_EFFECTS)
+			lst->postEffects = 0;
+		return (0);
+	}
+
+	else if (key == SDLK_LEFT)//123)
 		lst->scn->cam_pos0.x -= 1;
 	else if (key == SDLK_RIGHT)//124)
 		lst->scn->cam_pos0.x += 1;

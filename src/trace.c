@@ -28,12 +28,13 @@ t_isec	cls_isec(t_lst *lst, t_trc trc)
 	cisec.uv.y = INFINITY;
 	cisec.fig = NULL;
 	cur_fig = lst->scn->figs;
+	int i = 0;
 	while (cur_fig)
 	{
 		
 		sel_fig_check(&t, trc.o, trc.d, cur_fig);
 		
-		if (t.x >= trc.min && t.x <= trc.max && t.x < cisec.t)
+		if (t.x >= trc.min && t.x <= trc.max && t.x < cisec.t && !lst->arr_fig[i])
 		{
 			cisec.t = t.x;
 			cisec.fig = cur_fig;
@@ -48,7 +49,7 @@ t_isec	cls_isec(t_lst *lst, t_trc trc)
 				cisec.uv.y = INFINITY;
 			}
 		}
-		if (t.y >= trc.min && t.y <= trc.max && t.y < cisec.t)
+		if (t.y != t.x && t.y >= trc.min && t.y <= trc.max && t.y < cisec.t && !lst->arr_fig[i])
 		{
 			cisec.t = t.y;
 			cisec.fig = cur_fig;
@@ -67,6 +68,7 @@ t_isec	cls_isec(t_lst *lst, t_trc trc)
 		
 		
 		cur_fig = cur_fig->next;
+		i++;
 	}
 	return (cisec);
 }
@@ -167,6 +169,28 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	SDL_Color	refl_col;
 
 	cisec = cls_isec(lst, trc);
+	////////////////////////////прозрачность
+	SDL_Color prozr;
+	if (cisec.fig != NULL && cisec.fig->mat->transpare != 0){
+		int t = 0;
+		t_fig *cur_fig;
+		cur_fig = lst->scn->figs;
+		while (cur_fig)
+		{
+			if (cur_fig == cisec.fig)
+			{
+				lst->arr_fig[t] = 1;
+				break ;
+			}
+			t++;
+			cur_fig = cur_fig->next;
+		}
+		t = trace(lst, trc, depth);
+		prozr.r = t / (256 * 256);
+		prozr.g = t / 256 % 256;
+		prozr.b = t % (256 * 256);
+	}
+	////////////////////////////прозрачность
 	if (cisec.fig == NULL)
 	{
 		if (!lst->scn->diff_map.map)
@@ -239,5 +263,106 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	res.r = res.r * (1 - cisec.fig->mat->refl) + refl_col.r * cisec.fig->mat->refl;
 	res.g = res.g * (1 - cisec.fig->mat->refl) + refl_col.g * cisec.fig->mat->refl;
 	res.b = res.b * (1 - cisec.fig->mat->refl) + refl_col.b * cisec.fig->mat->refl;
-	return ((res.r << 16) + (res.g << 8) + res.b);
+	int color;
+	double kof = 1 - cisec.fig->mat->transpare, kof0 = cisec.fig->mat->transpare;
+	if (cisec.fig == NULL || cisec.fig->mat->transpare == 0)
+		color = (res.r << 16) + (res.g << 8) + res.b;
+	else
+		color = ((int)(kof * (double)res.r) << 16) + ((int)(kof0 * (double)prozr.r) << 16) + ((int)(kof * (double)res.g) << 8) + ((int)(kof0 * (double)prozr.g) << 8) + (int)(kof * (double)res.b) + (int)(kof0 * (double)prozr.b);
+	return (color);
+}
+
+void	postEffects(t_lst *lst)
+{
+	SDL_Color res;
+
+	for (int i = 0; i < S_W * S_H; i++)
+	{
+		res.r = lst->data_dop[i] / 256 / 256;
+		res.g = lst->data_dop[i] / 256 % 256;
+		res.b = lst->data_dop[i] % (256 * 256);
+		if (lst->postEffects == 1)//негатив
+		{
+			res.r = 255 - res.r;
+			res.g = 255 - res.g;
+			res.b = 255 - res.b;
+		}
+		else if (lst->postEffects == 2 || lst->postEffects == 6)//серые цвета
+		{
+			res.r = (res.r + res.g + res.b) / 3;
+			if (lst->postEffects == 6 && res.r >= 128)
+				res.r = 255;
+			else if (lst->postEffects == 6)
+				res.r = 0;
+			res.g = res.r;
+			res.b = res.r;
+		}
+		else if (lst->postEffects == 3)//синие оттенки
+		{
+			res.r = (res.r + res.g + res.b) / 3;
+			res.g = res.r;
+			if (res.b < res.r)
+			{
+				res.g = res.b;
+				res.b = res.r;
+				res.r = res.g;
+			}
+		}
+		else if (lst->postEffects == 4)//зеленые оттенки
+		{
+			res.r = (res.r + res.g + res.b) / 3;
+			res.b = res.r;
+			if (res.g < res.r)
+			{
+				res.b = res.g;
+				res.g = res.r;
+				res.r = res.b;
+			}
+		}
+		else if (lst->postEffects == 5)//красные оттенки
+		{
+			res.g = (res.r + res.g + res.b) / 3;
+			res.b = res.g;
+			if (res.r < res.g)
+			{
+				res.g = res.r;
+				res.r = res.b;
+				res.b = res.g;
+			}
+		}
+		else if (lst->postEffects == 7)
+		{
+			if (res.r >= 128)
+				res.r = 255;
+			else
+				res.r = 0;
+			if (res.g >= 128)
+				res.g = 255;
+			else
+				res.g = 0;
+			if (res.b >= 128)
+				res.b = 255;
+			else
+				res.b = 0;
+		}
+		else if (lst->postEffects == 8)
+		{
+			res.r = (res.r + res.g + res.b) / 3;
+			res.g = 0;
+			res.b = 0;
+		}
+		else if (lst->postEffects == 9)
+		{
+			res.g = (res.r + res.g + res.b) / 3;
+			res.r = 0;
+			res.b = 0;
+		}
+		else if (lst->postEffects == 10)
+		{
+			res.b = (res.r + res.g + res.b) / 3;
+			res.g = 0;
+			res.r = 0;
+		}
+		lst->data[i] = (res.r << 16) + (res.g << 8) + res.b;
+	}
 }

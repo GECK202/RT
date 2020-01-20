@@ -33,7 +33,9 @@
 # define SCENE_LINES (4)
 # define FIGURE_LINES (7)
 # define LIGHT_LINES (4)
-# define MATERIAL_LINES (6)
+# define MATERIAL_LINES (7)
+
+# define END_FOR_POST_EFFECTS 10
 
 # include <pthread.h>
 # include <math.h>
@@ -82,6 +84,7 @@ typedef struct		s_mat
 	t_map			norm_map;
 	int				spec;
 	float			refl;
+	float			transpare;
 	struct s_mat	*next;
 }					t_mat;
 
@@ -161,6 +164,12 @@ typedef struct		s_lst
 	int				*data;
 	
 	SDL_Point		cursor;
+
+	int				postEffects;
+	int				*data_dop;
+	int				num_file_for_screen;
+	int				*arr_fig;
+	int				t;
 	
 	int				n0;
 	int				n1;
@@ -186,7 +195,7 @@ typedef struct		s_read
 {
 	t_r_scn			f_scn[5];
 	int				(*cre_mat)(t_lst*);
-	t_r_mat			f_mat[6];
+	t_r_mat			f_mat[7];//Тест с прозрачностью
 	int				(*cre_fig)(t_lst*);
 	t_r_fig			f_fig[7];
 	int				(*cre_lght)(t_lst*);
@@ -208,6 +217,9 @@ typedef struct		s_l_prm
 	t_vec3			n;
 	t_vec3			v;
 }					t_l_prm;
+
+void				postEffects(t_lst *lst);
+int					set_transpare_mat(t_lst *lst, char *word);
 
 int					scene_init(t_lst *lst, char *file);
 void				init_f_read(t_lst *lst);

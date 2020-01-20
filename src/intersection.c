@@ -54,8 +54,8 @@ void	intersec_sph(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *sph)
 	t->x = (discr - k.y) * k.x;
 	t->y = (-discr - k.y) * k.x;
 	
-	if (t->x > t->y)
-		t->x = t->y;
+	// if (t->x > t->y)
+	// 	t->x = t->y;
 	
 	t_vec3 Vp = minus_vec3(sph->pos, plus_vec3(o, mult_vec3f(d, t->x)));
 	float lenvp = len_vec3(Vp);

@@ -46,3 +46,11 @@ int		set_refl_mat(t_lst *lst, char *word)
 	lst->scn->cur_mat->refl = ft_atof(word);
 	return (1);
 }
+
+int		set_transpare_mat(t_lst *lst, char *word)
+{
+	if (!word)
+		return (0);
+	lst->scn->cur_mat->transpare = ft_atof(word);
+	return (1);
+}

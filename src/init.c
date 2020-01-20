@@ -38,6 +38,7 @@ void	init_f_read(t_lst *lst)
 	lst->set->f_mat[3] = set_norm_map_mat;
 	lst->set->f_mat[4] = set_spec_mat;
 	lst->set->f_mat[5] = set_refl_mat;
+	lst->set->f_mat[6] = set_transpare_mat;
 }
 
 int	init_sdl(t_lst *lst)

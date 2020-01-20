@@ -20,8 +20,13 @@ void	mult(t_lst *lst, t_trc *trc, int x, int y)
 	mult_m3(&trc->d, trc->d, lst->camera_z);
 	mult_m3(&trc->d, trc->d, lst->camera_x);
 	mult_m3(&trc->d, trc->d, lst->camera_y);
+	int g = lst->t;
+	while (--g >= 0)
+		lst->arr_fig[g] = 0;
+
 	lst->data[(S_H - y - H_H - 1) * S_W + x + H_W] =
 		trace(lst, *trc, RECURCE_DEPTH);
+	lst->data_dop[(S_H - y - H_H - 1) * S_W + x + H_W] = lst->data[(S_H - y - H_H - 1) * S_W + x + H_W];
 }
 
 void	*pixel(void *l)
@@ -63,13 +68,16 @@ void	rain(t_lst *lst)
 	while (++(lst->pot) < POT)
 	{
 		ft_memcpy((void*)&data[lst->pot], (void *)lst, sizeof(t_lst));
+		data[lst->pot].arr_fig = malloc(sizeof(int) * lst->t);
 		rc = pthread_create(&threads[lst->pot],
 			NULL, pixel, (void *)(&data[lst->pot]));
 	}
 	pthread_attr_destroy(&attr);
 	lst->pot = -1;
-	while (++(lst->pot) < POT)
+	while (++(lst->pot) < POT){
 		rc = pthread_join(threads[lst->pot], &status);
+		free(data[lst->pot].arr_fig);
+	}
 }
 
 void close_sdl(t_lst *lst)
@@ -92,8 +100,21 @@ int		main(int ac, char *av[])
 	if (ac == 2)
 	{
 		lst = (t_lst *)malloc(sizeof(t_lst));
+		lst->postEffects = 0; //закинуть в init
+		lst->data_dop = malloc(sizeof(int) * (S_H * S_W)); //закинуть в init
+		lst->num_file_for_screen = 0; //закинуть в init
 		if (scene_init(lst, av[1]) && init_sdl(lst))
 		{
+			///////////////
+			lst->t = 0;
+			t_fig *f;
+			f = lst->scn->figs;
+			while (f)
+			{
+				lst->t++;
+				f = f->next;
+			}
+			///////////////
 			lst->norm = 0;
 			//load_tex_sdl(lst);
 			quit = 0;
@@ -101,7 +122,7 @@ int		main(int ac, char *av[])
 			while (!quit)
 			{
 				repaint = 0;
-				while( SDL_PollEvent( &e ) != 0 )
+				if( SDL_PollEvent( &e ) != 0 )
 				{
 					if(e.type == SDL_QUIT)
 						quit = 1;
@@ -111,8 +132,12 @@ int		main(int ac, char *av[])
 							quit = 1;
 						else
 						{
-							key_press(e.key.keysym.sym, lst);
-							repaint = 1;
+							if (key_press(e.key.keysym.sym, lst))
+								repaint = 1;
+							else {
+								postEffects(lst);
+								SDL_UpdateWindowSurface(lst->win);
+							}
 						}
 					}
 					else if (e.type == SDL_MOUSEBUTTONDOWN)
@@ -133,12 +158,13 @@ int		main(int ac, char *av[])
 					if (repaint || first)
 					{
 						rain(lst);
+						postEffects(lst);
 						SDL_UpdateWindowSurface(lst->win);
 						first = 0;
 					}
 				}
 			}
-			rain(lst);
+			// rain(lst);//хз, зачем
 		}
 		else
 			write(1, "Usage:./RT filename\n", 20);
