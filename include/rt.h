@@ -42,10 +42,10 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include "libft.h"
-# include <mlx.h>
+//# include <mlx.h>
 # include <SDL2/SDL.h>
 # include <SDL2/SDL_image.h>
-# include <SDL2/SDL_ttf.h>
+//# include <SDL2/SDL_ttf.h>
 
 typedef struct		s_tag
 {

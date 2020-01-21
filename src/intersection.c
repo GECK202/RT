@@ -139,17 +139,28 @@ void	intersec_pln(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *pln)
 	{
 		oc = invert_vec3(minus_vec3(o, pln->pos));
 		t->x = dot(oc, v) / dot(d, v);
+		
 		Vp = minus_vec3(pln->pos, plus_vec3(o, mult_vec3f(d, t->x)));
 		
 		mult_m3(&Vp, Vp, pln->mat_z);
 		mult_m3(&Vp, Vp, pln->mat_x);
 		mult_m3(&Vp, Vp, pln->mat_y);
 		
-		t->z = fabs(Vp.z * scale);
-		t->w = fabs(Vp.x * scale);
+		t->z = Vp.z * scale;
+		t->w = Vp.x * scale;
 
-		int z = t->z;
-		t->z -= z;
+		int tmp = t->z;
+		t->z -= tmp;
+		if (t->z < 0)
+			t->z += 1.0;
+			
+		tmp = t->w;
+		t->w -= tmp;
+		if (t->w < 0)
+			t->w += 1.0;
+
+			
+
 
 		// float cosphi = dot(pln->look, Vp) / (modul(pln->look) * modul(Vp));
 		// float sinphi = sqrt(1 - cosphi * cosphi);
