@@ -17,11 +17,10 @@
 ** calculate intersection and return figure and distatnce of intersection
 */
 
-t_isec	cls_isec(t_lst *lst, t_trc trc)
+t_isec	cls_isec(t_isec	*cisec, t_lst *lst, t_trc trc, int *arr_fig)
 {
 	t_fig	*cur_fig;
-	t_vec3	t;
-	t_isec	cisec;
+	t_hit	hit;
 
 	cisec.t = INFINITY;
 	cisec.uv.x = INFINITY;
@@ -32,9 +31,14 @@ t_isec	cls_isec(t_lst *lst, t_trc trc)
 	while (cur_fig)
 	{
 		
-		sel_fig_check(&t, trc.o, trc.d, cur_fig);
+		sel_fig_check(&hit, trc.o, trc.d, cur_fig, arr_fig[i]);
 		
-		if (t.x >= trc.min && t.x <= trc.max && t.x < cisec.t && !lst->arr_fig[i])
+		if (hit.count > 0)
+			add_isec(hit.isec1);
+		if (hit.count == 2)
+			add.isec(hit.isec2);
+		/*/
+		if (t.x >= trc.min && t.x <= trc.max && t.x < cisec.t && arr_fig[i] < 2)
 		{
 			cisec.t = t.x;
 			cisec.fig = cur_fig;
@@ -49,7 +53,7 @@ t_isec	cls_isec(t_lst *lst, t_trc trc)
 				cisec.uv.y = INFINITY;
 			}
 		}
-		if (t.y != t.x && t.y >= trc.min && t.y <= trc.max && t.y < cisec.t && !lst->arr_fig[i])
+		if (t.y != t.x && t.y >= trc.min && t.y <= trc.max && t.y < cisec.t && arr_fig[i] < 2)
 		{
 			cisec.t = t.y;
 			cisec.fig = cur_fig;
@@ -64,7 +68,7 @@ t_isec	cls_isec(t_lst *lst, t_trc trc)
 				cisec.uv.y = INFINITY;
 			}
 		}
-		
+		//*/
 		
 		
 		cur_fig = cur_fig->next;
@@ -113,7 +117,12 @@ SDL_Color	get_refl_col(t_lst *lst, t_trc trc, t_vec3 n, int depth)
 	trc.min = MIN_OFFSET;
 	trc.max = INFINITY;
 	trc.d = set_vec3(refl_r(trc.d, n));
-	r_col = trace(lst, trc, depth);
+	int *arr_fig0;
+	arr_fig0 = malloc(sizeof(int) * lst->t);
+	int g = lst->t;
+	while (--g >= 0)
+		arr_fig0[g] = 0;
+	r_col = trace(lst, trc, depth, arr_fig0);
 	refl_col.r = (r_col & 0xFF0000) >> 16;
 	refl_col.g = (r_col & 0xFF00) >> 8;
 	refl_col.b = r_col & 0xFF;
@@ -160,17 +169,19 @@ t_vec3	get_normal_from_file(t_isec *cisec, t_lst *lst, t_vec3 norml)
 ** ray trace function
 */
 
-int		trace(t_lst *lst, t_trc trc, int depth)
+int		trace(t_lst *lst, t_trc trc, int depth, int *arr_fig)
 {
 	SDL_Color	res;
 	t_vec3		n;
 	float		l;
-	t_isec		cisec;
+	t_isec		*cisec;
 	SDL_Color	refl_col;
 
-	cisec = cls_isec(lst, trc);
+	cisec = NULL;
+	cls_isec(cisec, lst, trc, arr_fig);
 	////////////////////////////прозрачность
 	SDL_Color prozr;
+	
 	if (cisec.fig != NULL && cisec.fig->mat->transpare != 0){
 		int t = 0;
 		t_fig *cur_fig;
@@ -179,19 +190,19 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 		{
 			if (cur_fig == cisec.fig)
 			{
-				lst->arr_fig[t] = 1;
+				arr_fig[t] += 1;
 				break ;
 			}
 			t++;
 			cur_fig = cur_fig->next;
 		}
-		t = trace(lst, trc, depth);
+		t = trace(lst, trc, depth, arr_fig);
 		prozr.r = t / (256 * 256);
 		prozr.g = t / 256 % 256;
 		prozr.b = t % (256 * 256);
 	}
 	////////////////////////////прозрачность
-	if (cisec.fig == NULL)
+	if (cisec == NULL)
 	{
 		if (!lst->scn->diff_map.map)
 			return (lst->scn->bgc);
@@ -233,8 +244,6 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 
 	trc.d = invert_vec3(trc.d);
 	l = light(lst, set_l_prm(trc, n), cisec.fig);
-	
-	
 
 	if (cisec.fig->mat->diff_map.map && cisec.uv.x && cisec.uv.x != INFINITY)
 	{
@@ -255,16 +264,23 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 		res.b = clamp(cisec.fig->mat->col.b * l, 0, 255);
 	}
 	
+	int color;
+	double kof = 1 - cisec.fig->mat->transpare, kof0 = cisec.fig->mat->transpare;
+
 	
 	if (depth <= 0 || cisec.fig->mat->refl <= 0)
-		return ((res.r << 16) + (res.g << 8) + res.b);
+	{
+		if (cisec.fig == NULL || cisec.fig->mat->transpare == 0)
+			color = (res.r << 16) + (res.g << 8) + res.b;
+		else
+			color = ((int)(kof * (double)res.r) << 16) + ((int)(kof0 * (double)prozr.r) << 16) + ((int)(kof * (double)res.g) << 8) + ((int)(kof0 * (double)prozr.g) << 8) + (int)(kof * (double)res.b) + (int)(kof0 * (double)prozr.b);
+		return (color);
+	}
 	trc.o = set_vec3(trc.p);
 	refl_col = get_refl_col(lst, trc, n, depth - 1);
 	res.r = res.r * (1 - cisec.fig->mat->refl) + refl_col.r * cisec.fig->mat->refl;
 	res.g = res.g * (1 - cisec.fig->mat->refl) + refl_col.g * cisec.fig->mat->refl;
 	res.b = res.b * (1 - cisec.fig->mat->refl) + refl_col.b * cisec.fig->mat->refl;
-	int color;
-	double kof = 1 - cisec.fig->mat->transpare, kof0 = cisec.fig->mat->transpare;
 	if (cisec.fig == NULL || cisec.fig->mat->transpare == 0)
 		color = (res.r << 16) + (res.g << 8) + res.b;
 	else

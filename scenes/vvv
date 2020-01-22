@@ -10,8 +10,8 @@ name: earth
 2	diffuse: 
 3	normal: 
 4	specular: 1500
-5	reflection: 0.4
-6	transpare: 0.4
+5	reflection: 0.7
+6	transpare: 0.7
 
 [material]:
 name: earth0
@@ -19,8 +19,8 @@ name: earth0
 2	diffuse: 
 3	normal: 
 4	specular: 1500
-5	reflection: 0.4
-6	transpare: 0.0
+5	reflection: 0.2
+6	transpare: 0.5
 
 [material]:
 0	name: blue_cyl
@@ -63,7 +63,7 @@ name: earth0
 1	position:0 -1 2
 2	direction:0 1 0
 3	rotation:0 0 0
-4	radius:1
+4	radius:2
 5	angle:0
 6	material: earth
 
@@ -83,7 +83,7 @@ name: earth0
 3	rotation:0 0 0
 4	radius:0
 5	angle:0
-6	material: water
+6	material: water1
 
 [figure]:
 0	type:sphere

@@ -17,23 +17,23 @@
 ** selection figure for check
 */
 
-void	sel_fig_check(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *cur_fig)
+void	sel_fig_check(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *cur_fig, int arr_fig)
 {
 	if (cur_fig->type == sphere)
-		intersec_sph(t, o, d, cur_fig);
+		intersec_sph(hit, o, d, cur_fig, arr_fig);
 	else if (cur_fig->type == cylinder)
-		intersec_cyl(t, o, d, cur_fig);
+		intersec_cyl(hit, o, d, cur_fig, arr_fig);
 	else if (cur_fig->type == conus)
-		intersec_con(t, o, d, cur_fig);
-	else if (cur_fig->type == plane)
-		intersec_pln(t, o, d, cur_fig);
+		intersec_con(hit, o, d, cur_fig, arr_fig);
+	else if (cur_fig->type == plane)	
+		intersec_pln(hit, o, d, cur_fig, arr_fig);
 }
 
 /*
 ** intersection with sphere
 */
 
-void	intersec_sph(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *sph)
+void	intersec_sph(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *sph, int arr_fig)
 {
 	t_vec3	oc;
 	t_vec3	k;
@@ -47,13 +47,22 @@ void	intersec_sph(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *sph)
 	k.y = dot(oc, d);
 	k.z = dot(oc, oc) - sph->rad * sph->rad;
 	discr = k.y * k.y - k.x * k.z;
-	if (discr < 0)
+	if (discr < 0){
 		return ;
+	}
 	discr = sqrt(discr);
 	k.x = 1 / k.x;
 	t->x = (discr - k.y) * k.x;
 	t->y = (-discr - k.y) * k.x;
 	
+	if (arr_fig == 1)
+	{
+		if (t->y > t->x)
+			t->x = t->y;
+		else
+			t->y = t->x;
+	}
+
 	// if (t->x > t->y)
 	// 	t->x = t->y;
 	
@@ -73,7 +82,7 @@ void	intersec_sph(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *sph)
 ** intersection with hyper_cylinder
 */
 
-void	intersec_cyl(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *cyl)
+void	intersec_cyl(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *cyl, int arr_fig)
 {
 	t_vec3	oc;
 	t_vec3	k;
@@ -96,8 +105,17 @@ void	intersec_cyl(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *cyl)
 	t->x = (discr - k.y) / k.x;
 	t->y = (-discr - k.y) / k.x;
 
-	if (t->x > t->y)
-		t->x = t->y;
+
+	if (arr_fig == 1)
+	{
+		if (t->y > t->x)
+			t->x = t->y;
+		else
+			t->y = t->x;
+	}
+
+	// if (t->x > t->y)
+	// 	t->x = t->y;
 	
 	float	scale = 0.1f;
 
@@ -105,6 +123,19 @@ void	intersec_cyl(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *cyl)
 	t_vec3 vt = mult_vec3f(dir, t->x);
 	t_vec3 c = set_vec3(cyl->pos);
 	float m = dot(d, vt) + dot(dir, minus_vec3(o, c));
+	if (m<0 || m>5.0)
+	{
+		t->x = t->y;
+		t->y = INFINITY;
+		t_vec3 vt = mult_vec3f(dir, t->x);
+		t_vec3 c = set_vec3(cyl->pos);
+		m = dot(d, vt) + dot(dir, minus_vec3(o, c));
+		if (m<0 || m>5.0)
+		{
+			t->x = INFINITY;
+			return ;
+		}
+	}
 	t_vec3 p = plus_vec3(mult_vec3f(d, t->x), o);
 	t_vec3 n = minus_vec3(minus_vec3(p, c), mult_vec3f(dir, m));
 	n = div_vec3f(n, len_vec3(n));
@@ -122,7 +153,7 @@ void	intersec_cyl(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *cyl)
 ** intersection with plane
 */
 
-void	intersec_pln(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *pln)
+void	intersec_pln(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln, int arr_fig)
 {
 	t_vec3	oc;
 	t_vec3	v;
@@ -163,7 +194,7 @@ void	intersec_pln(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *pln)
 ** intersection with hyper_conus
 */
 
-void	intersec_con(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *con)
+void	intersec_con(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *con, int arr_fig)
 {
 	t_vec3	oc;
 	t_vec3	k;
@@ -186,16 +217,37 @@ void	intersec_con(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *con)
 	t->x = (discr - k.y) / k.x;
 	t->y = (-discr - k.y) / k.x;
 
-		if (t->x > t->y)
-		t->x = t->y;
+	if (arr_fig == 1)
+	{
+		if (t->y > t->x)
+			t->x = t->y;
+		else
+			t->y = t->x;
+	}
+
+		// if (t->x > t->y)
+		// t->x = t->y;
 	
 	float	scale = 0.1f;
 
 	t_vec3 dir = mult_vec3f(con->dir, -1);
-	t_vec3 vt = mult_vec3f(dir, t->x);
+	t_vec3 vt = mult_vec3f(dir, t->y);
 	t_vec3 c = set_vec3(con->pos);
 	float m = dot(d, vt) + dot(dir, minus_vec3(o, c));
-	t_vec3 p = plus_vec3(mult_vec3f(d, t->x), o);
+	if (m<0 || m>5.0)
+	{
+		t->y = t->x;
+		t->x = INFINITY;
+		t_vec3 vt = mult_vec3f(dir, t->y);
+		t_vec3 c = set_vec3(con->pos);
+		m = dot(d, vt) + dot(dir, minus_vec3(o, c));
+		if (m<0 || m>5.0)
+		{
+			t->y = INFINITY;
+			return ;
+		}
+	}
+	t_vec3 p = plus_vec3(mult_vec3f(d, t->y), o);
 	t_vec3 n = minus_vec3(minus_vec3(p, c), mult_vec3f(dir, m));
 	n = div_vec3f(n, len_vec3(n));
 	

@@ -21,11 +21,13 @@ void	mult(t_lst *lst, t_trc *trc, int x, int y)
 	mult_m3(&trc->d, trc->d, lst->camera_x);
 	mult_m3(&trc->d, trc->d, lst->camera_y);
 	int g = lst->t;
+	int *arr_fig;
+	arr_fig = malloc(sizeof(int) * g);
 	while (--g >= 0)
-		lst->arr_fig[g] = 0;
+		arr_fig[g] = 0;
 
 	lst->data[(S_H - y - H_H - 1) * S_W + x + H_W] =
-		trace(lst, *trc, RECURCE_DEPTH);
+		trace(lst, *trc, RECURCE_DEPTH, arr_fig);
 	lst->data_dop[(S_H - y - H_H - 1) * S_W + x + H_W] = lst->data[(S_H - y - H_H - 1) * S_W + x + H_W];
 }
 
@@ -68,7 +70,6 @@ void	rain(t_lst *lst)
 	while (++(lst->pot) < POT)
 	{
 		ft_memcpy((void*)&data[lst->pot], (void *)lst, sizeof(t_lst));
-		data[lst->pot].arr_fig = malloc(sizeof(int) * lst->t);
 		rc = pthread_create(&threads[lst->pot],
 			NULL, pixel, (void *)(&data[lst->pot]));
 	}
@@ -100,9 +101,9 @@ int		main(int ac, char *av[])
 	if (ac == 2)
 	{
 		lst = (t_lst *)malloc(sizeof(t_lst));
-		lst->postEffects = 0; //закинуть в init
-		lst->data_dop = malloc(sizeof(int) * (S_H * S_W)); //закинуть в init
-		lst->num_file_for_screen = 0; //закинуть в init
+		lst->postEffects = 0; 								//закинуть в init
+		lst->data_dop = malloc(sizeof(int) * (S_H * S_W)); 	//закинуть в init
+		lst->num_file_for_screen = 0; 						//закинуть в init
 		if (scene_init(lst, av[1]) && init_sdl(lst))
 		{
 			///////////////
