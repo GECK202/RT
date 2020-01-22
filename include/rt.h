@@ -136,7 +136,7 @@ typedef struct		s_isec
 {
 	float			t;
 	t_fig			*fig;
-	float			check;
+	// float			check;
 	t_vec3			n;
 	t_vec3			uv;
 	struct s_isec	*next;
@@ -145,8 +145,8 @@ typedef struct		s_isec
 
 typedef struct		s_hit
 {
-	t_isec			isec1;
-	t_isec			isec2;
+	t_isec			*isec1;
+	t_isec			*isec2;
 	int				count;
 }					t_hit
 

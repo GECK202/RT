@@ -13,68 +13,71 @@
 #include "rt.h"
 #include "stdio.h"
 
+void ins_isec(t_isec *prev, t_isec *ins)
+{
+	prev->next = ins;
+	ins->prev = prev;
+}
+
+void add_isec(t_isec *cisec, t_isec	*isec)
+{
+	t_isec *cur;
+	t_isec *prev;
+
+	cur = cisec;
+	prev = NULL;
+	if (!cur || isec->t < cur->t)
+	{
+		cisec = isec;
+		if (cur)
+			ins_isec(isec, cur);
+		return ;
+	}
+	while (cur)
+	{
+		if (isec->t < cur->t)
+		{
+			ins_isec(prev, isec);
+			ins_isec(isec, cur);
+			return ;
+		}
+		prev = cur;
+		cur = cur->next;
+	}
+	ins_isec(prev, isec);
+}
+
 /*
 ** calculate intersection and return figure and distatnce of intersection
 */
 
-t_isec	cls_isec(t_isec	*cisec, t_lst *lst, t_trc trc, int *arr_fig)
+void	cls_isec(t_isec	*cisec, t_lst *lst, t_trc trc, int *arr_fig)
 {
 	t_fig	*cur_fig;
 	t_hit	hit;
 
-	cisec.t = INFINITY;
-	cisec.uv.x = INFINITY;
-	cisec.uv.y = INFINITY;
-	cisec.fig = NULL;
+	cisec = NULL;
 	cur_fig = lst->scn->figs;
-	int i = 0;
 	while (cur_fig)
 	{
-		
-		sel_fig_check(&hit, trc.o, trc.d, cur_fig, arr_fig[i]);
-		
+		hit->isec1 = NULL;
+		hit->isec2 = NULL;
+		hit->count = 0;
+		sel_fig_check(&hit, trc.o, trc.d, cur_fig);
 		if (hit.count > 0)
-			add_isec(hit.isec1);
+		{
+			hit.isec1->next = NULL;
+			hit.isec1->prev = NULL;
+			add_isec(cisec, hit.isec1);
+		}
 		if (hit.count == 2)
-			add.isec(hit.isec2);
-		/*/
-		if (t.x >= trc.min && t.x <= trc.max && t.x < cisec.t && arr_fig[i] < 2)
 		{
-			cisec.t = t.x;
-			cisec.fig = cur_fig;
-			if (t.z != INFINITY)//cisec.fig->type == sphere && 
-			{
-				cisec.uv.x = t.w;
-				cisec.uv.y = t.z;
-			}
-			else
-			{
-				cisec.uv.x = INFINITY;
-				cisec.uv.y = INFINITY;
-			}
+			hit.isec2->next = NULL;
+			hit.isec2->prev = NULL;
+			add_isec(cisec, hit.isec2);
 		}
-		if (t.y != t.x && t.y >= trc.min && t.y <= trc.max && t.y < cisec.t && arr_fig[i] < 2)
-		{
-			cisec.t = t.y;
-			cisec.fig = cur_fig;
-			if (t.z != INFINITY)//cisec.fig->type == sphere && 
-			{
-				cisec.uv.x = t.w;
-				cisec.uv.y = t.z;
-			}
-			else
-			{
-				cisec.uv.x = INFINITY;
-				cisec.uv.y = INFINITY;
-			}
-		}
-		//*/
-		
-		
 		cur_fig = cur_fig->next;
-		i++;
 	}
-	return (cisec);
 }
 
 /*
