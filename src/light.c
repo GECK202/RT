@@ -50,27 +50,8 @@ float	get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght)
 		trc->d.z = c_lght->dir.z;
 		trc->max = INFINITY;
 	}
-	shdw = cls_isec(lst, *trc);
+	cls_isec(&shdw, lst, *trc);
 	if (lst->scn->shadow && shdw.fig != NULL)
-	{
-		if (shdw.fig->mat->transpare != 0){
-			int t = 0;
-			t_fig * cur_fig;
-			cur_fig = lst->scn->figs;
-			while (cur_fig)
-			{
-				if (cur_fig == shdw.fig)
-				{
-					lst->arr_fig[t] = 1;
-					break ;
-				}
-				t++;
-				cur_fig = cur_fig->next;
-			}
-			return (shdw.fig->mat->transpare * get_shadow(lst, trc, b, c_lght));
-		}
-	}
-	else 
 		return (1);
 	return (0);
 }
@@ -137,11 +118,10 @@ float	light(t_lst *lst, t_l_prm b, t_fig *fig)
 			ints += c_lght->ints;
 		else
 		{
-			float kof;
-			if ((kof = get_shadow(lst, &trc, b, c_lght)) <= 1.0)
+			if (!get_shadow(lst, &trc, b, c_lght))
 			{
-				ints += (kof) * get_diffuse(trc, b, c_lght);
-				ints += (kof) * get_specular(trc, b, fig->mat->spec, c_lght->ints);
+				ints += get_diffuse(trc, b, c_lght);
+				ints += get_specular(trc, b, fig->mat->spec, c_lght->ints);
 			}
 		}
 		c_lght = c_lght->next;

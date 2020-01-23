@@ -17,16 +17,15 @@
 ** calculate intersection and return figure and distatnce of intersection
 */
 
-t_isec	cls_isec(t_lst *lst, t_trc trc)
+void	cls_isec(t_isec *cisec, t_lst *lst, t_trc trc)
 {
 	t_fig	*cur_fig;
 	t_vec3	t;
-	t_isec	cisec;
 
-	cisec.t = INFINITY;
-	cisec.uv.x = INFINITY;
-	cisec.uv.y = INFINITY;
-	cisec.fig = NULL;
+	cisec->t = INFINITY;
+	cisec->uv.x = INFINITY;
+	cisec->uv.y = INFINITY;
+	cisec->fig = NULL;
 	cur_fig = lst->scn->figs;
 	int i = 0;
 	while (cur_fig)
@@ -34,34 +33,34 @@ t_isec	cls_isec(t_lst *lst, t_trc trc)
 		
 		sel_fig_check(&t, trc.o, trc.d, cur_fig);
 		
-		if (t.x >= trc.min && t.x <= trc.max && t.x < cisec.t && !lst->arr_fig[i])
+		if (t.x >= trc.min && t.x <= trc.max && t.x < cisec->t)
 		{
-			cisec.t = t.x;
-			cisec.fig = cur_fig;
+			cisec->t = t.x;
+			cisec->fig = cur_fig;
 			if (t.z != INFINITY)//cisec.fig->type == sphere && 
 			{
-				cisec.uv.x = t.w;
-				cisec.uv.y = t.z;
+				cisec->uv.x = t.w;
+				cisec->uv.y = t.z;
 			}
 			else
 			{
-				cisec.uv.x = INFINITY;
-				cisec.uv.y = INFINITY;
+				cisec->uv.x = INFINITY;
+				cisec->uv.y = INFINITY;
 			}
 		}
-		if (t.y != t.x && t.y >= trc.min && t.y <= trc.max && t.y < cisec.t && !lst->arr_fig[i])
+		if (t.y != t.x && t.y >= trc.min && t.y <= trc.max && t.y < cisec->t)
 		{
-			cisec.t = t.y;
-			cisec.fig = cur_fig;
+			cisec->t = t.y;
+			cisec->fig = cur_fig;
 			if (t.z != INFINITY)//cisec.fig->type == sphere && 
 			{
-				cisec.uv.x = t.w;
-				cisec.uv.y = t.z;
+				cisec->uv.x = t.w;
+				cisec->uv.y = t.z;
 			}
 			else
 			{
-				cisec.uv.x = INFINITY;
-				cisec.uv.y = INFINITY;
+				cisec->uv.x = INFINITY;
+				cisec->uv.y = INFINITY;
 			}
 		}
 		
@@ -70,7 +69,6 @@ t_isec	cls_isec(t_lst *lst, t_trc trc)
 		cur_fig = cur_fig->next;
 		i++;
 	}
-	return (cisec);
 }
 
 /*
@@ -168,28 +166,28 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	t_isec		cisec;
 	SDL_Color	refl_col;
 
-	cisec = cls_isec(lst, trc);
+	cls_isec(&cisec, lst, trc);
 	////////////////////////////прозрачность
-	SDL_Color prozr;
-	if (cisec.fig != NULL && cisec.fig->mat->transpare != 0){
-		int t = 0;
-		t_fig *cur_fig;
-		cur_fig = lst->scn->figs;
-		while (cur_fig)
-		{
-			if (cur_fig == cisec.fig)
-			{
-				lst->arr_fig[t] = 1;
-				break ;
-			}
-			t++;
-			cur_fig = cur_fig->next;
-		}
-		t = trace(lst, trc, depth);
-		prozr.r = t / (256 * 256);
-		prozr.g = t / 256 % 256;
-		prozr.b = t % (256 * 256);
-	}
+	// SDL_Color prozr;
+	// if (cisec.fig != NULL && cisec.fig->mat->transpare != 0){
+	// 	int t = 0;
+	// 	t_fig *cur_fig;
+	// 	cur_fig = lst->scn->figs;
+	// 	while (cur_fig)
+	// 	{
+	// 		if (cur_fig == cisec.fig)
+	// 		{
+	// 			lst->arr_fig[t] = 1;
+	// 			break ;
+	// 		}
+	// 		t++;
+	// 		cur_fig = cur_fig->next;
+	// 	}
+	// 	t = trace(lst, trc, depth);
+	// 	prozr.r = t / (256 * 256);
+	// 	prozr.g = t / 256 % 256;
+	// 	prozr.b = t % (256 * 256);
+	// }
 	////////////////////////////прозрачность
 	if (cisec.fig == NULL)
 	{
@@ -265,10 +263,7 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	res.b = res.b * (1 - cisec.fig->mat->refl) + refl_col.b * cisec.fig->mat->refl;
 	int color;
 	double kof = 1 - cisec.fig->mat->transpare, kof0 = cisec.fig->mat->transpare;
-	if (cisec.fig == NULL || cisec.fig->mat->transpare == 0)
-		color = (res.r << 16) + (res.g << 8) + res.b;
-	else
-		color = ((int)(kof * (double)res.r) << 16) + ((int)(kof0 * (double)prozr.r) << 16) + ((int)(kof * (double)res.g) << 8) + ((int)(kof0 * (double)prozr.g) << 8) + (int)(kof * (double)res.b) + (int)(kof0 * (double)prozr.b);
+	color = (res.r << 16) + (res.g << 8) + res.b;
 	return (color);
 }
 

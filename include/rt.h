@@ -168,7 +168,6 @@ typedef struct		s_lst
 	int				postEffects;
 	int				*data_dop;
 	int				num_file_for_screen;
-	int				*arr_fig;
 	int				t;
 	
 	int				n0;
@@ -266,7 +265,7 @@ void				intersec_cyl(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *cyl);
 void				intersec_pln(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *pln);
 void				intersec_con(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *con);
 
-t_isec				cls_isec(t_lst *lst, t_trc trc);
+void				cls_isec(t_isec *cisec, t_lst *lst, t_trc trc);
 int					trace(t_lst *lst, t_trc trc, int depth);
 float				light(t_lst *lst, t_l_prm b, t_fig *fig);
 
