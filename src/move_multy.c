@@ -12,6 +12,7 @@
 
 #include "rt.h"
 
+
 void	move_light(t_lst *lst, SDL_Point p)
 {
 	t_lght	*lght;

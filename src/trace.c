@@ -17,7 +17,7 @@
 ** calculate intersection and return figure and distatnce of intersection
 */
 
-void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc)
+void	cls_isec2(t_isec **cisec, t_lst *lst, t_trc trc)
 {
 	t_fig	*cur_fig;
 	t_vec3	t;
@@ -31,7 +31,7 @@ void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc)
 	while (cur_fig)
 	{
 		
-		sel_fig_check(&t, trc.o, trc.d, cur_fig);
+		// sel_fig_check(&t, trc.o, trc.d, cur_fig);
 		
 		if (t.x >= trc.min && t.x <= trc.max && t.x < (*cisec)->t)
 		{
@@ -68,6 +68,98 @@ void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc)
 		
 		cur_fig = cur_fig->next;
 		i++;
+	}
+}
+
+void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc)//////////////////////////////
+{
+	t_fig	*cur_fig;
+	t_hit	hit;
+
+	(*cisec)->t = INFINITY;
+	(*cisec)->uv.x = INFINITY;
+	(*cisec)->uv.y = INFINITY;
+	(*cisec)->fig = NULL;
+	cur_fig = lst->scn->figs;
+	// int i = 0;
+	while (cur_fig)
+	{
+		
+		sel_fig_check(&hit, trc.o, trc.d, cur_fig);
+		
+		if (hit.count == 1 || hit.count == 2)
+		{
+			if (hit.isec1.t >= trc.min && hit.isec1.t <= trc.max && hit.isec1.t < (*cisec)->t)
+			{
+				(*cisec)->t = hit.isec1.t;
+				(*cisec)->fig = cur_fig;
+				if (hit.isec1.uv.y != INFINITY)//cisec->fig->type == sphere && 
+				{
+					(*cisec)->uv.x = hit.isec1.uv.x;
+					(*cisec)->uv.y = hit.isec1.uv.y;
+				}
+				else
+				{
+					(*cisec)->uv.x = INFINITY;
+					(*cisec)->uv.y = INFINITY;
+				}
+			}
+		}
+
+		if (hit.count == 2)
+		{
+			if (hit.isec2.t >= trc.min && hit.isec2.t <= trc.max && hit.isec2.t < (*cisec)->t)
+			{
+				(*cisec)->t = hit.isec2.t;
+				(*cisec)->fig = cur_fig;
+				if (hit.isec2.uv.y != INFINITY)//cisec->fig->type == sphere && 
+				{
+					(*cisec)->uv.x = hit.isec2.uv.x;
+					(*cisec)->uv.y = hit.isec2.uv.y;
+				}
+				else
+				{
+					(*cisec)->uv.x = INFINITY;
+					(*cisec)->uv.y = INFINITY;
+				}
+			}
+		}
+
+		// if (t.x >= trc.min && t.x <= trc.max && t.x < (*cisec)->t)
+		// {
+		// 	(*cisec)->t = t.x;
+		// 	(*cisec)->fig = cur_fig;
+		// 	if (t.z != INFINITY)//cisec->fig->type == sphere && 
+		// 	{
+		// 		(*cisec)->uv.x = t.w;
+		// 		(*cisec)->uv.y = t.z;
+		// 	}
+		// 	else
+		// 	{
+		// 		(*cisec)->uv.x = INFINITY;
+		// 		(*cisec)->uv.y = INFINITY;
+		// 	}
+		// }
+		// if (t.y != t.x && t.y >= trc.min && t.y <= trc.max && t.y < (*cisec)->t)
+		// {
+		// 	(*cisec)->t = t.y;
+		// 	(*cisec)->fig = cur_fig;
+		// 	if (t.z != INFINITY)//cisec->fig->type == sphere && 
+		// 	{
+		// 		(*cisec)->uv.x = t.w;
+		// 		(*cisec)->uv.y = t.z;
+		// 	}
+		// 	else
+		// 	{
+		// 		(*cisec)->uv.x = INFINITY;
+		// 		(*cisec)->uv.y = INFINITY;
+		// 	}
+		// }
+		
+		
+		
+		cur_fig = cur_fig->next;
+		// i++;
 	}
 }
 
