@@ -70,6 +70,7 @@ void	rain(t_lst *lst)
 	while (++(lst->pot) < POT)
 	{
 		ft_memcpy((void*)&data[lst->pot], (void *)lst, sizeof(t_lst));
+		// pixel((void *)(&data[lst->pot]));
 		rc = pthread_create(&threads[lst->pot],
 			NULL, pixel, (void *)(&data[lst->pot]));
 	}
@@ -77,7 +78,6 @@ void	rain(t_lst *lst)
 	lst->pot = -1;
 	while (++(lst->pot) < POT){
 		rc = pthread_join(threads[lst->pot], &status);
-		free(data[lst->pot].arr_fig);
 	}
 }
 

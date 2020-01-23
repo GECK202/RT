@@ -42,12 +42,12 @@ void	fill_isec_sphere(t_isec *i, t_vec3 o, t_vec3 d, t_fig *sph)
 	vp = minus_vec3(sph->pos, plus_vec3(o, mult_vec3f(d, i->t)));
 	vp = div_vec3f(vp, len_vec3(vp));
 	x = -dot(sph->dir, vp);
-	i->uv->y = acos(x);
-	x = sin(i->uv->y);
-	i->uv->x = (acos(dot(vp, sph->look)/x)) / (2 * M_PI);
+	i->uv.y = acos(x);
+	x = sin(i->uv.y);
+	i->uv.x = (acos(dot(vp, sph->look)/x)) / (2 * M_PI);
 	if (dot(cross(sph->dir, sph->look), vp) > 0)
-		i->uv->x = 1.0 - i->uv->x;
-	i->uv->y = i->uv->y / M_PI;
+		i->uv.x = 1.0 - i->uv.x;
+	i->uv.y = i->uv.y / M_PI;
 }
 
 /*
@@ -95,17 +95,17 @@ void	fill_isec_cyl(t_isec *i, t_vec3 o, t_vec3 d, t_fig *cyl)
 	scale = 0.1f;
 	i->fig = cyl;
 	dir = mult_vec3f(cyl->dir, -1);
-	vt = mult_vec3f(dir, t->x);
+	vt = mult_vec3f(dir, i->t);
 	m = dot(d, vt) + dot(dir, minus_vec3(o, cyl->pos));
-	p = plus_vec3(mult_vec3f(d, t->x), o);
+	p = plus_vec3(mult_vec3f(d, i->t), o);
 	i->n = minus_vec3(minus_vec3(p, cyl->pos), mult_vec3f(dir, m));
 	i->n = div_vec3f(i->n, len_vec3(i->n));
-	i->uv->y = (acos(dot(cyl->look, i->n)) / (M_PI));
+	i->uv.y = (acos(dot(cyl->look, i->n)) / (M_PI));
 	m *= scale;
 	m -= (int)m;
-	i->uv->x = m;
+	i->uv.x = m;
 	if (m < 0)
-		i->uv->x = - m;
+		i->uv.x = - m;
 }
 
 /*
@@ -150,7 +150,7 @@ void	intersec_pln(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln)
 {
 	t_vec3	oc;
 	t_vec3	v;
-	t_vec3	Vp;
+	t_vec3	vp;
 	int		tmp;
 	float	scale;
 
@@ -163,26 +163,59 @@ void	intersec_pln(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln)
 		hit->isec1->fig = pln;
 		oc = invert_vec3(minus_vec3(o, pln->pos));
 		hit->isec1->t = dot(oc, v) / dot(d, v);
-		vp = minus_vec3(pln->pos, plus_vec3(o, mult_vec3f(d, t->x)));
+		vp = minus_vec3(pln->pos, plus_vec3(o, mult_vec3f(d, hit->isec1->t)));
 		mult_m3(&vp, vp, pln->mat_z);
 		mult_m3(&vp, vp, pln->mat_x);
 		mult_m3(&vp, vp, pln->mat_y);
-		hit->isec1.uv.y = vp.z * scale;
-		hit->isec1.uv.x = vp.x * scale;
-		tmp = hit->isec1.uv.y;
-		hit->isec1.uv.y -= tmp;
-		if (hit->isec1.uv.y < 0)
-			hit->isec1.uv.y += 1.0;
-		tmp = hit->isec1.uv.x;
-		hit->isec1.uv.x -= tmp;
-		if (hit->isec1.uv.x < 0)
-			hit->isec1.uv.x += 1.0;
+		hit->isec1->uv.y = vp.z * scale;
+		hit->isec1->uv.x = vp.x * scale;
+		tmp = hit->isec1->uv.y;
+		hit->isec1->uv.y -= tmp;
+		if (hit->isec1->uv.y < 0)
+			hit->isec1->uv.y += 1.0;
+		tmp = hit->isec1->uv.x;
+		hit->isec1->uv.x -= tmp;
+		if (hit->isec1->uv.x < 0)
+			hit->isec1->uv.x += 1.0;
 	}
 }
 
 /*
 ** intersection with hyper_conus
 */
+
+void	fill_isec_con(t_isec *i, t_vec3 o, t_vec3 d, t_fig *con)
+{
+	float	scale = 0.1f;
+
+	t_vec3 dir = mult_vec3f(con->dir, -1);
+	t_vec3 vt = mult_vec3f(dir, i->t);
+	t_vec3 c = set_vec3(con->pos);
+	float m = dot(d, vt) + dot(dir, minus_vec3(o, c));
+	// if (m<0 || m>5.0)
+	// {
+	// 	t->y = t->x;
+	// 	t->x = INFINITY;
+	// 	t_vec3 vt = mult_vec3f(dir, t->y);
+	// 	t_vec3 c = set_vec3(con->pos);
+	// 	m = dot(d, vt) + dot(dir, minus_vec3(o, c));
+	// 	if (m<0 || m>5.0)
+	// 	{
+	// 		t->y = INFINITY;
+	// 		return ;
+	// 	}
+	// }
+	t_vec3 p = plus_vec3(mult_vec3f(d, i->t), o);
+	t_vec3 n = minus_vec3(minus_vec3(p, c), mult_vec3f(dir, m));
+	n = div_vec3f(n, len_vec3(n));
+	
+	i->uv.y = (acos(dot(con->look, n)) / (M_PI));
+	m *= scale;
+	m -= (int)m;
+	i->uv.x = m;
+	if (m < 0)
+		i->uv.x = - m;
+}
 
 void	intersec_con(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *con)
 {
@@ -192,9 +225,9 @@ void	intersec_con(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *con)
 	float	discr;
 
 	v = div_vec3f(con->dir, len_vec3(con->dir));
-	t->x = INFINITY;
-	t->y = INFINITY;
-	t->z = INFINITY;
+	// t->x = INFINITY;
+	// t->y = INFINITY;
+	// t->z = INFINITY;
 	oc = minus_vec3(o, con->pos);
 	k.x = dot(d, d) - con->rad * pow(dot(d, con->dir), 2);
 	k.y = 2 * (dot(oc, d) - con->rad * dot(d, con->dir) * dot(oc, con->dir));
@@ -204,47 +237,26 @@ void	intersec_con(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *con)
 		return ;
 	discr = sqrt(discr);
 	k.x *= 2;
-	t->x = (discr - k.y) / k.x;
-	t->y = (-discr - k.y) / k.x;
-
-	if (arr_fig == 1)
+	hit->isec1 = malloc(sizeof(t_isec));
+	hit->isec1->t = (discr - k.y) / k.x;
+	hit->count = 1;
+	fill_isec_con(hit->isec1, o, d, con);
+	if (discr > 0)
 	{
-		if (t->y > t->x)
-			t->x = t->y;
-		else
-			t->y = t->x;
+		hit->isec2 = malloc(sizeof(t_isec));
+		hit->isec2->t = (-discr - k.y) / k.x;
+		hit->count = 1;
+		fill_isec_con(hit->isec2, o, d, con);
 	}
+
+	// if (arr_fig == 1)
+	// {
+	// 	if (t->y > t->x)
+	// 		t->x = t->y;
+	// 	else
+	// 		t->y = t->x;
+	// }
 
 		// if (t->x > t->y)
 		// t->x = t->y;
-	
-	float	scale = 0.1f;
-
-	t_vec3 dir = mult_vec3f(con->dir, -1);
-	t_vec3 vt = mult_vec3f(dir, t->y);
-	t_vec3 c = set_vec3(con->pos);
-	float m = dot(d, vt) + dot(dir, minus_vec3(o, c));
-	if (m<0 || m>5.0)
-	{
-		t->y = t->x;
-		t->x = INFINITY;
-		t_vec3 vt = mult_vec3f(dir, t->y);
-		t_vec3 c = set_vec3(con->pos);
-		m = dot(d, vt) + dot(dir, minus_vec3(o, c));
-		if (m<0 || m>5.0)
-		{
-			t->y = INFINITY;
-			return ;
-		}
-	}
-	t_vec3 p = plus_vec3(mult_vec3f(d, t->y), o);
-	t_vec3 n = minus_vec3(minus_vec3(p, c), mult_vec3f(dir, m));
-	n = div_vec3f(n, len_vec3(n));
-	
-	t->z = (acos(dot(con->look, n)) / (M_PI));
-	m *= scale;
-	m -= (int)m;
-	t->w = m;
-	if (m < 0)
-		t->w = - m;
 }

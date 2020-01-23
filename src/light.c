@@ -34,7 +34,7 @@ t_vec3	refl_r(t_vec3 l, t_vec3 n)
 
 float	get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght, int *arr_fig)
 {
-	t_isec	shdw;
+	t_isec	*shdw;
 
 	if (c_lght->type == point)
 	{
@@ -50,16 +50,16 @@ float	get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght, int *arr_fig
 		trc->d.z = c_lght->dir.z;
 		trc->max = INFINITY;
 	}
-	shdw = cls_isec(lst, *trc, arr_fig);
-	if (lst->scn->shadow && shdw.fig != NULL)
+	cls_isec(shdw, lst, *trc, arr_fig);
+	if (lst->scn->shadow && shdw->fig != NULL)
 	{
-		if (shdw.fig->mat->transpare != 0){
+		if (shdw->fig->mat->transpare != 0){
 			int t = 0;
 			t_fig * cur_fig;
 			cur_fig = lst->scn->figs;
 			while (cur_fig)
 			{
-				if (cur_fig == shdw.fig)
+				if (cur_fig == shdw->fig)
 				{
 					arr_fig[t]++;
 					break ;
@@ -67,7 +67,7 @@ float	get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght, int *arr_fig
 				t++;
 				cur_fig = cur_fig->next;
 			}
-			return (shdw.fig->mat->transpare * get_shadow(lst, trc, b, c_lght, arr_fig));
+			return (shdw->fig->mat->transpare * get_shadow(lst, trc, b, c_lght, arr_fig));
 		}
 	}
 	else 
