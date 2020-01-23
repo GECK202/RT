@@ -20,14 +20,9 @@ void	mult(t_lst *lst, t_trc *trc, int x, int y)
 	mult_m3(&trc->d, trc->d, lst->camera_z);
 	mult_m3(&trc->d, trc->d, lst->camera_x);
 	mult_m3(&trc->d, trc->d, lst->camera_y);
-	int g = lst->t;
-	int *arr_fig;
-	arr_fig = malloc(sizeof(int) * g);
-	while (--g >= 0)
-		arr_fig[g] = 0;
 
 	lst->data[(S_H - y - H_H - 1) * S_W + x + H_W] =
-		trace(lst, *trc, RECURCE_DEPTH, arr_fig);
+		trace(lst, *trc, RECURCE_DEPTH);
 	lst->data_dop[(S_H - y - H_H - 1) * S_W + x + H_W] = lst->data[(S_H - y - H_H - 1) * S_W + x + H_W];
 }
 

@@ -53,7 +53,7 @@ void	add_isec(t_isec **cisec, t_isec *isec)
 ** calculate intersection and return figure and distatnce of intersection
 */
 
-void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc, int *arr_fig)
+void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc)
 {
 	t_fig	*cur_fig;
 	t_hit	hit;
@@ -124,12 +124,7 @@ SDL_Color	get_refl_col(t_lst *lst, t_trc trc, t_vec3 n, int depth)
 	trc.min = MIN_OFFSET;
 	trc.max = INFINITY;
 	trc.d = set_vec3(refl_r(trc.d, n));
-	int *arr_fig0;
-	arr_fig0 = malloc(sizeof(int) * lst->t);
-	int g = lst->t;
-	while (--g >= 0)
-		arr_fig0[g] = 0;
-	r_col = trace(lst, trc, depth, arr_fig0);
+	r_col = trace(lst, trc, depth);
 	refl_col.r = (r_col & 0xFF0000) >> 16;
 	refl_col.g = (r_col & 0xFF00) >> 8;
 	refl_col.b = r_col & 0xFF;
@@ -206,7 +201,7 @@ int		return_background(t_lst *lst, t_trc trc)
 ** ray trace function
 */
 
-int		trace(t_lst *lst, t_trc trc, int depth, int *arr_fig)
+int		trace(t_lst *lst, t_trc trc, int depth)
 {
 	SDL_Color	res;
 	t_vec3		n;
@@ -216,7 +211,7 @@ int		trace(t_lst *lst, t_trc trc, int depth, int *arr_fig)
 
 	cisec = NULL;
 	
-	cls_isec(&cisec, lst, trc, arr_fig);
+	cls_isec(&cisec, lst, trc);
 	
 	////////////////////////////прозрачность
 	// SDL_Color prozr;

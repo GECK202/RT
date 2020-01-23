@@ -32,7 +32,7 @@ t_vec3	refl_r(t_vec3 l, t_vec3 n)
 ** check shadow for current point or directional light
 */
 
-float	get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght, int *arr_fig)
+float	get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght)
 {
 	t_isec	*shdw;
 
@@ -51,7 +51,7 @@ float	get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght, int *arr_fig
 		trc->max = INFINITY;
 	}
 	shdw = NULL;
-	cls_isec(&shdw, lst, *trc, arr_fig);
+	cls_isec(&shdw, lst, *trc);
 	if (shdw && lst->scn->shadow && shdw->fig != NULL)
 	{
 		return 1;
@@ -122,12 +122,7 @@ float	light(t_lst *lst, t_l_prm b, t_fig *fig)
 		else
 		{
 			float kof;
-			int *arr_fig;
-			int g = lst->t;
-			arr_fig = malloc(sizeof(int) * g);
-			while (--g >= 0)
-				arr_fig[g] = 0;
-			if ((kof = get_shadow(lst, &trc, b, c_lght, arr_fig)) <= 1.0)
+			if ((kof = get_shadow(lst, &trc, b, c_lght)) <= 1.0)
 			{
 				ints += (kof) * get_diffuse(trc, b, c_lght);
 				ints += (kof) * get_specular(trc, b, fig->mat->spec, c_lght->ints);
