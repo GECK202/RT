@@ -34,7 +34,7 @@ t_vec3	refl_r(t_vec3 l, t_vec3 n)
 
 float	get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght)
 {
-	t_isec	shdw;
+	t_isec	*shdw;
 
 	if (c_lght->type == point)
 	{
@@ -50,8 +50,9 @@ float	get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght)
 		trc->d.z = c_lght->dir.z;
 		trc->max = INFINITY;
 	}
+	shdw = malloc(sizeof(t_isec));
 	cls_isec(&shdw, lst, *trc);
-	if (lst->scn->shadow && shdw.fig != NULL)
+	if (lst->scn->shadow && shdw->fig != NULL)
 		return (1);
 	return (0);
 }
