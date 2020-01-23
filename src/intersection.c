@@ -160,6 +160,7 @@ void	intersec_pln(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln)
 	{
 		hit->isec1 = malloc(sizeof(t_isec));
 		hit->count = 1;
+		hit->isec1->n = set_vec3(pln->dir);
 		hit->isec1->fig = pln;
 		oc = invert_vec3(minus_vec3(o, pln->pos));
 		hit->isec1->t = dot(oc, v) / dot(d, v);
@@ -188,6 +189,7 @@ void	fill_isec_con(t_isec *i, t_vec3 o, t_vec3 d, t_fig *con)
 {
 	float	scale = 0.1f;
 
+	i->fig = con;
 	t_vec3 dir = mult_vec3f(con->dir, -1);
 	t_vec3 vt = mult_vec3f(dir, i->t);
 	t_vec3 c = set_vec3(con->pos);
@@ -240,13 +242,13 @@ void	intersec_con(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *con)
 	hit->isec1 = malloc(sizeof(t_isec));
 	hit->isec1->t = (discr - k.y) / k.x;
 	hit->count = 1;
-	fill_isec_con(hit->isec1, o, d, con);
+	fill_isec_cyl(hit->isec1, o, d, con);
 	if (discr > 0)
 	{
 		hit->isec2 = malloc(sizeof(t_isec));
 		hit->isec2->t = (-discr - k.y) / k.x;
 		hit->count = 1;
-		fill_isec_con(hit->isec2, o, d, con);
+		fill_isec_cyl(hit->isec2, o, d, con);
 	}
 
 	// if (arr_fig == 1)

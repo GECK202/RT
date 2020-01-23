@@ -19,16 +19,16 @@ void ins_isec(t_isec *prev, t_isec *ins)
 	ins->prev = prev;
 }
 
-t_isec *add_isec(t_isec *cisec, t_isec *isec)
+void	add_isec(t_isec **cisec, t_isec *isec)
 {
 	t_isec *cur;
 	t_isec *prev;
 
-	cur = cisec;
+	cur = *cisec;
 	prev = NULL;
 	if (!cur || isec->t < cur->t)
 	{
-		cisec = isec;
+		*cisec = isec;
 		if (cur!=NULL)
 		{
 			ins_isec(isec, cur);
@@ -47,19 +47,18 @@ t_isec *add_isec(t_isec *cisec, t_isec *isec)
 		cur = cur->next;
 	}
 	ins_isec(prev, isec);
-	return (cisec);
 }
 
 /*
 ** calculate intersection and return figure and distatnce of intersection
 */
 
-t_isec	*cls_isec(t_isec	*cisec, t_lst *lst, t_trc trc, int *arr_fig)
+void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc, int *arr_fig)
 {
 	t_fig	*cur_fig;
 	t_hit	hit;
 
-	cisec = NULL;
+	*cisec = NULL;
 	cur_fig = lst->scn->figs;
 	while (cur_fig)
 	{
@@ -73,17 +72,16 @@ t_isec	*cls_isec(t_isec	*cisec, t_lst *lst, t_trc trc, int *arr_fig)
 		{
 			hit.isec1->next = NULL;
 			hit.isec1->prev = NULL;
-			add_isec(&cisec, &hit.isec1);
+			add_isec(cisec, hit.isec1);
 		}
 		if (hit.count == 2)
 		{
 			hit.isec2->next = NULL;
 			hit.isec2->prev = NULL;
-			add_isec(&cisec, &hit.isec2);
+			add_isec(cisec, hit.isec2);
 		}
 		cur_fig = cur_fig->next;
 	}
-	return (cisec);
 }
 
 /*
@@ -218,7 +216,7 @@ int		trace(t_lst *lst, t_trc trc, int depth, int *arr_fig)
 
 	cisec = NULL;
 	
-	cisec = cls_isec(NULL, lst, trc, arr_fig);
+	cls_isec(&cisec, lst, trc, arr_fig);
 	
 	////////////////////////////прозрачность
 	// SDL_Color prozr;
@@ -258,7 +256,7 @@ int		trace(t_lst *lst, t_trc trc, int depth, int *arr_fig)
 	// n = div_vec3f(n, len_vec3(n));
 
 	// trc.d = invert_vec3(trc.d);
-	l = 0.8;//light(lst, set_l_prm(trc, cisec->n), cisec->fig);
+	l = light(lst, set_l_prm(trc, cisec->n), cisec->fig);
 
 	// if (cisec->fig->mat->diff_map.map && cisec->uv.x && cisec->uv.x != INFINITY)
 	// {
