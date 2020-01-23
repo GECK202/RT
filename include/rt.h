@@ -275,7 +275,7 @@ void				intersec_cyl(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *cyl);
 void				intersec_pln(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln);
 void				intersec_con(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *con);
 
-void				cls_isec(t_isec	*cisec, t_lst *lst, t_trc trc, int *arr_fig);
+t_isec				*cls_isec(t_isec	*cisec, t_lst *lst, t_trc trc, int *arr_fig);
 int					trace(t_lst *lst, t_trc trc, int depth, int *arr_fig);
 float				light(t_lst *lst, t_l_prm b, t_fig *fig);
 

@@ -50,7 +50,7 @@ float	get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght, int *arr_fig
 		trc->d.z = c_lght->dir.z;
 		trc->max = INFINITY;
 	}
-	cls_isec(shdw, lst, *trc, arr_fig);
+	cls_isec(&shdw, lst, *trc, arr_fig);
 	if (lst->scn->shadow && shdw->fig != NULL)
 	{
 		if (shdw->fig->mat->transpare != 0){
