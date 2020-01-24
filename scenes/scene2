@@ -2,7 +2,7 @@
 0	camera position: 1 0 -20
 1	camera rotation: 0 0 0
 2	background color: 255 255 200
-3	diffuse map: res/HDRI_sky.png
+3	diffuse map: res/HDRI_sky2.jpg
 
 [material]:
 name: earth
@@ -17,10 +17,10 @@ name: earth
 0	name: blue_cyl
 1	color: 0 0 255
 2	diffuse: res/fig1_dif.png
-3	normal: res/fig1_nm.png1
+3	normal: res/fig1_nm.png
 4	specular: 0
-5	reflection: 0
-6	transpare: 0.8
+5	reflection: 0.5
+6	transpare: 0.6
 
 [material]:
 0	name: blue_con

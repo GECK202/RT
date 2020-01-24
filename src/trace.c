@@ -346,29 +346,7 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 
 	cisec = malloc(sizeof(t_isec));
 	cls_isec(&cisec, lst, trc);
-	////////////////////////////прозрачность
-	// SDL_Color prozr;
-	// if (cisec->fig != NULL && cisec->fig->mat->transpare != 0){
-	// 	int t = 0;
-	// 	t_fig *cur_fig;
-	// 	cur_fig = lst->scn->figs;
-	// 	while (cur_fig)
-	// 	{
-	// 		if (cur_fig == cisec->fig)
-	// 		{
-	// 			lst->arr_fig[t] = 1;
-	// 			break ;
-	// 		}
-	// 		t++;
-	// 		cur_fig = cur_fig->next;
-	// 	}
-	// 	t = trace(lst, trc, depth);
-	// 	prozr.r = t / (256 * 256);
-	// 	prozr.g = t / 256 % 256;
-	// 	prozr.b = t % (256 * 256);
-	// }
-	////////////////////////////прозрачность
-	
+
 	int col = return_background(lst, trc);
 	if (cisec->fig == NULL)
 		return (col);
@@ -395,18 +373,7 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 			l = light(lst, set_l_prm(trc, cur_isec->n), cur_isec->fig);
 
 			if (cur_isec->fig->mat->diff_map.map && cur_isec->uv.x && cur_isec->uv.x != INFINITY)
-			{
-				int w = cur_isec->fig->mat->diff_map.map->w;
-				int h = cur_isec->fig->mat->diff_map.map->h;
-				int index_x = (cur_isec->uv.x) * w;
-				int index_y = (cur_isec->uv.y) * h;
-				int index = clamp(index_x + index_y * w, 0, w * h - 1);
-				int c = cur_isec->fig->mat->diff_map.data[index];
-				tres.r = clamp(((c & 0xff0000)>>16) * l, 0, 255);
-				tres.g = clamp(((c & 0xff00)>>8) * l, 0, 255);
-				tres.b = clamp((c & 0xff) * l, 0, 255);
-				// tres = get_color_from_file(cur_isec->fig->mat->diff_map, cur_isec->uv, l);
-			}
+				tres = get_color_from_file(cur_isec->fig->mat->diff_map, cur_isec->uv, l);
 			else
 			{
 				tres.r = clamp(cur_isec->fig->mat->col.r * l, 0, 255);
@@ -423,19 +390,12 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 			}
 
 			koef = (1.0 - cur_isec->fig->mat->transpare) * full;
-			// if (full == 1.0)
-			// {
-			// 	res.r = tres.r * (1 - cur_isec->fig->mat->transpare);
-			// 	res.g = tres.g * (1 - cur_isec->fig->mat->transpare);
-			// 	res.b = tres.b * (1 - cur_isec->fig->mat->transpare);
-			// }
-			// else
 			{
 				res.r = clamp(res.r + koef * tres.r, 0, 255);
 				res.g= clamp(res.g + koef * tres.g, 0, 255);
 				res.b = clamp(res.b + koef * tres.b, 0, 255);
 			}
-			full -= koef;//cur_isec->fig->mat->transpare * full;
+			full -= koef;
 		}
 		if ((full < 0.05) || cur_isec->fig->mat->transpare == 0.0)
 			break;
