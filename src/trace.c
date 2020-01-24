@@ -75,6 +75,7 @@ void add_link(t_isec *prev, t_isec *ins)
 {
 	prev->next = ins;
 	ins->prev = prev;
+	
 }
 
 void	add_intersection(t_isec **cisec, t_isec *isec)
