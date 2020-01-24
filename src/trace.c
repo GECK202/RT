@@ -315,6 +315,23 @@ int 	return_background(t_lst *lst, t_trc trc)
 	return ((res.r << 16) + (res.g << 8) + res.b);
 }
 
+
+SDL_Color	get_color_from_file(t_map map, t_vec3 uv, float l)
+{
+	SDL_Color res;
+
+	int w = map.map->w;
+	int h = map.map->h;
+	int index_x = (uv.x) * w;
+	int index_y = (uv.y) * h;
+	int index = clamp(index_x + index_y * w, 0, w * h - 1);
+	int c = map.data[index];
+	res.r = clamp(((c & 0xff0000)>>16) * l, 0, 255);
+	res.g = clamp(((c & 0xff00)>>8) * l, 0, 255);
+	res.b = clamp((c & 0xff) * l, 0, 255);
+	return (res);
+}
+
 /*
 ** ray trace function
 */
@@ -351,49 +368,99 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	// 	prozr.b = t % (256 * 256);
 	// }
 	////////////////////////////прозрачность
+	
+	int col = return_background(lst, trc);
 	if (cisec->fig == NULL)
-	{
-		return (return_background(lst, trc));
-	}
-	trc.p = plus_vec3(mult_vec3f(trc.d, cisec->t), (trc.o));
+		return (col);
 	
-	if (cisec->fig->mat->norm_map.map && cisec->uv.x && cisec->uv.x != INFINITY)
-		get_normal_from_file(cisec, lst);
+	SDL_Color	tres;
+	t_isec *cur_isec;
+	cur_isec = cisec;
 
-	trc.d = invert_vec3(trc.d);
-	l = light(lst, set_l_prm(trc, cisec->n), cisec->fig);
+	float full = 1.0f;
+	float koef;
+	res.r = 0;
+	res.g = 0;
+	res.b = 0;
+	int flag = 0;
+	while (cur_isec)
+	{
+		if (cur_isec->fig->mat->transpare != 1.0)
+		{
+			trc.p = plus_vec3(mult_vec3f(trc.d, cur_isec->t), (trc.o));
+			
+			if (cur_isec->fig->mat->norm_map.map && cur_isec->uv.x && cur_isec->uv.x != INFINITY)
+				get_normal_from_file(cur_isec, lst);
+			trc.d = invert_vec3(trc.d);
+			l = light(lst, set_l_prm(trc, cur_isec->n), cur_isec->fig);
+
+			if (cur_isec->fig->mat->diff_map.map && cur_isec->uv.x && cur_isec->uv.x != INFINITY)
+			{
+				int w = cur_isec->fig->mat->diff_map.map->w;
+				int h = cur_isec->fig->mat->diff_map.map->h;
+				int index_x = (cur_isec->uv.x) * w;
+				int index_y = (cur_isec->uv.y) * h;
+				int index = clamp(index_x + index_y * w, 0, w * h - 1);
+				int c = cur_isec->fig->mat->diff_map.data[index];
+				tres.r = clamp(((c & 0xff0000)>>16) * l, 0, 255);
+				tres.g = clamp(((c & 0xff00)>>8) * l, 0, 255);
+				tres.b = clamp((c & 0xff) * l, 0, 255);
+				// tres = get_color_from_file(cur_isec->fig->mat->diff_map, cur_isec->uv, l);
+			}
+			else
+			{
+				tres.r = clamp(cur_isec->fig->mat->col.r * l, 0, 255);
+				tres.g = clamp(cur_isec->fig->mat->col.g * l, 0, 255);
+				tres.b = clamp(cur_isec->fig->mat->col.b * l, 0, 255);
+			}
+			if (depth > 0 && cur_isec->fig->mat->refl > 0)
+			{
+				trc.o = set_vec3(trc.p);
+				refl_col = get_refl_col(lst, trc, cur_isec->n, depth - 1);
+				tres.r = res.r * (1 - cur_isec->fig->mat->refl) + refl_col.r * cur_isec->fig->mat->refl;
+				tres.g = res.g * (1 - cur_isec->fig->mat->refl) + refl_col.g * cur_isec->fig->mat->refl;
+				tres.b = res.b * (1 - cur_isec->fig->mat->refl) + refl_col.b * cur_isec->fig->mat->refl;
+			}
+			koef = (1.0 - cur_isec->fig->mat->transpare) * full;
+			if (full == 1.0)
+			{
+				res.r = tres.r * (1 - cur_isec->fig->mat->transpare);
+				res.g = tres.g * (1 - cur_isec->fig->mat->transpare);
+				res.b = tres.b * (1 - cur_isec->fig->mat->transpare);
+			}
+			else
+			{
+				res.r = clamp(res.r + koef * tres.r, 0, 255);
+				res.g= clamp(res.g + koef * tres.g, 0, 255);
+				res.b = clamp(res.b + koef * tres.b, 0, 255);
+			}
+			full -= koef;//cur_isec->fig->mat->transpare * full;
+		}
+		if ((full < 0.005) || cur_isec->fig->mat->transpare == 0.0)
+			break;
+		cur_isec = cur_isec->next;
+	}
+
+	if (full > 0)
+	{
+		res.r = clamp(res.r + full * (col / (256 * 256)), 0, 255);
+		res.g = clamp(res.g + full * (col / 256 % 256), 0, 255);
+		res.b = clamp(res.b + full * (col % (256 * 256)), 0, 255);
+	}
+	
+
+	
+
+	
 	
 	
 
-	if (cisec->fig->mat->diff_map.map && cisec->uv.x && cisec->uv.x != INFINITY)
-	{
-		int w = cisec->fig->mat->diff_map.map->w;
-		int h = cisec->fig->mat->diff_map.map->h;
-		int index_x = (cisec->uv.x) * w;
-		int index_y = (cisec->uv.y) * h;
-		int index = clamp(index_x + index_y * w, 0, w * h - 1);
-		int n = cisec->fig->mat->diff_map.data[index];
-		res.r = clamp(((n & 0xff0000)>>16) * l, 0, 255);
-		res.g = clamp(((n & 0xff00)>>8) * l, 0, 255);
-		res.b = clamp((n & 0xff) * l, 0, 255);
-	}
-	else
-	{
-		res.r = clamp(cisec->fig->mat->col.r * l, 0, 255);
-		res.g = clamp(cisec->fig->mat->col.g * l, 0, 255);
-		res.b = clamp(cisec->fig->mat->col.b * l, 0, 255);
-	}
 	
 	
-	if (depth <= 0 || cisec->fig->mat->refl <= 0)
-		return ((res.r << 16) + (res.g << 8) + res.b);
-	trc.o = set_vec3(trc.p);
-	refl_col = get_refl_col(lst, trc, cisec->n, depth - 1);
-	res.r = res.r * (1 - cisec->fig->mat->refl) + refl_col.r * cisec->fig->mat->refl;
-	res.g = res.g * (1 - cisec->fig->mat->refl) + refl_col.g * cisec->fig->mat->refl;
-	res.b = res.b * (1 - cisec->fig->mat->refl) + refl_col.b * cisec->fig->mat->refl;
+	
+	
 	int color;
-	double kof = 1 - cisec->fig->mat->transpare, kof0 = cisec->fig->mat->transpare;
+	// double kof = 1 - cisec->fig->mat->transpare, kof0 = cisec->fig->mat->transpare;
 	color = (res.r << 16) + (res.g << 8) + res.b;
 	return (color);
 }

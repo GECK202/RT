@@ -60,20 +60,20 @@ void	rain(t_lst *lst)
 	int				rc;
 	void			*status;
 
-	// pthread_attr_init(&attr);
-	// pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+	pthread_attr_init(&attr);
+	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 	lst->pot = -1;
 	while (++(lst->pot) < POT)
 	{
 		ft_memcpy((void*)&data[lst->pot], (void *)lst, sizeof(t_lst));
-		pixel((void *)(&data[lst->pot]));
-		// rc = pthread_create(&threads[lst->pot],
-		// 	NULL, pixel, (void *)(&data[lst->pot]));
+		// pixel((void *)(&data[lst->pot]));
+		rc = pthread_create(&threads[lst->pot],
+			NULL, pixel, (void *)(&data[lst->pot]));
 	}
-	// pthread_attr_destroy(&attr);
-	// lst->pot = -1;
-	// while (++(lst->pot) < POT)
-	// 	rc = pthread_join(threads[lst->pot], &status);
+	pthread_attr_destroy(&attr);
+	lst->pot = -1;
+	while (++(lst->pot) < POT)
+		rc = pthread_join(threads[lst->pot], &status);
 }
 
 void close_sdl(t_lst *lst)
