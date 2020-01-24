@@ -51,6 +51,9 @@ float	get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght)
 		trc->max = INFINITY;
 	}
 	shdw = malloc(sizeof(t_isec));
+
+
+
 	cls_isec(&shdw, lst, *trc);
 	if (lst->scn->shadow && shdw->fig != NULL)
 		return (1);

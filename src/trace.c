@@ -71,6 +71,94 @@ void	cls_isec2(t_isec **cisec, t_lst *lst, t_trc trc)
 	}
 }
 
+void add_link(t_isec *prev, t_isec *ins)
+{
+	prev->next = ins;
+	ins->prev = prev;
+}
+
+void	add_intersection(t_isec **cisec, t_isec *isec)
+{
+	t_isec *cur;
+	t_isec *prev;
+
+	if ((*cisec)->fig == NULL)
+	{
+		free((*cisec));
+		*cisec = isec;
+		return ;
+	}
+
+	cur = *cisec;
+	prev = NULL;
+	if (!cur || isec->t < cur->t)
+	{
+		*cisec = isec;
+		if (cur!=NULL)
+		{
+			add_link(isec, cur);
+		}
+		return ;
+	}
+	while (cur)
+	{
+		if (isec->t < cur->t)
+		{
+			add_link(prev, isec);
+			add_link(isec, cur);
+			return ;
+		}
+		prev = cur;
+		cur = cur->next;
+	}
+	add_link(prev, isec);
+}
+
+void	cls_isec3(t_isec **cisec, t_lst *lst, t_trc trc)///////
+{
+	t_fig	*cur_fig;
+	t_hit	hit;
+
+	(*cisec)->t = INFINITY;
+	(*cisec)->uv.x = INFINITY;
+	(*cisec)->uv.y = INFINITY;
+	(*cisec)->fig = NULL;
+	(*cisec)->n = cre_vec3(0,0,1);
+	cur_fig = lst->scn->figs;
+	while (cur_fig)
+	{
+		
+		sel_fig_check(&hit, trc.o, trc.d, cur_fig);
+		
+		if (hit.count == 1 || hit.count == 2)
+		{
+			hit.isec1->prev = NULL;
+			hit.isec1->next = NULL;
+			add_intersection(cisec, hit.isec1);
+			// if (hit.isec1 && hit.isec1->t >= trc.min && hit.isec1->t <= trc.max && hit.isec1->t < (*cisec)->t)
+			// {
+			// 	if ((*cisec) != NULL)
+			// 		free((*cisec));
+			// 	*cisec = hit.isec1;
+			// }
+		}
+
+		if (hit.count == 2)
+		{
+			hit.isec2->prev = NULL;
+			hit.isec2->next = NULL;
+			add_intersection(cisec, hit.isec2);
+			// if (hit.isec2 && hit.isec2->t >= trc.min && hit.isec2->t <= trc.max && hit.isec2->t < (*cisec)->t)
+			// {
+			// 	if ((*cisec) != NULL)
+			// 		free((*cisec));
+			// 	*cisec = hit.isec2;
+			// }
+		}
+		cur_fig = cur_fig->next;
+	}
+}
+
 void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc)///////
 {
 	t_fig	*cur_fig;
@@ -88,28 +176,24 @@ void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc)///////
 		
 		if (hit.count == 1 || hit.count == 2)
 		{
-			if (hit.isec1 && hit.isec1->t >= trc.min && hit.isec1->t <= trc.max && hit.isec1->t < (*cisec)->t)
+			if (hit.isec1->t >= trc.min && hit.isec1->t <= trc.max && hit.isec1->t < (*cisec)->t)
 			{
-				if ((*cisec) != NULL)
-					free((*cisec));
+				free((*cisec));
 				*cisec = hit.isec1;
 			}
 		}
 
 		if (hit.count == 2)
 		{
-			if (hit.isec2 && hit.isec2->t >= trc.min && hit.isec2->t <= trc.max && hit.isec2->t < (*cisec)->t)
+			if (hit.isec2->t >= trc.min && hit.isec2->t <= trc.max && hit.isec2->t < (*cisec)->t)
 			{
-				if ((*cisec) != NULL)
-					free((*cisec));
+				free((*cisec));
 				*cisec = hit.isec2;
 			}
 		}
 		cur_fig = cur_fig->next;
 	}
 }
-
-
 
 /*
 ** calculate normal for intersection dot of figure
