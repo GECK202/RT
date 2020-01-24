@@ -9,7 +9,7 @@ name: earth
 1	color: 250 255 250
 2	diffuse: res/fig1_dif.png
 3	normal: res/fig1_nm.png
-4	specular: 1500
+4	specular: 100
 5	reflection: 0.4
 6	transpare: 0.4
 
@@ -18,7 +18,7 @@ name: earth
 1	color: 0 0 255
 2	diffuse: res/fig1_dif.png
 3	normal: res/fig1_nm.png1
-4	specular: 100
+4	specular: 0
 5	reflection: 0
 6	transpare: 0.0
 
@@ -47,7 +47,7 @@ name: earth
 3	rotation:0 0 0
 4	radius:2
 5	angle:0
-6	material: earth
+6	material: blue_cyl
 
 [figure]:
 0	type:sphere
@@ -56,7 +56,7 @@ name: earth
 3	rotation:0 0 0
 4	radius:1
 5	angle:0
-6	material: earth
+6	material: blue_cyl
 
 [figure]:
 0	type:cylinder
@@ -65,7 +65,7 @@ name: earth
 3	rotation:0 0 0
 4	radius:3
 5	angle:30
-6	material: earth
+6	material: blue_cyl
 
 [figure]:
 0	type:plane
@@ -74,7 +74,7 @@ name: earth
 3	rotation:0 0 0
 4	radius:0
 5	angle:0
-6	material: water
+6	material: blue_cyl
 
 [figure]:
 0	type:sphere
@@ -83,7 +83,7 @@ name: earth
 3	rotation:0 0 0
 4	radius:3
 5	angle:0
-6	material: earth
+6	material: blue_cyl
 
 [light]:
 0	type:ambient
