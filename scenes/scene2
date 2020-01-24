@@ -65,7 +65,7 @@ name: earth
 3	rotation:0 0 0
 4	radius:3
 5	angle:30
-6	material: blue_cyl
+6	material: earth
 
 [figure]:
 0	type:plane
