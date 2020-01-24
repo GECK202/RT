@@ -139,7 +139,16 @@ typedef struct		s_isec
 	float			check;
 	t_vec3			n;
 	t_vec3			uv;
+	struct s_isec	*next;
+	struct s_isec	*prev;
 }					t_isec;
+
+typedef struct		s_hit
+{
+	t_isec			*isec1;
+	t_isec			*isec2;
+	int				count;
+}					t_hit;
 
 typedef struct		s_scn
 {
@@ -168,7 +177,6 @@ typedef struct		s_lst
 	int				postEffects;
 	int				*data_dop;
 	int				num_file_for_screen;
-	int				*arr_fig;
 	int				t;
 	
 	int				n0;
@@ -218,6 +226,7 @@ typedef struct		s_l_prm
 	t_vec3			v;
 }					t_l_prm;
 
+void				cls_isec2(t_isec **cisec, t_lst *lst, t_trc trc);
 void				postEffects(t_lst *lst);
 int					set_transpare_mat(t_lst *lst, char *word);
 
@@ -259,14 +268,14 @@ t_vec3				invert_vec3(t_vec3 src);
 SDL_Color			set_col(int r, int g, int b, int a);
 t_vec3				refl_r(t_vec3 l, t_vec3 n);
 
-void				sel_fig_check(t_vec3 *t, t_vec3 o, t_vec3 d,
+void				sel_fig_check(t_hit *hit, t_vec3 o, t_vec3 d,
 									t_fig *cur_fig);
-void				intersec_sph(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *sph);
-void				intersec_cyl(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *cyl);
-void				intersec_pln(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *pln);
-void				intersec_con(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *con);
+void				intersec_sph(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *sph);
+void				intersec_cyl(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *cyl);
+void				intersec_pln(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln);
+void				intersec_con(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *con);
 
-t_isec				cls_isec(t_lst *lst, t_trc trc);
+void				cls_isec(t_isec **cisec, t_lst *lst, t_trc trc);
 int					trace(t_lst *lst, t_trc trc, int depth);
 float				light(t_lst *lst, t_l_prm b, t_fig *fig);
 

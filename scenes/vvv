@@ -44,7 +44,7 @@ name: earth0
 0	name: water
 1	color: 255 200 150
 2	diffuse: res/water3.png
-3	normal: res/water3_nm.png
+3	normal: res/water3_nm.png1
 4	specular: 100
 5	reflection: 0.6
 6	transpare: 0.0

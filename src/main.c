@@ -20,9 +20,6 @@ void	mult(t_lst *lst, t_trc *trc, int x, int y)
 	mult_m3(&trc->d, trc->d, lst->camera_z);
 	mult_m3(&trc->d, trc->d, lst->camera_x);
 	mult_m3(&trc->d, trc->d, lst->camera_y);
-	int g = lst->t;
-	while (--g >= 0)
-		lst->arr_fig[g] = 0;
 
 	lst->data[(S_H - y - H_H - 1) * S_W + x + H_W] =
 		trace(lst, *trc, RECURCE_DEPTH);
@@ -68,16 +65,13 @@ void	rain(t_lst *lst)
 	while (++(lst->pot) < POT)
 	{
 		ft_memcpy((void*)&data[lst->pot], (void *)lst, sizeof(t_lst));
-		data[lst->pot].arr_fig = malloc(sizeof(int) * lst->t);
 		rc = pthread_create(&threads[lst->pot],
 			NULL, pixel, (void *)(&data[lst->pot]));
 	}
 	pthread_attr_destroy(&attr);
 	lst->pot = -1;
-	while (++(lst->pot) < POT){
+	while (++(lst->pot) < POT)
 		rc = pthread_join(threads[lst->pot], &status);
-		free(data[lst->pot].arr_fig);
-	}
 }
 
 void close_sdl(t_lst *lst)

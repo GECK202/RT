@@ -17,51 +17,50 @@
 ** calculate intersection and return figure and distatnce of intersection
 */
 
-t_isec	cls_isec(t_lst *lst, t_trc trc)
+void	cls_isec2(t_isec **cisec, t_lst *lst, t_trc trc)
 {
 	t_fig	*cur_fig;
 	t_vec3	t;
-	t_isec	cisec;
 
-	cisec.t = INFINITY;
-	cisec.uv.x = INFINITY;
-	cisec.uv.y = INFINITY;
-	cisec.fig = NULL;
+	(*cisec)->t = INFINITY;
+	(*cisec)->uv.x = INFINITY;
+	(*cisec)->uv.y = INFINITY;
+	(*cisec)->fig = NULL;
 	cur_fig = lst->scn->figs;
 	int i = 0;
 	while (cur_fig)
 	{
 		
-		sel_fig_check(&t, trc.o, trc.d, cur_fig);
+		// sel_fig_check(&t, trc.o, trc.d, cur_fig);
 		
-		if (t.x >= trc.min && t.x <= trc.max && t.x < cisec.t && !lst->arr_fig[i])
+		if (t.x >= trc.min && t.x <= trc.max && t.x < (*cisec)->t)
 		{
-			cisec.t = t.x;
-			cisec.fig = cur_fig;
-			if (t.z != INFINITY)//cisec.fig->type == sphere && 
+			(*cisec)->t = t.x;
+			(*cisec)->fig = cur_fig;
+			if (t.z != INFINITY)//cisec->fig->type == sphere && 
 			{
-				cisec.uv.x = t.w;
-				cisec.uv.y = t.z;
+				(*cisec)->uv.x = t.w;
+				(*cisec)->uv.y = t.z;
 			}
 			else
 			{
-				cisec.uv.x = INFINITY;
-				cisec.uv.y = INFINITY;
+				(*cisec)->uv.x = INFINITY;
+				(*cisec)->uv.y = INFINITY;
 			}
 		}
-		if (t.y != t.x && t.y >= trc.min && t.y <= trc.max && t.y < cisec.t && !lst->arr_fig[i])
+		if (t.y != t.x && t.y >= trc.min && t.y <= trc.max && t.y < (*cisec)->t)
 		{
-			cisec.t = t.y;
-			cisec.fig = cur_fig;
-			if (t.z != INFINITY)//cisec.fig->type == sphere && 
+			(*cisec)->t = t.y;
+			(*cisec)->fig = cur_fig;
+			if (t.z != INFINITY)//cisec->fig->type == sphere && 
 			{
-				cisec.uv.x = t.w;
-				cisec.uv.y = t.z;
+				(*cisec)->uv.x = t.w;
+				(*cisec)->uv.y = t.z;
 			}
 			else
 			{
-				cisec.uv.x = INFINITY;
-				cisec.uv.y = INFINITY;
+				(*cisec)->uv.x = INFINITY;
+				(*cisec)->uv.y = INFINITY;
 			}
 		}
 		
@@ -70,7 +69,104 @@ t_isec	cls_isec(t_lst *lst, t_trc trc)
 		cur_fig = cur_fig->next;
 		i++;
 	}
-	return (cisec);
+}
+
+void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc)//////////////////////////////
+{
+	t_fig	*cur_fig;
+	t_hit	hit;
+
+	(*cisec)->t = INFINITY;
+	(*cisec)->uv.x = INFINITY;
+	(*cisec)->uv.y = INFINITY;
+	(*cisec)->fig = NULL;
+	cur_fig = lst->scn->figs;
+	// int i = 0;
+	while (cur_fig)
+	{
+		
+		sel_fig_check(&hit, trc.o, trc.d, cur_fig);
+		
+		if (hit.count == 1 || hit.count == 2)
+		{
+			if (hit.isec1 && hit.isec1->t >= trc.min && hit.isec1->t <= trc.max && hit.isec1->t < (*cisec)->t)
+			{
+				// if ((*cisec) != NULL)
+				// 	free((*cisec));
+				*cisec = hit.isec1;
+				// (*cisec)->t = hit.isec1.t;
+				// (*cisec)->fig = cur_fig;
+				// if (hit.isec1.uv.y != INFINITY)//cisec->fig->type == sphere && 
+				// {
+				// 	(*cisec)->uv.x = hit.isec1.uv.x;
+				// 	(*cisec)->uv.y = hit.isec1.uv.y;
+				// }
+				// else
+				// {
+				// 	(*cisec)->uv.x = INFINITY;
+				// 	(*cisec)->uv.y = INFINITY;
+				// }
+			}
+		}
+
+		if (hit.count == 2)
+		{
+			if (hit.isec2 && hit.isec2->t >= trc.min && hit.isec2->t <= trc.max && hit.isec2->t < (*cisec)->t)
+			{
+				// if ((*cisec) != NULL)
+				// 	free((*cisec));
+				*cisec = hit.isec2;
+				// (*cisec)->t = hit.isec2.t;
+				// (*cisec)->fig = cur_fig;
+				// if (hit.isec2.uv.y != INFINITY)//cisec->fig->type == sphere && 
+				// {
+				// 	(*cisec)->uv.x = hit.isec2.uv.x;
+				// 	(*cisec)->uv.y = hit.isec2.uv.y;
+				// }
+				// else
+				// {
+				// 	(*cisec)->uv.x = INFINITY;
+				// 	(*cisec)->uv.y = INFINITY;
+				// }
+			}
+		}
+
+		// if (t.x >= trc.min && t.x <= trc.max && t.x < (*cisec)->t)
+		// {
+		// 	(*cisec)->t = t.x;
+		// 	(*cisec)->fig = cur_fig;
+		// 	if (t.z != INFINITY)//cisec->fig->type == sphere && 
+		// 	{
+		// 		(*cisec)->uv.x = t.w;
+		// 		(*cisec)->uv.y = t.z;
+		// 	}
+		// 	else
+		// 	{
+		// 		(*cisec)->uv.x = INFINITY;
+		// 		(*cisec)->uv.y = INFINITY;
+		// 	}
+		// }
+		// if (t.y != t.x && t.y >= trc.min && t.y <= trc.max && t.y < (*cisec)->t)
+		// {
+		// 	(*cisec)->t = t.y;
+		// 	(*cisec)->fig = cur_fig;
+		// 	if (t.z != INFINITY)//cisec->fig->type == sphere && 
+		// 	{
+		// 		(*cisec)->uv.x = t.w;
+		// 		(*cisec)->uv.y = t.z;
+		// 	}
+		// 	else
+		// 	{
+		// 		(*cisec)->uv.x = INFINITY;
+		// 		(*cisec)->uv.y = INFINITY;
+		// 	}
+		// }
+		
+		
+		
+		cur_fig = cur_fig->next;
+		// i++;
+	}
 }
 
 /*
@@ -165,33 +261,34 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	SDL_Color	res;
 	t_vec3		n;
 	float		l;
-	t_isec		cisec;
+	t_isec		*cisec;
 	SDL_Color	refl_col;
 
-	cisec = cls_isec(lst, trc);
+	cisec = malloc(sizeof(t_isec));
+	cls_isec(&cisec, lst, trc);
 	////////////////////////////прозрачность
-	SDL_Color prozr;
-	if (cisec.fig != NULL && cisec.fig->mat->transpare != 0){
-		int t = 0;
-		t_fig *cur_fig;
-		cur_fig = lst->scn->figs;
-		while (cur_fig)
-		{
-			if (cur_fig == cisec.fig)
-			{
-				lst->arr_fig[t] = 1;
-				break ;
-			}
-			t++;
-			cur_fig = cur_fig->next;
-		}
-		t = trace(lst, trc, depth);
-		prozr.r = t / (256 * 256);
-		prozr.g = t / 256 % 256;
-		prozr.b = t % (256 * 256);
-	}
+	// SDL_Color prozr;
+	// if (cisec->fig != NULL && cisec->fig->mat->transpare != 0){
+	// 	int t = 0;
+	// 	t_fig *cur_fig;
+	// 	cur_fig = lst->scn->figs;
+	// 	while (cur_fig)
+	// 	{
+	// 		if (cur_fig == cisec->fig)
+	// 		{
+	// 			lst->arr_fig[t] = 1;
+	// 			break ;
+	// 		}
+	// 		t++;
+	// 		cur_fig = cur_fig->next;
+	// 	}
+	// 	t = trace(lst, trc, depth);
+	// 	prozr.r = t / (256 * 256);
+	// 	prozr.g = t / 256 % 256;
+	// 	prozr.b = t % (256 * 256);
+	// }
 	////////////////////////////прозрачность
-	if (cisec.fig == NULL)
+	if (cisec->fig == NULL)
 	{
 		if (!lst->scn->diff_map.map)
 			return (lst->scn->bgc);
@@ -220,55 +317,52 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 		res.b = clamp((n & 0xff), 0, 255);
 		return ((res.r << 16) + (res.g << 8) + res.b);
 	}
-	trc.p = plus_vec3(mult_vec3f(trc.d, cisec.t), (trc.o));
+	trc.p = plus_vec3(mult_vec3f(trc.d, cisec->t), (trc.o));
 	
-	n = get_normal(&cisec, trc);
+	n = get_normal(cisec, trc);
 	
-	if (cisec.fig->mat->norm_map.map && cisec.uv.x && cisec.uv.x != INFINITY)
+	if (cisec->fig->mat->norm_map.map && cisec->uv.x && cisec->uv.x != INFINITY)
 	{
-		t_vec3 gn = get_normal_from_file(&cisec, lst, n);
+		t_vec3 gn = get_normal_from_file(cisec, lst, n);
 		n = minus_vec3(n, gn);
 	}
 	n = div_vec3f(n, len_vec3(n));
 
 	trc.d = invert_vec3(trc.d);
-	l = light(lst, set_l_prm(trc, n), cisec.fig);
+	l = light(lst, set_l_prm(trc, n), cisec->fig);
 	
 	
 
-	if (cisec.fig->mat->diff_map.map && cisec.uv.x && cisec.uv.x != INFINITY)
+	if (cisec->fig->mat->diff_map.map && cisec->uv.x && cisec->uv.x != INFINITY)
 	{
-		int w = cisec.fig->mat->diff_map.map->w;
-		int h = cisec.fig->mat->diff_map.map->h;
-		int index_x = (cisec.uv.x) * w;
-		int index_y = (cisec.uv.y) * h;
+		int w = cisec->fig->mat->diff_map.map->w;
+		int h = cisec->fig->mat->diff_map.map->h;
+		int index_x = (cisec->uv.x) * w;
+		int index_y = (cisec->uv.y) * h;
 		int index = clamp(index_x + index_y * w, 0, w * h - 1);
-		int n = cisec.fig->mat->diff_map.data[index];
+		int n = cisec->fig->mat->diff_map.data[index];
 		res.r = clamp(((n & 0xff0000)>>16) * l, 0, 255);
 		res.g = clamp(((n & 0xff00)>>8) * l, 0, 255);
 		res.b = clamp((n & 0xff) * l, 0, 255);
 	}
 	else
 	{
-		res.r = clamp(cisec.fig->mat->col.r * l, 0, 255);
-		res.g = clamp(cisec.fig->mat->col.g * l, 0, 255);
-		res.b = clamp(cisec.fig->mat->col.b * l, 0, 255);
+		res.r = clamp(cisec->fig->mat->col.r * l, 0, 255);
+		res.g = clamp(cisec->fig->mat->col.g * l, 0, 255);
+		res.b = clamp(cisec->fig->mat->col.b * l, 0, 255);
 	}
 	
 	
-	if (depth <= 0 || cisec.fig->mat->refl <= 0)
+	if (depth <= 0 || cisec->fig->mat->refl <= 0)
 		return ((res.r << 16) + (res.g << 8) + res.b);
 	trc.o = set_vec3(trc.p);
 	refl_col = get_refl_col(lst, trc, n, depth - 1);
-	res.r = res.r * (1 - cisec.fig->mat->refl) + refl_col.r * cisec.fig->mat->refl;
-	res.g = res.g * (1 - cisec.fig->mat->refl) + refl_col.g * cisec.fig->mat->refl;
-	res.b = res.b * (1 - cisec.fig->mat->refl) + refl_col.b * cisec.fig->mat->refl;
+	res.r = res.r * (1 - cisec->fig->mat->refl) + refl_col.r * cisec->fig->mat->refl;
+	res.g = res.g * (1 - cisec->fig->mat->refl) + refl_col.g * cisec->fig->mat->refl;
+	res.b = res.b * (1 - cisec->fig->mat->refl) + refl_col.b * cisec->fig->mat->refl;
 	int color;
-	double kof = 1 - cisec.fig->mat->transpare, kof0 = cisec.fig->mat->transpare;
-	if (cisec.fig == NULL || cisec.fig->mat->transpare == 0)
-		color = (res.r << 16) + (res.g << 8) + res.b;
-	else
-		color = ((int)(kof * (double)res.r) << 16) + ((int)(kof0 * (double)prozr.r) << 16) + ((int)(kof * (double)res.g) << 8) + ((int)(kof0 * (double)prozr.g) << 8) + (int)(kof * (double)res.b) + (int)(kof0 * (double)prozr.b);
+	double kof = 1 - cisec->fig->mat->transpare, kof0 = cisec->fig->mat->transpare;
+	color = (res.r << 16) + (res.g << 8) + res.b;
 	return (color);
 }
 
