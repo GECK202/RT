@@ -13,8 +13,8 @@
 #ifndef RT_H
 # define RT_H
 
-# define S_W (800)
-# define S_H (600)
+# define S_W (400)
+# define S_H (300)
 # define H_W (S_W / 2)
 # define H_H (S_H / 2)
 # define RATIO ((float)S_W / (float)S_H)

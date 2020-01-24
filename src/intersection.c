@@ -96,8 +96,8 @@ void	intersec_cyl(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *cyl)
 	t->x = (discr - k.y) / k.x;
 	t->y = (-discr - k.y) / k.x;
 
-	if (t->x > t->y)
-		t->x = t->y;
+	//if (t->x > t->y)
+	//	t->x = t->y;
 	
 	float	scale = 0.1f;
 
@@ -105,11 +105,28 @@ void	intersec_cyl(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *cyl)
 	t_vec3 vt = mult_vec3f(dir, t->x);
 	t_vec3 c = set_vec3(cyl->pos);
 	float m = dot(d, vt) + dot(dir, minus_vec3(o, c));
+	if (m<0 || m > 5)
+	{
+		t->x = t->y;
+		t->y = INFINITY;
+		t_vec3 vt = mult_vec3f(dir, t->x);
+		t_vec3 c = set_vec3(cyl->pos);
+		float m = dot(d, vt) + dot(dir, minus_vec3(o, c));
+		if (m<0 || m>5)
+		{
+			t->x = INFINITY;
+			return ;
+		}
+	}
+
 	t_vec3 p = plus_vec3(mult_vec3f(d, t->x), o);
 	t_vec3 n = minus_vec3(minus_vec3(p, c), mult_vec3f(dir, m));
 	n = div_vec3f(n, len_vec3(n));
 	
-	t->z = (acos(dot(cyl->look, n)) / (M_PI));
+	float alp = dot(cyl->look, n);
+	if (alp < 0.0)
+		alp = 1.0 - abs(alp);
+	t->z = (acos(alp)/ (M_PI));
 	m *= scale;
 	m -= (int)m;
 	t->w = m;

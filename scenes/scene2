@@ -16,10 +16,10 @@ name: earth
 [material]:
 0	name: blue_cyl
 1	color: 0 0 255
-2	diffuse: 
-3	normal: 
-4	specular: 1500
-5	reflection: 0.3
+2	diffuse: res/fig1_dif.png
+3	normal: res/fig1_nm.png1
+4	specular: 100
+5	reflection: 0
 6	transpare: 0.0
 
 [material]:
@@ -63,9 +63,9 @@ name: earth
 1	position:-5 1 5
 2	direction:0 1 0
 3	rotation:0 0 0
-4	radius:1
+4	radius:3
 5	angle:30
-6	material: earth
+6	material: blue_cyl
 
 [figure]:
 0	type:plane
