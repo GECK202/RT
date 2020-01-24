@@ -421,14 +421,15 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 				tres.g = res.g * (1 - cur_isec->fig->mat->refl) + refl_col.g * cur_isec->fig->mat->refl;
 				tres.b = res.b * (1 - cur_isec->fig->mat->refl) + refl_col.b * cur_isec->fig->mat->refl;
 			}
+
 			koef = (1.0 - cur_isec->fig->mat->transpare) * full;
-			if (full == 1.0)
-			{
-				res.r = tres.r * (1 - cur_isec->fig->mat->transpare);
-				res.g = tres.g * (1 - cur_isec->fig->mat->transpare);
-				res.b = tres.b * (1 - cur_isec->fig->mat->transpare);
-			}
-			else
+			// if (full == 1.0)
+			// {
+			// 	res.r = tres.r * (1 - cur_isec->fig->mat->transpare);
+			// 	res.g = tres.g * (1 - cur_isec->fig->mat->transpare);
+			// 	res.b = tres.b * (1 - cur_isec->fig->mat->transpare);
+			// }
+			// else
 			{
 				res.r = clamp(res.r + koef * tres.r, 0, 255);
 				res.g= clamp(res.g + koef * tres.g, 0, 255);
@@ -436,16 +437,16 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 			}
 			full -= koef;//cur_isec->fig->mat->transpare * full;
 		}
-		if ((full < 0.005) || cur_isec->fig->mat->transpare == 0.0)
+		if ((full < 0.05) || cur_isec->fig->mat->transpare == 0.0)
 			break;
 		cur_isec = cur_isec->next;
 	}
 
 	if (full > 0)
 	{
-		res.r = clamp(res.r + full * (col / (256 * 256)), 0, 255);
-		res.g = clamp(res.g + full * (col / 256 % 256), 0, 255);
-		res.b = clamp(res.b + full * (col % (256 * 256)), 0, 255);
+		res.r = clamp(res.r + full * ((col & 0xff0000)>>16), 0, 255);
+		res.g = clamp(res.g + full * ((col & 0xff00)>>8), 0, 255);
+		res.b = clamp(res.b + full * (col & 0xff), 0, 255);
 	}
 	
 
