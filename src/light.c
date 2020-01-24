@@ -33,6 +33,15 @@ t_vec3	refl_r(t_vec3 l, t_vec3 n)
 ** check shadow for current point or directional light
 */
 
+float	transpare_shadow(t_isec *shdw, float kof)
+{
+	if (!shdw)
+		return (kof);
+	else if (shdw->fig->mat->transpare == 0)
+		return (0);
+	return (transpare_shadow(shdw->next, kof * shdw->fig->mat->transpare));
+}
+
 float	get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght)
 {
 	t_isec	*shdw;
@@ -54,12 +63,8 @@ float	get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght)
 	shdw = malloc(sizeof(t_isec));
 	cls_isec(&shdw, lst, *trc);
 	if (lst->scn->shadow && shdw->fig != NULL)
-	{
-
-		return (1);
-	}
-
-	return (0);
+		return (transpare_shadow(shdw, 1));
+	return (1);
 }
 
 /*
@@ -124,10 +129,11 @@ float	light(t_lst *lst, t_l_prm b, t_fig *fig)
 			ints += c_lght->ints;
 		else
 		{
-			if (!get_shadow(lst, &trc, b, c_lght))
+			float kof;
+			if ((kof = get_shadow(lst, &trc, b, c_lght)) > 0)
 			{
-				ints += get_diffuse(trc, b, c_lght);
-				ints += get_specular(trc, b, fig->mat->spec, c_lght->ints);
+				ints += kof * get_diffuse(trc, b, c_lght);
+				ints += kof * get_specular(trc, b, fig->mat->spec, c_lght->ints);
 			}
 		}
 		c_lght = c_lght->next;

@@ -11,7 +11,7 @@ name: earth
 3	normal: res/fig1_nm.png
 4	specular: 100
 5	reflection: 0.4
-6	transpare: 0.4
+6	transpare: 0.7
 
 [material]:
 0	name: blue_cyl
@@ -19,8 +19,8 @@ name: earth
 2	diffuse: res/fig1_dif.png
 3	normal: res/fig1_nm.png
 4	specular: 0
-5	reflection: 0.5
-6	transpare: 0.6
+5	reflection: 0
+6	transpare: 0
 
 [material]:
 0	name: blue_con
@@ -28,8 +28,8 @@ name: earth
 2	diffuse: 
 3	normal: 
 4	specular: 1500
-5	reflection: 0.3
-6	transpare: 0.8
+5	reflection: 0
+6	transpare: 0
 
 [material]:
 0	name: water
@@ -37,8 +37,8 @@ name: earth
 2	diffuse: res/water3.png
 3	normal: res/water3_nm.png
 4	specular: 100
-5	reflection: 0.6
-6	transpare: 0.8
+5	reflection: 0
+6	transpare: 0
 
 [figure]:
 0	type:conus
@@ -83,7 +83,7 @@ name: earth
 3	rotation:0 0 0
 4	radius:3
 5	angle:0
-6	material: blue_cyl
+6	material: earth
 
 [light]:
 0	type:ambient
