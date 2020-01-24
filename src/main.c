@@ -16,13 +16,14 @@ void	mult(t_lst *lst, t_trc *trc, int x, int y)
 {
 	trc->d.x = (float)x * RATIO / H_W;
 	trc->d.y = (float)y / H_H;
-	trc->d.z = 2;
+	trc->d.z = 1.5;
 	mult_m3(&trc->d, trc->d, lst->camera_z);
 	mult_m3(&trc->d, trc->d, lst->camera_x);
 	mult_m3(&trc->d, trc->d, lst->camera_y);
 
 	lst->data[(S_H - y - H_H - 1) * S_W + x + H_W] =
 		trace(lst, *trc, RECURCE_DEPTH);
+		
 	lst->data_dop[(S_H - y - H_H - 1) * S_W + x + H_W] = lst->data[(S_H - y - H_H - 1) * S_W + x + H_W];
 }
 
@@ -59,19 +60,20 @@ void	rain(t_lst *lst)
 	int				rc;
 	void			*status;
 
-	pthread_attr_init(&attr);
-	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+	// pthread_attr_init(&attr);
+	// pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 	lst->pot = -1;
 	while (++(lst->pot) < POT)
 	{
 		ft_memcpy((void*)&data[lst->pot], (void *)lst, sizeof(t_lst));
-		rc = pthread_create(&threads[lst->pot],
-			NULL, pixel, (void *)(&data[lst->pot]));
+		pixel((void *)(&data[lst->pot]));
+		// rc = pthread_create(&threads[lst->pot],
+		// 	NULL, pixel, (void *)(&data[lst->pot]));
 	}
-	pthread_attr_destroy(&attr);
-	lst->pot = -1;
-	while (++(lst->pot) < POT)
-		rc = pthread_join(threads[lst->pot], &status);
+	// pthread_attr_destroy(&attr);
+	// lst->pot = -1;
+	// while (++(lst->pot) < POT)
+	// 	rc = pthread_join(threads[lst->pot], &status);
 }
 
 void close_sdl(t_lst *lst)

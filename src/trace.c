@@ -17,59 +17,59 @@
 ** calculate intersection and return figure and distatnce of intersection
 */
 
-void	cls_isec2(t_isec **cisec, t_lst *lst, t_trc trc)
-{
-	t_fig	*cur_fig;
-	t_vec3	t;
+// void	cls_isec2(t_isec **cisec, t_lst *lst, t_trc trc)
+// {
+// 	t_fig	*cur_fig;
+// 	t_vec3	t;
 
-	(*cisec)->t = INFINITY;
-	(*cisec)->uv.x = INFINITY;
-	(*cisec)->uv.y = INFINITY;
-	(*cisec)->fig = NULL;
-	cur_fig = lst->scn->figs;
-	int i = 0;
-	while (cur_fig)
-	{
+// 	(*cisec)->t = INFINITY;
+// 	(*cisec)->uv.x = INFINITY;
+// 	(*cisec)->uv.y = INFINITY;
+// 	(*cisec)->fig = NULL;
+// 	cur_fig = lst->scn->figs;
+// 	int i = 0;
+// 	while (cur_fig)
+// 	{
 		
-		// sel_fig_check(&t, trc.o, trc.d, cur_fig);
+// 		// sel_fig_check(&t, trc.o, trc.d, cur_fig);
 		
-		if (t.x >= trc.min && t.x <= trc.max && t.x < (*cisec)->t)
-		{
-			(*cisec)->t = t.x;
-			(*cisec)->fig = cur_fig;
-			if (t.z != INFINITY)//cisec->fig->type == sphere && 
-			{
-				(*cisec)->uv.x = t.w;
-				(*cisec)->uv.y = t.z;
-			}
-			else
-			{
-				(*cisec)->uv.x = INFINITY;
-				(*cisec)->uv.y = INFINITY;
-			}
-		}
-		if (t.y != t.x && t.y >= trc.min && t.y <= trc.max && t.y < (*cisec)->t)
-		{
-			(*cisec)->t = t.y;
-			(*cisec)->fig = cur_fig;
-			if (t.z != INFINITY)//cisec->fig->type == sphere && 
-			{
-				(*cisec)->uv.x = t.w;
-				(*cisec)->uv.y = t.z;
-			}
-			else
-			{
-				(*cisec)->uv.x = INFINITY;
-				(*cisec)->uv.y = INFINITY;
-			}
-		}
+// 		if (t.x >= trc.min && t.x <= trc.max && t.x < (*cisec)->t)
+// 		{
+// 			(*cisec)->t = t.x;
+// 			(*cisec)->fig = cur_fig;
+// 			if (t.z != INFINITY)//cisec->fig->type == sphere && 
+// 			{
+// 				(*cisec)->uv.x = t.w;
+// 				(*cisec)->uv.y = t.z;
+// 			}
+// 			else
+// 			{
+// 				(*cisec)->uv.x = INFINITY;
+// 				(*cisec)->uv.y = INFINITY;
+// 			}
+// 		}
+// 		if (t.y != t.x && t.y >= trc.min && t.y <= trc.max && t.y < (*cisec)->t)
+// 		{
+// 			(*cisec)->t = t.y;
+// 			(*cisec)->fig = cur_fig;
+// 			if (t.z != INFINITY)//cisec->fig->type == sphere && 
+// 			{
+// 				(*cisec)->uv.x = t.w;
+// 				(*cisec)->uv.y = t.z;
+// 			}
+// 			else
+// 			{
+// 				(*cisec)->uv.x = INFINITY;
+// 				(*cisec)->uv.y = INFINITY;
+// 			}
+// 		}
 		
 		
 		
-		cur_fig = cur_fig->next;
-		i++;
-	}
-}
+// 		cur_fig = cur_fig->next;
+// 		i++;
+// 	}
+// }
 
 void add_link(t_isec *prev, t_isec *ins)
 {
@@ -115,7 +115,7 @@ void	add_intersection(t_isec **cisec, t_isec *isec)
 	add_link(prev, isec);
 }
 
-void	cls_isec3(t_isec **cisec, t_lst *lst, t_trc trc)///////
+void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc)///////
 {
 	t_fig	*cur_fig;
 	t_hit	hit;
@@ -131,7 +131,7 @@ void	cls_isec3(t_isec **cisec, t_lst *lst, t_trc trc)///////
 		
 		sel_fig_check(&hit, trc.o, trc.d, cur_fig);
 		
-		if (hit.count == 1 || hit.count == 2)
+		if ((hit.count == 1 || hit.count == 2) && hit.isec1->t >= trc.min && hit.isec1->t <= trc.max)
 		{
 			hit.isec1->prev = NULL;
 			hit.isec1->next = NULL;
@@ -144,7 +144,7 @@ void	cls_isec3(t_isec **cisec, t_lst *lst, t_trc trc)///////
 			// }
 		}
 
-		if (hit.count == 2)
+		if (hit.count == 2 && hit.isec2->t >= trc.min && hit.isec2->t <= trc.max)
 		{
 			hit.isec2->prev = NULL;
 			hit.isec2->next = NULL;
@@ -160,7 +160,7 @@ void	cls_isec3(t_isec **cisec, t_lst *lst, t_trc trc)///////
 	}
 }
 
-void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc)///////
+void	cls_isec3(t_isec **cisec, t_lst *lst, t_trc trc)///////
 {
 	t_fig	*cur_fig;
 	t_hit	hit;
@@ -357,16 +357,8 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	}
 	trc.p = plus_vec3(mult_vec3f(trc.d, cisec->t), (trc.o));
 	
-	// n = get_normal(cisec, trc);
-	// n = set_vec3(cisec->n);
-	
 	if (cisec->fig->mat->norm_map.map && cisec->uv.x && cisec->uv.x != INFINITY)
-	{
-		// t_vec3 gn = 
 		get_normal_from_file(cisec, lst);
-		// n = minus_vec3(n, gn);
-	}
-	// n = div_vec3f(n, len_vec3(n));
 
 	trc.d = invert_vec3(trc.d);
 	l = light(lst, set_l_prm(trc, cisec->n), cisec->fig);

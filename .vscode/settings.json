@@ -4,6 +4,8 @@
 	"editor.renderWhitespace": "all",
 	"files.associations": {
 		"algorithm": "c",
-		"iterator": "c"
+		"iterator": "c",
+		"ostream": "c",
+		"*.tcc": "c"
 	}
 }
