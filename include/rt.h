@@ -31,9 +31,14 @@
 # define MATERIAL (1)
 
 # define SCENE_LINES (4)
-# define FIGURE_LINES (7)
+# define FIGURE_LINES (8)
 # define LIGHT_LINES (4)
 # define MATERIAL_LINES (7)
+
+# define SCENE_FUNCTIONS (SCENE_LINES + 1)
+# define FIGURE_FUNCTIONS FIGURE_LINES
+# define LIGHT_FUNCTIONS LIGHT_LINES 
+# define MATERIAL_FUNCTIONS MATERIAL_LINES
 
 # define END_FOR_POST_EFFECTS 10
 
@@ -107,6 +112,7 @@ typedef struct		s_fig
 	t_vec3			look;
 	float			rad;
 	float			ang;
+	t_vec3			limit;
 	t_vec3			alpha;
 	t_mat3			mat_x;
 	t_mat3			mat_y;
@@ -201,13 +207,13 @@ typedef int			(*t_r_scn)(t_lst*, char*);
 
 typedef struct		s_read
 {
-	t_r_scn			f_scn[5];
+	t_r_scn			f_scn[SCENE_FUNCTIONS];
 	int				(*cre_mat)(t_lst*);
-	t_r_mat			f_mat[7];//Тест с прозрачностью
+	t_r_mat			f_mat[MATERIAL_FUNCTIONS];//Тест с прозрачностью
 	int				(*cre_fig)(t_lst*);
-	t_r_fig			f_fig[7];
+	t_r_fig			f_fig[FIGURE_FUNCTIONS];
 	int				(*cre_lght)(t_lst*);
-	t_r_lght		f_lght[4];
+	t_r_lght		f_lght[LIGHT_FUNCTIONS];
 }					t_read;
 
 typedef struct		s_trc
@@ -309,6 +315,7 @@ int					set_dir_fig(t_lst *lst, char *word);
 int					set_rot_fig(t_lst *lst, char *word);
 int					set_rad_fig(t_lst *lst, char *word);
 int					set_ang_fig(t_lst *lst, char *word);
+int					set_lim_fig(t_lst *lst, char *word);
 int					set_mat_fig(t_lst *lst, char *word);
 
 int					cre_lght(t_lst *lst);

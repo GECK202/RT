@@ -39,3 +39,22 @@ int		set_ang_fig(t_lst *lst, char *word)
 		fig->rad = 33;
 	return (1);
 }
+
+int		set_lim_fig(t_lst *lst, char *word)
+{
+	char	**limit;
+	t_fig	*fig;
+
+	if (!word)
+		return (0);
+	fig = lst->scn->cur_fig;
+	limit = ft_strsplit(word, ' ');
+	if (limit[0] && limit[1])
+	{
+		fig->limit.x = ft_atof(limit[0]);
+		fig->limit.y = ft_atof(limit[1]);
+		fig->limit.z = 0;
+		return (free_words(limit, 1));
+	}
+	return (free_words(limit, 0));
+}

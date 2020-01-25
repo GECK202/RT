@@ -47,7 +47,8 @@ name: earth
 3	rotation:0 0 0
 4	radius:2
 5	angle:0
-6	material: blue_cyl
+6	limit:0 0
+7	material: blue_cyl
 
 [figure]:
 0	type:sphere
@@ -56,7 +57,8 @@ name: earth
 3	rotation:0 0 0
 4	radius:1
 5	angle:0
-6	material: blue_cyl
+6	limit:0 0
+7	material: blue_cyl
 
 [figure]:
 0	type:cylinder
@@ -65,16 +67,18 @@ name: earth
 3	rotation:0 0 0
 4	radius:3
 5	angle:30
-6	material: blue_cyl
+6	limit:0 0
+7	material: blue_cyl
 
 [figure]:
 0	type:plane
-1	position:0 -5 3
+1	position:0 -5 0
 2	direction:0 1 0
 3	rotation:0 0 0
 4	radius:0
 5	angle:0
-6	material: blue_cyl
+6	limit:10 0
+7	material: blue_cyl
 
 [figure]:
 0	type:sphere
@@ -83,7 +87,8 @@ name: earth
 3	rotation:0 0 0
 4	radius:3
 5	angle:0
-6	material: earth
+6	limit:0 0
+7	material: earth
 
 [light]:
 0	type:ambient
