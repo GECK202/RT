@@ -13,64 +13,6 @@
 #include "rt.h"
 #include "stdio.h"
 
-/*
-** calculate intersection and return figure and distatnce of intersection
-*/
-
-// void	cls_isec2(t_isec **cisec, t_lst *lst, t_trc trc)
-// {
-// 	t_fig	*cur_fig;
-// 	t_vec3	t;
-
-// 	(*cisec)->t = INFINITY;
-// 	(*cisec)->uv.x = INFINITY;
-// 	(*cisec)->uv.y = INFINITY;
-// 	(*cisec)->fig = NULL;
-// 	cur_fig = lst->scn->figs;
-// 	int i = 0;
-// 	while (cur_fig)
-// 	{
-		
-// 		// sel_fig_check(&t, trc.o, trc.d, cur_fig);
-		
-// 		if (t.x >= trc.min && t.x <= trc.max && t.x < (*cisec)->t)
-// 		{
-// 			(*cisec)->t = t.x;
-// 			(*cisec)->fig = cur_fig;
-// 			if (t.z != INFINITY)//cisec->fig->type == sphere && 
-// 			{
-// 				(*cisec)->uv.x = t.w;
-// 				(*cisec)->uv.y = t.z;
-// 			}
-// 			else
-// 			{
-// 				(*cisec)->uv.x = INFINITY;
-// 				(*cisec)->uv.y = INFINITY;
-// 			}
-// 		}
-// 		if (t.y != t.x && t.y >= trc.min && t.y <= trc.max && t.y < (*cisec)->t)
-// 		{
-// 			(*cisec)->t = t.y;
-// 			(*cisec)->fig = cur_fig;
-// 			if (t.z != INFINITY)//cisec->fig->type == sphere && 
-// 			{
-// 				(*cisec)->uv.x = t.w;
-// 				(*cisec)->uv.y = t.z;
-// 			}
-// 			else
-// 			{
-// 				(*cisec)->uv.x = INFINITY;
-// 				(*cisec)->uv.y = INFINITY;
-// 			}
-// 		}
-		
-		
-		
-// 		cur_fig = cur_fig->next;
-// 		i++;
-// 	}
-// }
-
 void add_link(t_isec *prev, t_isec *ins)
 {
 	prev->next = ins;
@@ -115,7 +57,7 @@ void	add_intersection(t_isec **cisec, t_isec *isec)
 	add_link(prev, isec);
 }
 
-void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc)///////
+void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc)
 {
 	t_fig	*cur_fig;
 	t_hit	hit;
@@ -128,104 +70,62 @@ void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc)///////
 	cur_fig = lst->scn->figs;
 	while (cur_fig)
 	{
-		
 		sel_fig_check(&hit, trc.o, trc.d, cur_fig);
-		
-		if ((hit.count == 1 || hit.count == 2) && hit.isec1->t >= trc.min && hit.isec1->t <= trc.max)
-		{
-			hit.isec1->prev = NULL;
-			hit.isec1->next = NULL;
-			add_intersection(cisec, hit.isec1);
-			// if (hit.isec1 && hit.isec1->t >= trc.min && hit.isec1->t <= trc.max && hit.isec1->t < (*cisec)->t)
-			// {
-			// 	if ((*cisec) != NULL)
-			// 		free((*cisec));
-			// 	*cisec = hit.isec1;
-			// }
-		}
-
-		if (hit.count == 2 && hit.isec2->t >= trc.min && hit.isec2->t <= trc.max)
-		{
-			hit.isec2->prev = NULL;
-			hit.isec2->next = NULL;
-			add_intersection(cisec, hit.isec2);
-			// if (hit.isec2 && hit.isec2->t >= trc.min && hit.isec2->t <= trc.max && hit.isec2->t < (*cisec)->t)
-			// {
-			// 	if ((*cisec) != NULL)
-			// 		free((*cisec));
-			// 	*cisec = hit.isec2;
-			// }
-		}
-		cur_fig = cur_fig->next;
-	}
-}
-
-void	cls_isec3(t_isec **cisec, t_lst *lst, t_trc trc)///////
-{
-	t_fig	*cur_fig;
-	t_hit	hit;
-
-	(*cisec)->t = INFINITY;
-	(*cisec)->uv.x = INFINITY;
-	(*cisec)->uv.y = INFINITY;
-	(*cisec)->fig = NULL;
-	cur_fig = lst->scn->figs;
-	while (cur_fig)
-	{
-		
-		sel_fig_check(&hit, trc.o, trc.d, cur_fig);
-		
 		if (hit.count == 1 || hit.count == 2)
 		{
-			if (hit.isec1->t >= trc.min && hit.isec1->t <= trc.max && hit.isec1->t < (*cisec)->t)
+			if (hit.isec1->t >= trc.min && hit.isec1->t <= trc.max)
 			{
-				free((*cisec));
-				*cisec = hit.isec1;
+				hit.isec1->prev = NULL;
+				hit.isec1->next = NULL;
+				add_intersection(cisec, hit.isec1);
 			}
+			else
+				free(hit.isec1);
 		}
-
 		if (hit.count == 2)
 		{
-			if (hit.isec2->t >= trc.min && hit.isec2->t <= trc.max && hit.isec2->t < (*cisec)->t)
+			if (hit.isec2->t >= trc.min && hit.isec2->t <= trc.max)
 			{
-				free((*cisec));
-				*cisec = hit.isec2;
+				hit.isec2->prev = NULL;
+				hit.isec2->next = NULL;
+				add_intersection(cisec, hit.isec2);
 			}
+			else
+				free(hit.isec2);
 		}
 		cur_fig = cur_fig->next;
 	}
 }
 
-/*
-** calculate normal for intersection dot of figure
-*/
+SDL_Color	mult_sdl_color(SDL_Color col, float koef)
+{
+	SDL_Color res;
 
-// t_vec3	get_normal(t_isec *cisec, t_trc trc)
-// {
-// 	t_vec3	n;
-// 	t_fig	fig;
-// 	float	m;
-// 	t_vec3	vt;
-// 	t_vec3	c;
+	res.r = clamp(col.r * koef, 0, 255);
+	res.g = clamp(col.g * koef, 0, 255);
+	res.b = clamp(col.b * koef, 0, 255);
+	return (res);
+}
 
-// 	fig = *(cisec->fig);
-// 	n.x = 0;
-// 	if (fig.type == plane)
-// 		n = cisec->n;
-// 		// n = set_vec3(fig.dir);
-// 	else if (fig.type == sphere)
-// 		n = cisec->n;
-// 		// n = minus_vec3(trc.p, fig.pos);
-// 	else if ((fig.type == cylinder) || (fig.type == conus))
-// 		n = cisec->n;
-// 	// {
-// 	// 	vt = mult_vec3f(fig.dir, cisec->t);
-// 	// 	c = set_vec3(fig.pos);
-// 	// 	m = dot(trc.d, vt) + dot(minus_vec3(trc.o, c), fig.dir);
-// 	// 	n = minus_vec3(minus_vec3(trc.p, c), mult_vec3f(fig.dir, m));
-// 	// }
-// 	return (div_vec3f(n, len_vec3(n)));
-// }
+SDL_Color	mult_int_color(int c, float koef)
+{
+	SDL_Color res;
+
+	res.r = clamp(((c & 0xff0000)>>16) * koef, 0, 255);
+	res.g = clamp(((c & 0xff00)>>8) * koef, 0, 255);
+	res.b = clamp((c & 0xff) * koef, 0, 255);
+	return (res);
+}
+
+SDL_Color	plus_sdl_color(SDL_Color col1, SDL_Color col2)
+{
+	SDL_Color res;
+
+	res.r = clamp(col1.r + col2.r, 0, 255);
+	res.g = clamp(col1.g + col2.g, 0, 255);
+	res.b = clamp(col1.b + col2.b, 0, 255);
+	return (res);
+}
 
 /*
 ** calculate reflection color for dot
@@ -270,16 +170,15 @@ void	get_normal_from_file(t_isec *cisec, t_lst *lst)
 	int h = cisec->fig->mat->norm_map.map->h;
 	int index_x = cisec->uv.x * w;
 	int index_y = cisec->uv.y * h;
-	int index = clamp(index_x + index_y * w, 0, w * h - 1);
+	int index = clamp(index_x + index_y * w, 0, w * h);
 	uint n = cisec->fig->mat->norm_map.data[index];
 	
 	norm.x = 0.5 - ((n & 0xff0000)>>16) /255.0f;
 	norm.y = 0.5 - ((n & 0xff00)>>8) /255.0f;
-	norm.z = 1.0 - (n & 0xff) /255.0f;//(n & 0xff) / 255.0f + norml.z * (koeff);
+	norm.z = 1.0 - (n & 0xff) /255.0f;
 
 	cisec->n = minus_vec3(cisec->n, norm);
 	cisec->n = div_vec3f(cisec->n, len_vec3(cisec->n));
-	// return (norm);
 }
 
 
@@ -307,7 +206,7 @@ int 	return_background(t_lst *lst, t_trc trc)
 	int h = lst->scn->diff_map.map->h;
 	int index_x = v * w;
 	int index_y = u * h;
-	int index = clamp(index_x + index_y * w, 0, w * h - 1);
+	int index = clamp(index_x + index_y * w, 0, w * h);
 	int n = lst->scn->diff_map.data[index];
 	res.r = clamp(((n & 0xff0000)>>16), 0, 255);
 	res.g = clamp(((n & 0xff00)>>8), 0, 255);
@@ -315,21 +214,25 @@ int 	return_background(t_lst *lst, t_trc trc)
 	return ((res.r << 16) + (res.g << 8) + res.b);
 }
 
-
 SDL_Color	get_color_from_file(t_map map, t_vec3 uv, float l)
 {
-	SDL_Color res;
-
-	int w = map.map->w;
-	int h = map.map->h;
-	int index_x = (uv.x) * w;
-	int index_y = (uv.y) * h;
-	int index = clamp(index_x + index_y * w, 0, w * h - 1);
+	int index_x = (uv.x) * map.map->w;
+	int index_y = (uv.y) * map.map->h;
+	int index = clamp(index_x + index_y * map.map->w, 0, map.map->w * map.map->h);
 	int c = map.data[index];
-	res.r = clamp(((c & 0xff0000)>>16) * l, 0, 255);
-	res.g = clamp(((c & 0xff00)>>8) * l, 0, 255);
-	res.b = clamp((c & 0xff) * l, 0, 255);
-	return (res);
+	return (mult_int_color(c, l));
+}
+
+void free_isec_list(t_isec *cisec)
+{
+	t_isec	*tmp;
+
+	while (cisec)
+	{
+		tmp = cisec;
+		cisec = cisec->next;
+		free(tmp);
+	}
 }
 
 /*
@@ -349,7 +252,10 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 
 	int col = return_background(lst, trc);
 	if (cisec->fig == NULL)
+	{
+		free(cisec);
 		return (col);
+	}
 	
 	SDL_Color	tres;
 	t_isec *cur_isec;
@@ -363,7 +269,7 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	int flag = 0;
 	while (cur_isec)
 	{
-		if (cur_isec->fig->mat->transpare != 1.0)
+		if (cur_isec->fig->mat->transpare < 1.0)
 		{
 			trc.p = plus_vec3(mult_vec3f(trc.d, cur_isec->t), (trc.o));
 			
@@ -375,53 +281,26 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 			if (cur_isec->fig->mat->diff_map.map && cur_isec->uv.x && cur_isec->uv.x != INFINITY)
 				tres = get_color_from_file(cur_isec->fig->mat->diff_map, cur_isec->uv, l);
 			else
-			{
-				tres.r = clamp(cur_isec->fig->mat->col.r * l, 0, 255);
-				tres.g = clamp(cur_isec->fig->mat->col.g * l, 0, 255);
-				tres.b = clamp(cur_isec->fig->mat->col.b * l, 0, 255);
-			}
+				tres = mult_sdl_color(cur_isec->fig->mat->col, l);
+
 			if (depth > 0 && cur_isec->fig->mat->refl > 0)
 			{
 				trc.o = set_vec3(trc.p);
 				refl_col = get_refl_col(lst, trc, cur_isec->n, depth - 1);
-				tres.r = res.r * (1 - cur_isec->fig->mat->refl) + refl_col.r * cur_isec->fig->mat->refl;
-				tres.g = res.g * (1 - cur_isec->fig->mat->refl) + refl_col.g * cur_isec->fig->mat->refl;
-				tres.b = res.b * (1 - cur_isec->fig->mat->refl) + refl_col.b * cur_isec->fig->mat->refl;
+				tres = plus_sdl_color(mult_sdl_color(tres, 1.0 - cur_isec->fig->mat->refl), mult_sdl_color(refl_col, cur_isec->fig->mat->refl));
 			}
-
 			koef = (1.0 - cur_isec->fig->mat->transpare) * full;
-			{
-				res.r = clamp(res.r + koef * tres.r, 0, 255);
-				res.g= clamp(res.g + koef * tres.g, 0, 255);
-				res.b = clamp(res.b + koef * tres.b, 0, 255);
-			}
+			res = plus_sdl_color(res, mult_sdl_color(tres, koef));
 			full -= koef;
 		}
 		if ((full < 0.05) || cur_isec->fig->mat->transpare == 0.0)
 			break;
 		cur_isec = cur_isec->next;
 	}
-
 	if (full > 0)
-	{
-		res.r = clamp(res.r + full * ((col & 0xff0000)>>16), 0, 255);
-		res.g = clamp(res.g + full * ((col & 0xff00)>>8), 0, 255);
-		res.b = clamp(res.b + full * (col & 0xff), 0, 255);
-	}
-	
-
-	
-
-	
-	
-	
-
-	
-	
-	
-	
+		res = plus_sdl_color(res, mult_int_color(col, full));
 	int color;
-	// double kof = 1 - cisec->fig->mat->transpare, kof0 = cisec->fig->mat->transpare;
 	color = (res.r << 16) + (res.g << 8) + res.b;
+	free_isec_list(cisec);
 	return (color);
 }

@@ -2,7 +2,7 @@
 0	camera position: 1 0 -20
 1	camera rotation: 0 0 0
 2	background color: 255 255 200
-3	diffuse map: res/HDRI_sky2.jpg
+3	diffuse map: res/HDRI_sky.png
 
 [material]:
 name: earth

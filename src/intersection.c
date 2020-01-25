@@ -121,8 +121,8 @@ void	intersec_pln(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln)
 		oc = invert_vec3(minus_vec3(o, pln->pos));
 		hit->isec1 = malloc(sizeof(t_isec));
 		hit->isec1->fig = pln;
-		hit->isec1->uv.x = INFINITY;
-		hit->isec1->uv.y = INFINITY;
+		// hit->isec1->uv.x = INFINITY;
+		// hit->isec1->uv.y = INFINITY;
 		hit->isec1->t = dot(oc, v) / dot(d, v);
 		hit->isec1->n = set_vec3(pln->dir);
 		hit->count = 1;

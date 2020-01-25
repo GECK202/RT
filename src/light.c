@@ -12,7 +12,9 @@
 
 #include "rt.h"
 #include <stdio.h>
+
 void	cls_isec3(t_isec **cisec, t_lst *lst, t_trc trc);
+void	free_isec_list(t_isec *cisec);
 /*
 ** calculate vector of reflection
 */
@@ -42,9 +44,12 @@ float	transpare_shadow(t_isec *shdw, float kof)
 	return (transpare_shadow(shdw->next, kof * shdw->fig->mat->transpare));
 }
 
+
+
 float	get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght)
 {
 	t_isec	*shdw;
+	float	s;
 
 	if (c_lght->type == point)
 	{
@@ -63,7 +68,12 @@ float	get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght)
 	shdw = malloc(sizeof(t_isec));
 	cls_isec(&shdw, lst, *trc);
 	if (lst->scn->shadow && shdw->fig != NULL)
-		return (transpare_shadow(shdw, 1));
+	{
+		s = transpare_shadow(shdw, 1);
+		free_isec_list(shdw);
+		return (s);
+	}
+	free(shdw);
 	return (1);
 }
 

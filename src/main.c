@@ -144,7 +144,8 @@ int		main(int ac, char *av[])
 					else if (e.type == SDL_MOUSEMOTION)
 					{
 						mouse_move(&(e.motion), lst);
-						repaint = 1;
+						if (lst->change)
+							repaint = 1;
 					}
 					else if (e.type == SDL_MOUSEWHEEL)
 					{
