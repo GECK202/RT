@@ -47,7 +47,7 @@ name: earth
 3	rotation:0 0 0
 4	radius:2
 5	angle:0
-6	limit:0 0
+6	limit:10 0
 7	material: blue_cyl
 
 [figure]:
@@ -62,12 +62,32 @@ name: earth
 
 [figure]:
 0	type:cylinder
+1	position:5 1 5
+2	direction:0 1 0
+3	rotation:0 0 0
+4	radius:3
+5	angle:30
+6	limit:10 0
+7	material: blue_cyl
+
+[figure]:
+0	type:cylinder
 1	position:-5 1 5
 2	direction:0 1 0
 3	rotation:0 0 0
 4	radius:3
 5	angle:30
 6	limit:0 0
+7	material: water
+
+[figure]:
+0	type:plane
+1	position:0 -4 0
+2	direction:0 1 0
+3	rotation:0 0 0
+4	radius:0
+5	angle:0
+6	limit:10 10
 7	material: blue_cyl
 
 [figure]:
@@ -77,8 +97,8 @@ name: earth
 3	rotation:0 0 0
 4	radius:0
 5	angle:0
-6	limit:10 0
-7	material: blue_cyl
+6	limit:0 0
+7	material: water
 
 [figure]:
 0	type:sphere
