@@ -20,7 +20,7 @@ name: earth
 3	normal: res/fig1_nm.png
 4	specular: 0
 5	reflection: 0
-6	transpare: 0
+6	transpare: 0.5
 
 [material]:
 0	name: blue_con
@@ -47,7 +47,7 @@ name: earth
 3	rotation:0 0 0
 4	radius:2
 5	angle:0
-6	limit:10 0
+6	limit:0 0
 7	material: blue_cyl
 
 [figure]:

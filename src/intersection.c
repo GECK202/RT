@@ -181,14 +181,25 @@ t_isec	*get_isec_cyl(float t, t_vec3 o, t_vec3 d, t_fig *cyl)
 		isec->fig = cyl;
 		isec->t = t;
 
-			p = plus_vec3(mult_vec3f(d, isec->t), o);
+		p = plus_vec3(mult_vec3f(d, isec->t), o);
 		isec->n = minus_vec3(minus_vec3(p, c), mult_vec3f(dir, m));
 		isec->n = div_vec3f(isec->n, len_vec3(isec->n));
 	
-		isec->uv.y = (acos(dot(cyl->look, isec->n)) / (M_PI));
-			m *= scale;
-			m -= (int)m;
-		isec->uv.x = m;
+		isec->uv.x = (acos(dot(cyl->look, isec->n)) / (2*M_PI));
+		m *= scale;
+		m -= (int)m;
+		if (m<0.0)
+			m = -m;
+		isec->uv.y = m;
+		// isec->uv.y = m;
+		// t_vec3 Vp = minus_vec3(cyl->pos, plus_vec3(o, mult_vec3f(d, t)));
+		// Vp = div_vec3f(Vp, len_vec3(Vp));
+		// // float x = sin(isec->uv.y * M_PI * cyl->rad);
+		// isec->uv.x = (acos(dot(Vp, cyl->look))) / (2 * M_PI);
+		if (dot(cross(cyl->dir, cyl->look), isec->n) > 0)
+			isec->uv.x = 1.0 - isec->uv.x;
+
+
 		return (isec);
 	}
 	return (NULL);
