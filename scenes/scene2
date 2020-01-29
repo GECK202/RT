@@ -63,7 +63,7 @@ name: earth
 [figure]:
 0	type:cylinder
 1	position:5 1 5
-2	direction:0 1 0
+2	direction:0 10 0
 3	rotation:0 0 0
 4	radius:3
 5	angle:30

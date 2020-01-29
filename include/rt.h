@@ -290,7 +290,7 @@ void				rain(t_lst *lst);
 void				set_m4_rz(t_mat3 *m, float fi);
 void				set_m4_rx(t_mat3 *m, float fi);
 void				set_m4_ry(t_mat3 *m, float fi);
-void				rotation_fig(t_fig *fig);
+void				rotation_fig(t_fig *fig, t_lst *lst);
 void				mult_m3(t_vec3 *d, t_vec3 s, t_mat3 m);
 void				rot_v3z(t_vec3 *dst, t_vec3 *src, float fi);
 void				rot_v3x(t_vec3 *dst, t_vec3 *src, float fi);
