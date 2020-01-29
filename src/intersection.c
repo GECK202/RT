@@ -76,6 +76,7 @@ void	intersec_sph(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *sph)
 	// n = minus_vec3(trc.p, fig.pos);
 	hit->isec1->n = invert_vec3(Vp);
 
+
 	hit->count = 1;
 	if (discr == 0)
 		return ;
