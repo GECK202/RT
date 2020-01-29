@@ -13,8 +13,8 @@
 #ifndef RT_H
 # define RT_H
 
-# define S_W (400)
-# define S_H (300)
+# define S_W (700)
+# define S_H (500)
 # define H_W (S_W / 2)
 # define H_H (S_H / 2)
 # define RATIO ((float)S_W / (float)S_H)
@@ -233,6 +233,8 @@ typedef struct		s_l_prm
 	t_vec3			v;
 }					t_l_prm;
 
+void				get_normal_from_file(t_isec *cisec, t_lst *lst);
+
 void				cls_isec2(t_isec **cisec, t_lst *lst, t_trc trc);
 void				postEffects(t_lst *lst);
 int					set_transpare_mat(t_lst *lst, char *word);
@@ -284,7 +286,7 @@ void				intersec_con(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *con);
 
 void				cls_isec(t_isec **cisec, t_lst *lst, t_trc trc);
 int					trace(t_lst *lst, t_trc trc, int depth);
-float				light(t_lst *lst, t_l_prm b, t_fig *fig);
+t_vec3				light(t_lst *lst, t_l_prm b, t_fig *fig);
 
 void				rain(t_lst *lst);
 void				set_m4_rz(t_mat3 *m, float fi);
