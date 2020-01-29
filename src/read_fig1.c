@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "rt.h"
+#include <stdio.h>
 
 int		cre_fig(t_lst *lst)
 {
@@ -91,13 +92,37 @@ int		set_dir_fig(t_lst *lst, char *word)
 		fig->begin.x = ft_atof(coord[0]);
 		fig->begin.y = ft_atof(coord[1]);
 		fig->begin.z = ft_atof(coord[2]);
-		fig->dir.x = fig->begin.x;
-		fig->dir.y = fig->begin.y;
-		fig->dir.z = fig->begin.z;
-		fig->look = cre_vec3(0,0,1.0);
+		// fig->dir.x = fig->begin.x;
+		// fig->dir.y = fig->begin.y;
+		// fig->dir.z = fig->begin.z;
+		// fig->look = cre_vec3(0,0,1.0);
 		return (free_words(coord, 1));
 	}
 	return (free_words(coord, 0));
+}
+
+void	rotation_fig(t_fig *fig)
+{
+	mult_m3(&fig->dir, cre_vec3(0,1.0,0), fig->mat_z);
+	mult_m3(&fig->dir, fig->dir, fig->mat_x);
+	mult_m3(&fig->dir, fig->dir, fig->mat_y);
+	fig->dir = div_vec3f(fig->dir, len_vec3(fig->dir));
+
+	mult_m3(&fig->look, cre_vec3(0,0,1.0), fig->mat_z);
+	mult_m3(&fig->look, fig->look, fig->mat_x);
+	mult_m3(&fig->look, fig->look, fig->mat_y);
+	fig->look = div_vec3f(fig->look, len_vec3(fig->look));
+
+	mult_m3(&fig->right, cre_vec3(1.0,0,0), fig->mat_z);
+	mult_m3(&fig->right, fig->right, fig->mat_x);
+	mult_m3(&fig->right, fig->right, fig->mat_y);
+	fig->right = div_vec3f(fig->right, len_vec3(fig->right));
+
+	fig->begin_pos = plus_vec3(fig->begin_pos, fig->begin);
+	mult_m3(&fig->begin_pos, fig->begin_pos, fig->mat_z);
+	mult_m3(&fig->begin_pos, fig->begin_pos, fig->mat_x);
+	mult_m3(&fig->begin_pos, fig->begin_pos, fig->mat_y);
+	fig->begin_ = minus_vec3(fig->begin_pos, fig->begin);
 }
 
 int		set_rot_fig(t_lst *lst, char *word)
@@ -117,12 +142,30 @@ int		set_rot_fig(t_lst *lst, char *word)
 		set_m4_rx(&fig->mat_x, fig->alpha.x);
 		set_m4_ry(&fig->mat_y, fig->alpha.y);
 		set_m4_rz(&fig->mat_z, fig->alpha.z);
-		mult_m3(&lst->scn->cur_fig->dir,
-		lst->scn->cur_fig->begin, lst->scn->cur_fig->mat_z);
-		mult_m3(&lst->scn->cur_fig->dir,
-		lst->scn->cur_fig->dir, lst->scn->cur_fig->mat_x);
-		mult_m3(&lst->scn->cur_fig->dir,
-		lst->scn->cur_fig->dir, lst->scn->cur_fig->mat_y);
+
+		rotation_fig(fig);
+		
+		// mult_m3(&lst->scn->cur_fig->dir,
+		// cre_vec3(0,1,0), lst->scn->cur_fig->mat_z);
+		// mult_m3(&lst->scn->cur_fig->dir,
+		// lst->scn->cur_fig->dir, lst->scn->cur_fig->mat_x);
+		// mult_m3(&lst->scn->cur_fig->dir,
+		// lst->scn->cur_fig->dir, lst->scn->cur_fig->mat_y);
+
+		// mult_m3(&lst->scn->cur_fig->look,
+		// cre_vec3(0,0,1), lst->scn->cur_fig->mat_z);
+		// mult_m3(&lst->scn->cur_fig->look,
+		// lst->scn->cur_fig->look, lst->scn->cur_fig->mat_x);
+		// mult_m3(&lst->scn->cur_fig->look,
+		// lst->scn->cur_fig->look, lst->scn->cur_fig->mat_y);
+
+		// mult_m3(&lst->scn->cur_fig->right,
+		// cre_vec3(1,0,0), lst->scn->cur_fig->mat_z);
+		// mult_m3(&lst->scn->cur_fig->right,
+		// lst->scn->cur_fig->right, lst->scn->cur_fig->mat_x);
+		// mult_m3(&lst->scn->cur_fig->right,
+		// lst->scn->cur_fig->right, lst->scn->cur_fig->mat_y);
+
 		return (free_words(coord, 1));
 	}
 	return (free_words(coord, 0));

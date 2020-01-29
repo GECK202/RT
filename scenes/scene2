@@ -43,7 +43,7 @@ name: earth
 [figure]:
 0	type:conus
 1	position:-10 1 5
-2	direction:0 1 0
+2	direction:0 10 0
 3	rotation:0 0 0
 4	radius:2
 5	angle:0
