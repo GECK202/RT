@@ -214,13 +214,23 @@ int 	return_background(t_lst *lst, t_trc trc)
 	return ((res.r << 16) + (res.g << 8) + res.b);
 }
 
-SDL_Color	get_color_from_file(t_map map, t_vec3 uv, float l)
+SDL_Color	get_color_from_file(t_map map, t_vec3 uv, t_vec3 l)
 {
 	int index_x = (uv.x) * map.map->w;
 	int index_y = (uv.y) * map.map->h;
 	int index = clamp(index_x + index_y * map.map->w, 0, map.map->w * map.map->h);
 	int c = map.data[index];
-	return (mult_int_color(c, l));
+
+	SDL_Color res;
+	res.r = (c & 0xff0000)>>16;
+	res.g = (c & 0xff00)>>8;
+	res.b = c & 0xff;
+
+	res.r = res.r * l.x;
+	res.g = res.g * l.y;
+	res.b = res.b * l.z;
+	return (res);
+	// return (mult_int_color(c, l));
 }
 
 void free_isec_list(t_isec *cisec)
@@ -243,7 +253,7 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 {
 	SDL_Color	res;
 	t_vec3		n;
-	float		l;
+	t_vec3		l;
 	t_isec		*cisec;
 	SDL_Color	refl_col;
 
@@ -275,13 +285,22 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 			
 			if (cur_isec->fig->mat->norm_map.map && cur_isec->uv.x && cur_isec->uv.x != INFINITY)
 				get_normal_from_file(cur_isec, lst);
+			
 			trc.d = invert_vec3(trc.d);
 			l = light(lst, set_l_prm(trc, cur_isec->n), cur_isec->fig);
 
 			if (cur_isec->fig->mat->diff_map.map && cur_isec->uv.x && cur_isec->uv.x != INFINITY)
 				tres = get_color_from_file(cur_isec->fig->mat->diff_map, cur_isec->uv, l);
 			else
-				tres = mult_sdl_color(cur_isec->fig->mat->col, l);
+			{
+				// tres.r = clamp((int)(l.x * (float)cur_isec->fig->mat->col.r), 0, 255);
+				// tres.g = clamp((int)(l.y * (float)cur_isec->fig->mat->col.g), 0, 255);
+				// tres.b = clamp((int)(l.z * (float)cur_isec->fig->mat->col.b), 0, 255);
+				tres.r = (int)(l.x * (float)cur_isec->fig->mat->col.r);
+				tres.g = (int)(l.y * (float)cur_isec->fig->mat->col.g);
+				tres.b = (int)(l.z * (float)cur_isec->fig->mat->col.b);
+				// tres = mult_sdl_color(cur_isec->fig->mat->col, l);
+			}
 
 			if (depth > 0 && cur_isec->fig->mat->refl > 0)
 			{
@@ -289,6 +308,8 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 				refl_col = get_refl_col(lst, trc, cur_isec->n, depth - 1);
 				tres = plus_sdl_color(mult_sdl_color(tres, 1.0 - cur_isec->fig->mat->refl), mult_sdl_color(refl_col, cur_isec->fig->mat->refl));
 			}
+
+
 			koef = (1.0 - cur_isec->fig->mat->transpare) * full;
 			res = plus_sdl_color(res, mult_sdl_color(tres, koef));
 			full -= koef;
