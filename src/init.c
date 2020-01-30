@@ -32,6 +32,7 @@ void	init_f_read(t_lst *lst)
 	lst->set->f_lght[1] = set_pos_lght;
 	lst->set->f_lght[2] = set_dir_lght;
 	lst->set->f_lght[3] = set_ints_lght;
+	lst->set->f_lght[4] = set_col_lght;
 	lst->set->cre_mat = cre_mat;
 	lst->set->f_mat[0] = set_name_mat;
 	lst->set->f_mat[1] = set_col_mat;

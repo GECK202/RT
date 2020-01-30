@@ -214,13 +214,19 @@ int 	return_background(t_lst *lst, t_trc trc)
 	return ((res.r << 16) + (res.g << 8) + res.b);
 }
 
-SDL_Color	get_color_from_file(t_map map, t_vec3 uv, float l)
+SDL_Color	get_color_from_file(t_map map, t_vec3 uv, t_vec3 l)
 {
 	int index_x = (uv.x) * map.map->w;
 	int index_y = (uv.y) * map.map->h;
 	int index = clamp(index_x + index_y * map.map->w, 0, map.map->w * map.map->h);
 	int c = map.data[index];
-	return (mult_int_color(c, l));
+
+	SDL_Color res;
+
+	res.r = clamp(((c & 0xff0000)>>16) * l.x, 0, 255);
+	res.g = clamp(((c & 0xff00)>>8) * l.y, 0, 255);
+	res.b = clamp((c & 0xff) * l.z, 0, 255);
+	return (res);
 }
 
 void free_isec_list(t_isec *cisec)
@@ -243,9 +249,16 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 {
 	SDL_Color	res;
 	t_vec3		n;
-	float		l;
+	t_vec3		l;
 	t_isec		*cisec;
 	SDL_Color	refl_col;
+
+	SDL_Color fog_col;
+	fog_col.r = 180;
+	fog_col.g = 200;
+	fog_col.b = 200;
+
+	int res_fog = (fog_col.r << 16) + (fog_col.g << 8) + fog_col.b;
 
 	cisec = malloc(sizeof(t_isec));
 	cls_isec(&cisec, lst, trc);
@@ -254,7 +267,7 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	if (cisec->fig == NULL)
 	{
 		free(cisec);
-		return (col);
+		return (res_fog);
 	}
 	
 	SDL_Color	tres;
@@ -281,7 +294,12 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 			if (cur_isec->fig->mat->diff_map.map && cur_isec->uv.x && cur_isec->uv.x != INFINITY)
 				tres = get_color_from_file(cur_isec->fig->mat->diff_map, cur_isec->uv, l);
 			else
-				tres = mult_sdl_color(cur_isec->fig->mat->col, l);
+			{
+				// tres = mult_sdl_color(cur_isec->fig->mat->col, l);
+				tres.r = clamp(cur_isec->fig->mat->col.r * l.x, 0, 255);
+				tres.g = clamp(cur_isec->fig->mat->col.g * l.y, 0, 255);
+				tres.b = clamp(cur_isec->fig->mat->col.b * l.z, 0, 255);
+			}
 
 			if (depth > 0 && cur_isec->fig->mat->refl > 0)
 			{
@@ -299,8 +317,18 @@ int		trace(t_lst *lst, t_trc trc, int depth)
 	}
 	if (full > 0)
 		res = plus_sdl_color(res, mult_int_color(col, full));
+
+	float fog_n = cisec->t / 20.0;
+	// printf("%f\n", fog_n);
+	if (fog_n > 1)
+		fog_n = 1;
+	res.r = res.r * (1 - fog_n) + fog_col.r * fog_n;
+	res.g = res.g * (1 - fog_n) + fog_col.g * fog_n;
+	res.b = res.b * (1 - fog_n) + fog_col.b * fog_n;
+
 	int color;
 	color = (res.r << 16) + (res.g << 8) + res.b;
+	
 	free_isec_list(cisec);
 	return (color);
 }

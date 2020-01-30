@@ -101,8 +101,10 @@ int		set_dir_fig(t_lst *lst, char *word)
 	return (free_words(coord, 0));
 }
 
-void	rotation_fig(t_fig *fig)
+void	rotation_fig(t_fig *fig, t_lst *lst)
 {
+	t_vec3	tmp;
+
 	mult_m3(&fig->dir, cre_vec3(0,1.0,0), fig->mat_z);
 	mult_m3(&fig->dir, fig->dir, fig->mat_x);
 	mult_m3(&fig->dir, fig->dir, fig->mat_y);
@@ -118,11 +120,10 @@ void	rotation_fig(t_fig *fig)
 	mult_m3(&fig->right, fig->right, fig->mat_y);
 	fig->right = div_vec3f(fig->right, len_vec3(fig->right));
 
-	fig->begin_pos = plus_vec3(fig->begin_pos, fig->begin);
-	mult_m3(&fig->begin_pos, fig->begin_pos, fig->mat_z);
-	mult_m3(&fig->begin_pos, fig->begin_pos, fig->mat_x);
-	mult_m3(&fig->begin_pos, fig->begin_pos, fig->mat_y);
-	fig->begin_ = minus_vec3(fig->begin_pos, fig->begin);
+	mult_m3(&tmp, fig->begin, fig->mat_z);
+	mult_m3(&tmp, tmp, fig->mat_x);
+	mult_m3(&tmp, tmp, fig->mat_y);
+	fig->pos = plus_vec3(minus_vec3(fig->begin_pos, fig->begin), tmp);
 }
 
 int		set_rot_fig(t_lst *lst, char *word)
@@ -143,7 +144,7 @@ int		set_rot_fig(t_lst *lst, char *word)
 		set_m4_ry(&fig->mat_y, fig->alpha.y);
 		set_m4_rz(&fig->mat_z, fig->alpha.z);
 
-		rotation_fig(fig);
+		rotation_fig(fig, lst);
 		
 		// mult_m3(&lst->scn->cur_fig->dir,
 		// cre_vec3(0,1,0), lst->scn->cur_fig->mat_z);

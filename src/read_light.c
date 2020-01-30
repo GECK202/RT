@@ -100,6 +100,25 @@ int		set_dir_lght(t_lst *lst, char *word)
 	return (free_words(coord, 0));
 }
 
+int		set_col_lght(t_lst *lst, char *word)
+{
+	char	**col;
+	t_lght	*lght;
+
+	if (!word)
+		return (0);
+	lght = lst->scn->cur_lght;
+	col = ft_strsplit(word, ' ');
+	if (col[0] && col[1] && col[2])
+	{
+		lght->col.r = clamp(ft_atoi(col[0]), 0, 255);
+		lght->col.g = clamp(ft_atoi(col[1]), 0, 255);
+		lght->col.b = clamp(ft_atoi(col[2]), 0, 255);
+		return (free_words(col, 1));
+	}
+	return (free_words(col, 0));
+}
+
 int		set_ints_lght(t_lst *lst, char *word)
 {
 	if (!word)

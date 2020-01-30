@@ -32,7 +32,7 @@
 
 # define SCENE_LINES (4)
 # define FIGURE_LINES (8)
-# define LIGHT_LINES (4)
+# define LIGHT_LINES (5)
 # define MATERIAL_LINES (7)
 
 # define SCENE_FUNCTIONS (SCENE_LINES + 1)
@@ -136,6 +136,7 @@ typedef struct		s_lght
 	t_vec3			begin_pos;
 	t_vec3			dir;
 	float			ints;
+	SDL_Color		col;
 	struct s_lght	*next;
 }					t_lght;
 
@@ -284,13 +285,13 @@ void				intersec_con(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *con);
 
 void				cls_isec(t_isec **cisec, t_lst *lst, t_trc trc);
 int					trace(t_lst *lst, t_trc trc, int depth);
-float				light(t_lst *lst, t_l_prm b, t_fig *fig);
+t_vec3				light(t_lst *lst, t_l_prm b, t_fig *fig);
 
 void				rain(t_lst *lst);
 void				set_m4_rz(t_mat3 *m, float fi);
 void				set_m4_rx(t_mat3 *m, float fi);
 void				set_m4_ry(t_mat3 *m, float fi);
-void				rotation_fig(t_fig *fig);
+void				rotation_fig(t_fig *fig, t_lst *lst);
 void				mult_m3(t_vec3 *d, t_vec3 s, t_mat3 m);
 void				rot_v3z(t_vec3 *dst, t_vec3 *src, float fi);
 void				rot_v3x(t_vec3 *dst, t_vec3 *src, float fi);
@@ -325,6 +326,8 @@ int					set_type_lght(t_lst *lst, char *word);
 int					set_pos_lght(t_lst *lst, char *word);
 int					set_dir_lght(t_lst *lst, char *word);
 int					set_ints_lght(t_lst *lst, char *word);
+int 				set_col_lght(t_lst *lst, char *word);
+
 void				move_light(t_lst *lst, SDL_Point p);
 void				move_fig(t_lst *lst, SDL_Point p);
 void				multy_x(t_lst *lst, int tmp);
