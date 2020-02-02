@@ -30,7 +30,7 @@
 # define LIGHT (3)
 # define MATERIAL (1)
 
-# define SCENE_LINES (4)
+# define SCENE_LINES (9)
 # define FIGURE_LINES (8)
 # define LIGHT_LINES (5)
 # define MATERIAL_LINES (7)
@@ -47,6 +47,12 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include "libft.h"
+# include <fcntl.h>
+
+# include <sys/types.h>
+# include <sys/stat.h>
+
+// # include <sys\stat.h>
 //# include <mlx.h>
 # include <SDL2/SDL.h>
 # include <SDL2/SDL_image.h>
@@ -158,6 +164,14 @@ typedef struct		s_hit
 	int				count;
 }					t_hit;
 
+typedef struct		s_fog
+{
+	int 			enable;
+	float			max_tr;
+	float			near;
+	SDL_Color		col;
+}					t_fog;
+
 typedef struct		s_scn
 {
 	t_fig			*figs;
@@ -168,9 +182,11 @@ typedef struct		s_scn
 	t_mat			*cur_mat;
 	t_vec3			cam_pos;
 	t_vec3			cam_pos0;
-	int				bgc;
+	float			cam_focus_dist;
+	SDL_Color		bgc;
 	int				shadow;
 	t_map			diff_map;
+	t_fog			fog;
 }					t_scn;
 
 typedef struct		s_lst
@@ -242,7 +258,7 @@ int					scene_init(t_lst *lst, char *file);
 void				init_f_read(t_lst *lst);
 int					check_tag(t_lst *l, char **word, t_tag *ctag);
 int					read_scene(t_lst *l, char *file);
-int					set_diff_map_scn(t_lst *lst, char *word);
+
 
 int					init_sdl(t_lst *lst);
 
@@ -262,6 +278,7 @@ void				mouse_press(SDL_MouseButtonEvent *e, t_lst *lst);
 void				mouse_weel(Sint32 y, t_lst *lst);
 
 int					clamp(int n, int min, int max);
+float				clampf(float n, float min, float max);
 float				dot(t_vec3 v1, t_vec3 v2);
 t_vec3				cross(t_vec3 v1, t_vec3 v2);
 float				len_vec3(t_vec3 v);
@@ -284,7 +301,7 @@ void				intersec_pln(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln);
 void				intersec_con(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *con);
 
 void				cls_isec(t_isec **cisec, t_lst *lst, t_trc trc);
-int					trace(t_lst *lst, t_trc trc, int depth);
+SDL_Color			trace(t_lst *lst, t_trc trc, int depth);
 t_vec3				light(t_lst *lst, t_l_prm b, t_fig *fig);
 
 void				rain(t_lst *lst);
@@ -300,7 +317,13 @@ void				rot_v3y(t_vec3 *dst, t_vec3 *src, float fi);
 float				ft_atof(char *f);
 int					set_pos_cam(t_lst *lst, char *word);
 int					set_rot_cam(t_lst *lst, char *word);
+int					set_cam_focus_dist(t_lst *lst, char *word);
 int					set_col_bgc(t_lst *lst, char *word);
+int					set_diff_map_scn(t_lst *lst, char *word);
+int					set_fog_enable(t_lst *lst, char *word);
+int					set_fog_near(t_lst *lst, char *word);
+int					set_fog_max_tr(t_lst *lst, char *word);
+int					set_fog_color(t_lst *lst, char *word);
 
 int					cre_mat(t_lst *lst);
 void				load_map(t_map *map, char *filename);

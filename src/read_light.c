@@ -95,6 +95,7 @@ int		set_dir_lght(t_lst *lst, char *word)
 		lght->dir.x = ft_atof(coord[0]);
 		lght->dir.y = ft_atof(coord[1]);
 		lght->dir.z = ft_atof(coord[2]);
+		lght->dir = div_vec3f(lght->dir, len_vec3(lght->dir));
 		return (free_words(coord, 1));
 	}
 	return (free_words(coord, 0));

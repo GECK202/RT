@@ -42,6 +42,15 @@ int		clamp(int n, int min, int max)
 	return (n);
 }
 
+float		clampf(float n, float min, float max)
+{
+	if (n < min)
+		return (min);
+	if (n > max)
+		return (max);
+	return (n);
+}
+
 void	ret(t_lst *lst)
 {
 	mult_m3(&lst->scn->cam_pos0, lst->scn->cam_pos0, lst->camera_z);

@@ -16,8 +16,13 @@ void	init_f_read(t_lst *lst)
 {
 	lst->set->f_scn[0] = set_pos_cam;
 	lst->set->f_scn[1] = set_rot_cam;
-	lst->set->f_scn[2] = set_col_bgc;
-	lst->set->f_scn[3] = set_diff_map_scn;
+	lst->set->f_scn[2] = set_cam_focus_dist;
+	lst->set->f_scn[3] = set_col_bgc;
+	lst->set->f_scn[4] = set_diff_map_scn;
+	lst->set->f_scn[5] = set_fog_enable;
+	lst->set->f_scn[6] = set_fog_near;
+	lst->set->f_scn[7] = set_fog_max_tr;
+	lst->set->f_scn[8] = set_fog_color;
 	lst->set->cre_fig = cre_fig;
 	lst->set->f_fig[0] = set_type_fig;
 	lst->set->f_fig[1] = set_pos_fig;
@@ -63,7 +68,9 @@ int		scene_init(t_lst *lst, char *file)
 	init_f_read(lst);
 	if (!(lst->scn = (t_scn*)malloc(sizeof(t_scn))))
 		return (0);
-	lst->scn->bgc = 0;
+	lst->scn->bgc.r = 0;
+	lst->scn->bgc.g = 0;
+	lst->scn->bgc.b = 0;
 	lst->scn->cur_fig = NULL;
 	lst->scn->cur_lght = NULL;
 	lst->scn->mats = NULL;

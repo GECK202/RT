@@ -14,15 +14,17 @@
 
 void	mult(t_lst *lst, t_trc *trc, int x, int y)
 {
+	SDL_Color col;
+
 	trc->d.x = (float)x * RATIO / H_W;
 	trc->d.y = (float)y / H_H;
-	trc->d.z = 1.5;
+	trc->d.z = lst->scn->cam_focus_dist;
 	mult_m3(&trc->d, trc->d, lst->camera_z);
 	mult_m3(&trc->d, trc->d, lst->camera_x);
 	mult_m3(&trc->d, trc->d, lst->camera_y);
-
-	lst->data[(S_H - y - H_H - 1) * S_W + x + H_W] =
-		trace(lst, *trc, RECURCE_DEPTH);
+	col = trace(lst, *trc, RECURCE_DEPTH);
+	lst->data[(S_H - y - H_H - 1) * S_W + x + H_W] = (col.r << 16) + (col.g << 8) + col.b;
+		// trace(lst, *trc, RECURCE_DEPTH);
 		
 	lst->data_dop[(S_H - y - H_H - 1) * S_W + x + H_W] = lst->data[(S_H - y - H_H - 1) * S_W + x + H_W];
 }
