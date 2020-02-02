@@ -32,9 +32,9 @@ name: earth
 [material]:
 0	name: blue_con
 1	color: 0 255 255
-2	diffuse: 
+2	diffuse: res/tree_mask.png
 3	normal: 
-4	mask: 
+4	mask: res/tree_mask.png1
 5	specular: 1500
 6	reflection: 0
 7	transpare: 0
@@ -66,8 +66,8 @@ name: earth
 3	rotation:0 0 0
 4	radius:0
 5	angle:0
-6	limit:0 10
-7	material: water
+6	limit:10 10
+7	material: blue_con
 
 [figure]:
 0	type:sphere
