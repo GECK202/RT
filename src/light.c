@@ -83,9 +83,9 @@ t_vec3	transpare_shadow(t_isec *shdw, t_vec3 kof)
 	col.g = clamp(tr + col.g, 0, 255) * (transp);
 	col.b = clamp(tr + col.b, 0, 255) * (transp);
 
-	kof.x = clampf(kof.x - 0.90 + (float)col.r / 255.0, 0, kof.x);
-	kof.y = clampf(kof.y - 0.90 + (float)col.g / 255.0, 0, kof.y);
-	kof.z = clampf(kof.z - 0.90 + (float)col.b / 255.0, 0, kof.z);
+	kof.x = clampf(kof.x - 0.9 + (float)col.r / 255.0, 0, kof.x);
+	kof.y = clampf(kof.y - 0.9 + (float)col.g / 255.0, 0, kof.y);
+	kof.z = clampf(kof.z - 0.9 + (float)col.b / 255.0, 0, kof.z);
 
 	// kof.x = clampf(kof.x - (((1.0 - shdw->fig->mat->transpare) * col.r) / 255.0),0,1);
 	// kof.y = clampf(kof.y - (((1.0 - shdw->fig->mat->transpare) * col.g) / 255.0),0,1);

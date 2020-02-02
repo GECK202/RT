@@ -261,6 +261,8 @@ float	get_transp_from_file(t_map map, t_vec3 uv)
 
 	// res.r = clamp(((c & 0xff0000)>>16) * l.x, 0, 255);
 	res = 1.0 - clamp(((c & 0xff)), 0, 255) / 255.0;
+	if (res > 0.5)
+		res = 1;
 	// res.b = clamp((c & 0xff) * l.z, 0, 255);
 	return (res);
 }

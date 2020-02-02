@@ -182,7 +182,7 @@ void	intersec_pln(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln)
 	hit->isec2 = NULL;
 	hit->count = 0;
 
-	if (dot(d, v) > 0)
+	// if (dot(d, v) > 0)
 	{
 		oc = invert_vec3(minus_vec3(o, pln->pos));
 		t = dot(oc, v) / dot(d, v);
