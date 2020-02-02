@@ -36,16 +36,18 @@ void	init_f_read(t_lst *lst)
 	lst->set->f_lght[0] = set_type_lght;
 	lst->set->f_lght[1] = set_pos_lght;
 	lst->set->f_lght[2] = set_dir_lght;
-	lst->set->f_lght[3] = set_ints_lght;
-	lst->set->f_lght[4] = set_col_lght;
+	lst->set->f_lght[3] = set_angle_lght;
+	lst->set->f_lght[4] = set_ints_lght;
+	lst->set->f_lght[5] = set_col_lght;
 	lst->set->cre_mat = cre_mat;
 	lst->set->f_mat[0] = set_name_mat;
 	lst->set->f_mat[1] = set_col_mat;
 	lst->set->f_mat[2] = set_diff_map_mat;
 	lst->set->f_mat[3] = set_norm_map_mat;
-	lst->set->f_mat[4] = set_spec_mat;
-	lst->set->f_mat[5] = set_refl_mat;
-	lst->set->f_mat[6] = set_transpare_mat;
+	lst->set->f_mat[4] = set_mask_map_mat;	
+	lst->set->f_mat[5] = set_spec_mat;
+	lst->set->f_mat[6] = set_refl_mat;
+	lst->set->f_mat[7] = set_transpare_mat;
 }
 
 int	init_sdl(t_lst *lst)

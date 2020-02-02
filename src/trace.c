@@ -250,6 +250,21 @@ SDL_Color	get_color_from_file(t_map map, t_vec3 uv, t_vec3 l)
 	return (res);
 }
 
+float	get_transp_from_file(t_map map, t_vec3 uv)
+{
+	int index_x = (uv.x) * map.map->w;
+	int index_y = (uv.y) * map.map->h;
+	int index = clamp(index_x + index_y * map.map->w, 0, map.map->w * map.map->h);
+	int c = map.data[index];
+
+	float res;
+
+	// res.r = clamp(((c & 0xff0000)>>16) * l.x, 0, 255);
+	res = 1.0 - clamp(((c & 0xff)), 0, 255) / 255.0;
+	// res.b = clamp((c & 0xff) * l.z, 0, 255);
+	return (res);
+}
+
 void free_isec_list(t_isec *cisec)
 {
 	t_isec	*tmp;
@@ -303,7 +318,13 @@ SDL_Color		trace(t_lst *lst, t_trc trc, int depth)
 	int flag = 0;
 	while (cur_isec)
 	{
-		if (cur_isec->fig->mat->transpare < 1.0)
+		float transp;
+		if (cur_isec->fig->mat->mask_map.map && cur_isec->uv.x && cur_isec->uv.x != INFINITY)
+			transp = get_transp_from_file(cur_isec->fig->mat->mask_map, cur_isec->uv);
+		else
+			transp = cur_isec->fig->mat->transpare;
+
+		if (transp < 1.0)
 		{
 			trc.p = plus_vec3(mult_vec3f(trc.d, cur_isec->t), (trc.o));
 			
@@ -335,11 +356,11 @@ SDL_Color		trace(t_lst *lst, t_trc trc, int depth)
 				refl_col = get_refl_col(lst, trc, cur_isec->n, depth - 1);
 				tres = plus_sdl_color(mult_sdl_color(tres, 1.0 - cur_isec->fig->mat->refl), mult_sdl_color(refl_col, cur_isec->fig->mat->refl));
 			}
-			koef = (1.0 - cur_isec->fig->mat->transpare) * full;
+			koef = (1.0 - transp) * full;
 			res = plus_sdl_color(res, mult_sdl_color(tres, koef));
 			full -= koef;
 		}
-		if ((full < 0.05) || cur_isec->fig->mat->transpare == 0.0)
+		if ((full < 0.05) || transp == 0.0)
 			break;
 		cur_isec = cur_isec->next;
 	}

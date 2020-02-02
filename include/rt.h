@@ -32,8 +32,8 @@
 
 # define SCENE_LINES (9)
 # define FIGURE_LINES (8)
-# define LIGHT_LINES (5)
-# define MATERIAL_LINES (7)
+# define LIGHT_LINES (6)
+# define MATERIAL_LINES (8)
 
 # define SCENE_FUNCTIONS (SCENE_LINES + 1)
 # define FIGURE_FUNCTIONS FIGURE_LINES
@@ -93,6 +93,7 @@ typedef struct		s_mat
 	SDL_Color		col;
 	t_map			diff_map;
 	t_map			norm_map;
+	t_map			mask_map;
 	int				spec;
 	float			refl;
 	float			transpare;
@@ -132,7 +133,8 @@ typedef enum		e_tlght
 {
 	ambient,
 	point,
-	direct
+	direct,
+	lconus
 }					t_tlght;
 
 typedef struct		s_lght
@@ -141,6 +143,7 @@ typedef struct		s_lght
 	t_vec3			pos;
 	t_vec3			begin_pos;
 	t_vec3			dir;
+	float 			angle;
 	float			ints;
 	SDL_Color		col;
 	struct s_lght	*next;
@@ -252,7 +255,6 @@ typedef struct		s_l_prm
 
 void				cls_isec2(t_isec **cisec, t_lst *lst, t_trc trc);
 void				postEffects(t_lst *lst);
-int					set_transpare_mat(t_lst *lst, char *word);
 
 int					scene_init(t_lst *lst, char *file);
 void				init_f_read(t_lst *lst);
@@ -300,9 +302,11 @@ void				intersec_cyl(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *cyl);
 void				intersec_pln(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln);
 void				intersec_con(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *con);
 
+float				get_transp_from_file(t_map map, t_vec3 uv);
 void				cls_isec(t_isec **cisec, t_lst *lst, t_trc trc);
 SDL_Color			trace(t_lst *lst, t_trc trc, int depth);
 t_vec3				light(t_lst *lst, t_l_prm b, t_fig *fig);
+
 
 void				rain(t_lst *lst);
 void				set_m4_rz(t_mat3 *m, float fi);
@@ -331,8 +335,10 @@ int					set_name_mat(t_lst *lst, char *word);
 int					set_col_mat(t_lst *lst, char *word);
 int					set_diff_map_mat(t_lst *lst, char *word);
 int					set_norm_map_mat(t_lst *lst, char *word);
+int					set_mask_map_mat(t_lst *lst, char *word);
 int					set_spec_mat(t_lst *lst, char *word);
 int					set_refl_mat(t_lst *lst, char *word);
+int					set_transpare_mat(t_lst *lst, char *word);
 
 int					cre_fig(t_lst *lst);
 int					set_type_fig(t_lst *lst, char *word);
@@ -350,6 +356,7 @@ int					set_pos_lght(t_lst *lst, char *word);
 int					set_dir_lght(t_lst *lst, char *word);
 int					set_ints_lght(t_lst *lst, char *word);
 int 				set_col_lght(t_lst *lst, char *word);
+int 				set_angle_lght(t_lst *lst, char *word);
 
 void				move_light(t_lst *lst, SDL_Point p);
 void				move_fig(t_lst *lst, SDL_Point p);

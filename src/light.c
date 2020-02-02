@@ -70,11 +70,18 @@ t_vec3	transpare_shadow(t_isec *shdw, t_vec3 kof)
 	// col.r = col.r * (1 - shdw->fig->mat->transpare); //255 - col.r;
 	// col.g = col.g * (1 - shdw->fig->mat->transpare); //255 - col.g;
 	// col.b = col.b * (1 - shdw->fig->mat->transpare); //255 - col.b;
-	float tr = ((shdw->fig->mat->transpare) * 2 - 1.0) * 255;
 
-	col.r = clamp(tr + col.r, 0, 255) * (shdw->fig->mat->transpare);
-	col.g = clamp(tr + col.g, 0, 255) * (shdw->fig->mat->transpare);
-	col.b = clamp(tr + col.b, 0, 255) * (shdw->fig->mat->transpare);
+	float transp;
+	if (shdw->fig->mat->mask_map.map && shdw->uv.x && shdw->uv.x != INFINITY)
+		transp = get_transp_from_file(shdw->fig->mat->mask_map, shdw->uv);
+	else
+		transp = shdw->fig->mat->transpare;
+
+	float tr = ((transp) * 2 - 1.0) * 255;
+
+	col.r = clamp(tr + col.r, 0, 255) * (transp);
+	col.g = clamp(tr + col.g, 0, 255) * (transp);
+	col.b = clamp(tr + col.b, 0, 255) * (transp);
 
 	kof.x = clampf(kof.x - 0.90 + (float)col.r / 255.0, 0, kof.x);
 	kof.y = clampf(kof.y - 0.90 + (float)col.g / 255.0, 0, kof.y);
@@ -98,7 +105,7 @@ t_vec3	get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght)
 		c_lght->col.r * c_lght->ints / 255.0,\
 		c_lght->col.g * c_lght->ints/ 255.0,\
 		c_lght->col.b * c_lght->ints/ 255.0);
-	if (c_lght->type == point)
+	if (c_lght->type == point || c_lght->type == lconus)
 	{
 		trc->d.x = c_lght->pos.x - b.p.x;
 		trc->d.y = c_lght->pos.y - b.p.y;
@@ -192,18 +199,18 @@ t_vec3	light(t_lst *lst, t_l_prm b, t_fig *fig)
 		}
 		else
 		{
-			// if (c_lght->type == point)
-			// {
-			// 	t_vec3 dl = minus_vec3(c_lght->pos, b.p);
-			// 	dl = div_vec3f(dl, len_vec3(dl));
-			// 	float al = acos(dot(dl, c_lght->dir))*180 /M_PI;
-			// 	// printf("%f\n", al);
-			// 	if (al > 90)
-			// 	{
-			// 		c_lght = c_lght->next;
-			// 		continue;
-			// 	}
-			// }
+			if (c_lght->type == lconus)
+			{
+				t_vec3 dl = minus_vec3(c_lght->pos, b.p);
+				dl = div_vec3f(dl, len_vec3(dl));
+				float al = acos(dot(dl, c_lght->dir))*180 /M_PI;
+				// printf("%f\n", al);
+				if (al > c_lght->angle)
+				{
+					c_lght = c_lght->next;
+					continue;
+				}
+			}
 			t_vec3 kof;
 			kof = get_shadow(lst, &trc, b, c_lght);
 			float diff = get_diffuse(trc, b, c_lght);
@@ -213,24 +220,24 @@ t_vec3	light(t_lst *lst, t_l_prm b, t_fig *fig)
 			// printf("[");
 			if (kof.x > 0)
 			{
-				if (kof.x > 1.0)
-					kof.x = 1.0;
+				// if (kof.x > 1.0)
+				// 	kof.x = 1.0;
 				// printf("%f ", kof.x);
 				ints.x += kof.x * diff;
 				ints.x += kof.x * spec;
 			}
 			if (kof.y > 0)
 			{
-				if (kof.y > 1.0)
-					kof.y = 1.0;
+				// if (kof.y > 1.0)
+				// 	kof.y = 1.0;
 				// printf("%f ", kof.y);
 				ints.y += kof.y * diff;
 				ints.y += kof.y * spec;
 			}
 			if (kof.z > 0)
 			{
-				if (kof.z > 1.0)
-					kof.z = 1.0;
+				// if (kof.z > 1.0)
+					// kof.z = 1.0;
 				// printf("%f", kof.z);
 				ints.z += kof.z * diff;
 				ints.z += kof.z * spec;

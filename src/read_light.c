@@ -35,7 +35,7 @@ int		cre_lght(t_lst *lst)
 
 int		set_type_lght(t_lst *lst, char *word)
 {
-	const char	l_type[3][8] = {"ambient", "point", "direct"};
+	const char	l_type[4][8] = {"ambient", "point", "direct", "lconus"};
 	int			i;
 	int			type;
 
@@ -99,6 +99,19 @@ int		set_dir_lght(t_lst *lst, char *word)
 		return (free_words(coord, 1));
 	}
 	return (free_words(coord, 0));
+}
+
+int		set_angle_lght(t_lst *lst, char *word)
+{
+	float angle;
+
+	if (!word)
+		return (0);
+	angle = ft_atof(word);
+	if (angle < 0)
+		angle = -angle;
+	lst->scn->cur_lght->angle = angle;
+	return (1);
 }
 
 int		set_col_lght(t_lst *lst, char *word)

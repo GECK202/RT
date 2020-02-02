@@ -86,3 +86,14 @@ int		set_norm_map_mat(t_lst *lst, char *word)
 	load_map(&(lst->scn->cur_mat->norm_map), filename[0]);
 	return (free_words(filename, 1));
 }
+
+int		set_mask_map_mat(t_lst *lst, char *word)
+{
+	char **filename;
+
+	if (!word || !(*word))
+		return (0);
+	filename = ft_strsplit(word, ' ');
+	load_map(&(lst->scn->cur_mat->mask_map), filename[0]);
+	return (free_words(filename, 1));
+}

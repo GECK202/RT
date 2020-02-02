@@ -4,46 +4,50 @@
 3	camera focus_distance: 2
 4	background color: 255 255 200
 5	diffuse map: res/HDRI_sky.png
-6	fog enable:0
-7	fog near:20
-8	fog max transparent:0.15
-9	fog color:255 255 255
+6	fog enable:1
+7	fog near:35
+8	fog max transparent:0.5
+9	fog color:125 155 155
 
 [material]:
 name: earth
 1	color: 250 0 0
 2	diffuse: res/fig1_dif.png
 3	normal: res/fig1_nm.png
-4	specular: 100
-5	reflection: 0
-6	transpare: 0.6
+4	mask: res/fig1_mask.png
+5	specular: 100
+6	reflection: 0
+7	transpare: 0.6
 
 [material]:
 0	name: blue_cyl
 1	color: 0 0 255
 2	diffuse: res/fig1_dif.png
 3	normal: res/fig1_nm.png1
-4	specular: 0
-5	reflection: 0
-6	transpare: 0
+4	mask: 
+5	specular: 0
+6	reflection: 0
+7	transpare: 0
 
 [material]:
 0	name: blue_con
 1	color: 0 255 255
 2	diffuse: 
 3	normal: 
-4	specular: 1500
-5	reflection: 0
-6	transpare: 0
+4	mask: 
+5	specular: 1500
+6	reflection: 0
+7	transpare: 0
 
 [material]:
 0	name: water
 1	color: 255 255 255
-2	diffuse: res/water3.png
+2	diffuse: res/water3.png1
 3	normal: res/water3_nm.png
-4	specular: 100
-5	reflection: 0
-6	transpare: 0
+4	mask: 
+5	specular: 100
+6	reflection: 0
+7	transpare: 0
 
 [figure]:
 0	type:cylinder
@@ -53,7 +57,7 @@ name: earth
 4	radius:3
 5	angle:30
 6	limit:10 0
-7	material: blue_cyl
+7	material: earth
 
 [figure]:
 0	type:plane
@@ -79,19 +83,46 @@ name: earth
 0	type:ambient
 1	position:0 0 0
 2	direction:0 0 0
-3	intens:0
-4	color:255 255 255
+3	angle:360
+4	intens:0.2
+5	color:255 255 255
 
 [light]:
 0	type:point
-1	position:0 15 0
+1	position:-2 1 3
 2	direction:0 1 0
-3	intens:1
-4	color:255 255 255
+3	angle:360
+4	intens:0.6
+5	color:250 250 250
+
+[light]:
+0	type:lconus
+1	position:0 25 0
+2	direction:0 1 0
+3	angle:30
+4	intens:0.6
+5	color:2 255 2
+
+[light]:
+0	type:lconus
+1	position:3 10 0
+2	direction:2 4 0
+3	angle:30
+4	intens:0.6
+5	color:255 0 0
+
+[light]:
+0	type:lconus
+1	position:-3 10 0
+2	direction:-2 4 0
+3	angle:30
+4	intens:0.6
+5	color:0 0 255
 
 [light]:
 0	type:direct
 1	position:0 0 0
 2	direction:1 1 4
-3	intens:0
-4	color:255 255 255
+3	angle:360
+4	intens:0.2
+5	color:255 255 255
