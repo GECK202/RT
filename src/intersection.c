@@ -104,7 +104,7 @@ void	intersec_sph(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *sph)
 ** intersection with plane
 */
 
-void	intersec_pln2(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln)
+void	intersec_pln(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln)
 {
 	t_vec3	oc;
 	t_vec3	v;
@@ -116,14 +116,17 @@ void	intersec_pln2(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln)
 	// float	width = 10;
 	// float	height = 20;
 
-	scale = 10.10f;
+	scale = 0.10f;
 	v = invert_vec3(div_vec3f(pln->dir, len_vec3(pln->dir)));
 
 	hit->isec1 = NULL;
 	hit->isec2 = NULL;
 	hit->count = 0;
 
-	if (dot(d, v) > 0)
+	t_vec3 n;
+	n = set_vec3(pln->dir);
+	if (dot(d, v) < 0)
+		n = invert_vec3(n);
 	{
 		oc = invert_vec3(minus_vec3(o, pln->pos));
 		t = dot(oc, v) / dot(d, v);
@@ -133,40 +136,59 @@ void	intersec_pln2(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln)
 		// mult_m3(&Vp, Vp, pln->mat_z);
 		// mult_m3(&Vp, Vp, pln->mat_x);
 		// mult_m3(&Vp, Vp, pln->mat_y);
-		Vp = div_vec3f(Vp, len_vec3(Vp));
+		// Vp = div_vec3f(Vp, len_vec3(Vp));
 		t_vec3 uv;
-		uv.x = (acos(dot(pln->look, Vp)) * scale / (2*M_PI));
-		uv.y = (acos(dot(pln->right, Vp)) * scale / (2*M_PI));
+		uv.y = (dot(pln->look, Vp)) * scale;
+		uv.x = (dot(pln->right, Vp)) * scale;
 		
 		// printf("%f, %f\n", uv.x, uv.y);
 		// Vz = cross(Vp, pln->dir);
 
-		if ((uv.x >= 0 && uv.x <= pln->limit.x && uv.z >=0 && uv.z <= pln->limit.y)
+		if ((uv.x >= 0 && uv.x <= pln->limit.x && uv.y >=0 && uv.y <= pln->limit.y)
 			|| pln->limit.x == 0 || pln->limit.y == 0)
 		{
 			hit->isec1 = malloc(sizeof(t_isec));
 			hit->isec1->fig = pln;
 			hit->isec1->t = t;
-			hit->isec1->n = set_vec3(pln->dir);
+			hit->isec1->n = set_vec3(n);
 			hit->count = 1;
 			
+			
+			int tmp;
+			tmp = (int)uv.x;
+			uv.x -= tmp;
+			tmp = (int)uv.y;
+			uv.y -= (int)uv.y;//tmp;
+
+			if (uv.x < 0)
+				uv.x = -uv.x;
+
+			if (uv.y < 0)
+				uv.y = -uv.y;
+
+			if (dot(Vp, pln->right)>0)
+				uv.x = 1.0 - uv.x;
+
+			if (dot(Vp, pln->look)<0)
+				uv.y = 1.0 - uv.y;
+
 			hit->isec1->uv.y = uv.y;
 			hit->isec1->uv.x = uv.x;
 
-			int tmp = hit->isec1->uv.y;
-			hit->isec1->uv.y -= tmp;
-			if (hit->isec1->uv.y < 0)
-				hit->isec1->uv.y += 1.0;
+			// int tmp = hit->isec1->uv.y;
+			// hit->isec1->uv.y -= tmp;
+			// if (hit->isec1->uv.y < 0)
+			// 	hit->isec1->uv.y = - hit->isec1->uv.y;
 			
-			tmp = hit->isec1->uv.x;
-			hit->isec1->uv.x -= tmp;
-			if (hit->isec1->uv.x < 0)
-				hit->isec1->uv.x += 1.0;
+			// tmp = hit->isec1->uv.x;
+			// hit->isec1->uv.x -= tmp;
+			// if (hit->isec1->uv.x < 0)
+			// 	hit->isec1->uv.x = - hit->isec1->uv.x;
 		}
 	}
 }
 
-void	intersec_pln(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln)
+void	intersec_pln2(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln)
 {
 	t_vec3	oc;
 	t_vec3	v;
@@ -182,18 +204,24 @@ void	intersec_pln(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln)
 	hit->isec2 = NULL;
 	hit->count = 0;
 
-	// if (dot(d, v) > 0)
+	t_vec3 n;
+	n = set_vec3(pln->dir);
+	if (dot(d, v) < 0)
+		n = invert_vec3(n);
 	{
 		oc = invert_vec3(minus_vec3(o, pln->pos));
 		t = dot(oc, v) / dot(d, v);
 		Vp = minus_vec3(pln->pos, plus_vec3(o, mult_vec3f(d, t)));
 
 
-		
-		mult_m3(&Vp, Vp, pln->mat_z);
-		mult_m3(&Vp, Vp, pln->mat_x);
-		mult_m3(&Vp, Vp, pln->mat_y);
-
+		t_vec3 Vn;
+		mult_m3(&Vn, Vp, pln->mat_z);
+		mult_m3(&Vn, Vn, pln->mat_x);
+		mult_m3(&Vn, Vn, pln->mat_y);
+		Vp = div_vec3f(Vp, len_vec3(Vp));
+		// Vp = set_vec3(Vn);
+		Vp = div_vec3f(Vn, len_vec3(Vn));
+		Vp = refl_r(invert_vec3(Vn), Vp);
 		// Vz = cross(Vp, pln->dir);
 
 		if ((Vp.x >= 0 && Vp.x <= pln->limit.x && Vp.z >=0 && Vp.z <= pln->limit.y)
@@ -202,7 +230,7 @@ void	intersec_pln(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln)
 			hit->isec1 = malloc(sizeof(t_isec));
 			hit->isec1->fig = pln;
 			hit->isec1->t = t;
-			hit->isec1->n = set_vec3(pln->dir);
+			hit->isec1->n = n; //set_vec3(pln->dir);
 			hit->count = 1;
 			
 			hit->isec1->uv.y = Vp.z * scale;

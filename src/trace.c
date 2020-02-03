@@ -138,7 +138,7 @@ SDL_Color	get_refl_col(t_lst *lst, t_trc trc, t_vec3 n, int depth)
 
 	trc.min = MIN_OFFSET;
 	trc.max = INFINITY;
-	trc.d = set_vec3(refl_r(trc.d, n));
+	trc.d = refl_r(trc.d, n);//set_vec3()
 	refl_col = trace(lst, trc, depth);
 	// refl_col.r = (r_col & 0xFF0000) >> 16;
 	// refl_col.g = (r_col & 0xFF00) >> 8;

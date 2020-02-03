@@ -160,7 +160,7 @@ int		main(int ac, char *av[])
 						postEffects(lst);
 						SDL_UpdateWindowSurface(lst->win);
 						first = 0;
-						// printf("%f %f %f\n", lst->scn->cur_fig->alpha.x, lst->scn->cur_fig->alpha.y, lst->scn->cur_fig->alpha.z);
+						printf("%f %f %f\n", lst->scn->cur_fig->alpha.x, lst->scn->cur_fig->alpha.y, lst->scn->cur_fig->alpha.z);
 					}
 				}
 			}
