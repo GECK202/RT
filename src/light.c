@@ -34,6 +34,8 @@ t_vec3	refl_r(t_vec3 l, t_vec3 n)
 
 SDL_Color	get_color_from_file2(t_map map, t_vec3 uv)
 {
+	// uv.x = clampf(uv.x,0,1);
+	// uv.y = clampf(uv.y,0,1);
 	int index_x = (uv.x) * map.map->w;
 	int index_y = (uv.y) * map.map->h;
 	int index = clamp(index_x + index_y * map.map->w, 0, map.map->w * map.map->h);

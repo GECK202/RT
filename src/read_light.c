@@ -35,13 +35,13 @@ int		cre_lght(t_lst *lst)
 
 int		set_type_lght(t_lst *lst, char *word)
 {
-	const char	l_type[4][8] = {"ambient", "point", "direct", "lconus"};
+	const char	l_type[MAX_LGHT][8] = {"ambient", "point", "direct", "lconus"};
 	int			i;
 	int			type;
 
 	i = -1;
 	type = -1;
-	while (++i < 4)
+	while (++i < MAX_LGHT)
 	{
 		if (ft_strcmp(word, l_type[i]) == 0)
 		{

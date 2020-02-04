@@ -70,7 +70,7 @@ void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc)
 	cur_fig = lst->scn->figs;
 	while (cur_fig)
 	{
-		sel_fig_check(&hit, trc.o, trc.d, cur_fig);
+		sel_fig_check(lst, &hit, trc, cur_fig);
 		if (hit.count == 1 || hit.count == 2)
 		{
 			if (hit.isec1->t >= trc.min && hit.isec1->t <= trc.max)
@@ -166,6 +166,9 @@ void	get_normal_from_file(t_isec *cisec, t_lst *lst)
 	t_vec3	norm;
 	float koeff = 0.1;
 
+	// cisec->uv.x = clampf(cisec->uv.x,0,1);
+	// cisec->uv.y = clampf(cisec->uv.y,0,1);
+
 	int w = cisec->fig->mat->norm_map.map->w;
 	int h = cisec->fig->mat->norm_map.map->h;
 	int index_x = cisec->uv.x * w;
@@ -237,10 +240,14 @@ SDL_Color 	return_background(t_lst *lst, t_trc trc)
 
 SDL_Color	get_color_from_file(t_map map, t_vec3 uv, t_vec3 l)
 {
+	// uv.x = clampf(uv.x,0,1);
+	// uv.y = clampf(uv.y,0,1);
 	int index_x = (uv.x) * map.map->w;
 	int index_y = (uv.y) * map.map->h;
-	int index = clamp(index_x + index_y * map.map->w, 0, map.map->w * map.map->h);
+	// printf("%d %d ",index_x, index_y);
+	unsigned int index = clamp(index_x + index_y * map.map->w, 1, map.map->w * map.map->h - 1);
 	int c = map.data[index];
+	// printf("%d ", index);
 
 	SDL_Color res;
 
@@ -285,6 +292,7 @@ void free_isec_list(t_isec *cisec)
 
 SDL_Color		trace(t_lst *lst, t_trc trc, int depth)
 {
+	// write(1,"ok4",3);
 	SDL_Color	res;
 	t_vec3		n;
 	t_vec3		l;
@@ -300,7 +308,7 @@ SDL_Color		trace(t_lst *lst, t_trc trc, int depth)
 
 	cisec = malloc(sizeof(t_isec));
 	cls_isec(&cisec, lst, trc);
-
+	// write(1,"ok5",3);
 	SDL_Color col = return_background(lst, trc);
 	if (cisec->fig == NULL)
 	{

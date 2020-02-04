@@ -37,8 +37,10 @@ int		cre_mat(t_lst *lst)
 		mat->col = set_col(128, 128, 128, 255);
 		load_map(&(mat->diff_map), 0);
 		load_map(&(mat->norm_map), 0);
+		load_map(&(mat->mask_map), 0);
 		mat->refl = 0;
 		mat->spec = 1000;	
+		mat->transpare = 0;
 		lst->scn->mats = mat;
 	}
 	else

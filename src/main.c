@@ -101,8 +101,11 @@ int		main(int ac, char *av[])
 		lst->postEffects = 0; //закинуть в init
 		lst->data_dop = malloc(sizeof(int) * (S_H * S_W)); //закинуть в init
 		lst->num_file_for_screen = 0; //закинуть в init
+		// write(1,"ok1",3);
 		if (scene_init(lst, av[1]) && init_sdl(lst))
 		{
+			// printf("ok");
+			
 			///////////////
 			lst->t = 0;
 			t_fig *f;
@@ -117,8 +120,10 @@ int		main(int ac, char *av[])
 			//load_tex_sdl(lst);
 			quit = 0;
 			first = 1;
+			// write(1,"ok2",3);
 			while (!quit)
 			{
+				// write(1,"ok3",3);
 				repaint = 0;
 				if( SDL_PollEvent( &e ) != 0 )
 				{
@@ -160,7 +165,7 @@ int		main(int ac, char *av[])
 						postEffects(lst);
 						SDL_UpdateWindowSurface(lst->win);
 						first = 0;
-						printf("%f %f %f\n", lst->scn->cur_fig->alpha.x, lst->scn->cur_fig->alpha.y, lst->scn->cur_fig->alpha.z);
+						// printf("%f %f %f\n", lst->scn->cur_fig->alpha.x, lst->scn->cur_fig->alpha.y, lst->scn->cur_fig->alpha.z);
 					}
 				}
 			}

@@ -4,7 +4,7 @@
 3	camera focus_distance: 2
 4	background color: 255 255 200
 5	diffuse map: res/HDRI_sky.png
-6	fog enable:1
+6	fog enable:0
 7	fog near:35
 8	fog max transparent:0.25
 9	fog color:125 155 155
@@ -43,7 +43,7 @@ name: earth
 0	name: water
 1	color: 255 255 255
 2	diffuse: res/water3.png
-3	normal: res/water3_nm.png
+3	normal: res/water3_nm.png1
 4	mask: 
 5	specular: 100
 6	reflection: 0
@@ -65,6 +65,16 @@ name: earth
 2	center:0 0 0
 3	rotation:0 0 0
 4	radius:0
+5	angle:0
+6	limit:0 0
+7	material: water
+
+[figure]:
+0	type:inv_sph
+1	position:1 1 0
+2	center:0 0 0
+3	rotation:0 0 0
+4	radius:3
 5	angle:0
 6	limit:0 0
 7	material: water

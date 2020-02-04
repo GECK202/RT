@@ -36,13 +36,13 @@ int		cre_fig(t_lst *lst)
 
 int		set_type_fig(t_lst *lst, char *word)
 {
-	const char	f_type[4][10] = {"sphere", "cylinder", "plane", "conus"};
+	const char	f_type[MAX_FIGS][10] = {"sphere", "cylinder", "plane", "conus", "inv_sph"};
 	int			i;
 	int			type;
 
 	i = -1;
 	type = -1;
-	while (++i < 4)
+	while (++i < MAX_FIGS)
 	{
 		if (ft_strcmp(word, f_type[i]) == 0)
 		{
@@ -53,6 +53,7 @@ int		set_type_fig(t_lst *lst, char *word)
 	if (type < 0)
 		return (0);
 	lst->scn->cur_fig->type = type;
+	// printf("%s ", f_type[type]);
 	return (1);
 }
 
@@ -92,10 +93,6 @@ int		set_dir_fig(t_lst *lst, char *word)
 		fig->begin.x = ft_atof(coord[0]);
 		fig->begin.y = ft_atof(coord[1]);
 		fig->begin.z = ft_atof(coord[2]);
-		// fig->dir.x = fig->begin.x;
-		// fig->dir.y = fig->begin.y;
-		// fig->dir.z = fig->begin.z;
-		// fig->look = cre_vec3(0,0,1.0);
 		return (free_words(coord, 1));
 	}
 	return (free_words(coord, 0));
@@ -179,6 +176,8 @@ int		set_mat_fig(t_lst *lst, char *word)
 	char	mat_name[18];
 	int		flag;
 
+	// write(1,"1",1);
+	// printf("1");
 	if (!word || !(*word))
 		return (0);
 	if (!(name = ft_strsplit(word, ' ')) || !(name[0]))
@@ -189,6 +188,8 @@ int		set_mat_fig(t_lst *lst, char *word)
 	ft_strncpy(mat_name, name[0], 18);
 	mat = lst->scn->mats;
 	flag = 0;
+	// write(1,"2",1);
+	// printf("2");
 	while (mat)
 	{
 		if (ft_strcmp(mat_name, mat->name) == 0)
@@ -201,5 +202,8 @@ int		set_mat_fig(t_lst *lst, char *word)
 	}
 	if (!flag)
 		lst->scn->cur_fig->mat = lst->scn->mats;
+	// char *c = lst->scn->cur_fig->mat->name;
+	// write(1,c,5);
+	// printf("3");
 	return (free_words(name, 1));
 }
