@@ -51,6 +51,9 @@ int		set_transpare_mat(t_lst *lst, char *word)
 {
 	if (!word)
 		return (0);
-	lst->scn->cur_mat->transpare = ft_atof(word);
+	if (lst->scn->cur_mat->mask_map.map != 0)
+		lst->scn->cur_mat->transpare = 1;
+	else
+		lst->scn->cur_mat->transpare = ft_atof(word);
 	return (1);
 }

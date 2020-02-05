@@ -70,7 +70,7 @@ void	cls_isec(t_isec **cisec, t_lst *lst, t_trc trc)
 	cur_fig = lst->scn->figs;
 	while (cur_fig)
 	{
-		sel_fig_check(&hit, trc.o, trc.d, cur_fig);
+		sel_fig_check(lst, &hit, trc, cur_fig);
 		if (hit.count == 1 || hit.count == 2)
 		{
 			if (hit.isec1->t >= trc.min && hit.isec1->t <= trc.max)

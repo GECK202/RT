@@ -106,7 +106,9 @@ typedef enum		e_tfig
 	sphere,
 	cylinder,
 	plane,
-	conus
+	conus,
+	inv_sph,
+	MAX_FIGS
 }					t_tfig;
 
 typedef struct		s_fig
@@ -135,7 +137,7 @@ typedef enum		e_tlght
 	point,
 	direct,
 	lconus,
-	last
+	MAX_LGHT
 }					t_tlght;
 
 typedef struct		s_lght
@@ -296,12 +298,12 @@ t_vec3				invert_vec3(t_vec3 src);
 SDL_Color			set_col(int r, int g, int b, int a);
 t_vec3				refl_r(t_vec3 l, t_vec3 n);
 
-void				sel_fig_check(t_hit *hit, t_vec3 o, t_vec3 d,
+void				sel_fig_check(t_lst *lst, t_hit *hit, t_trc trc,
 									t_fig *cur_fig);
-void				intersec_sph(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *sph);
-void				intersec_cyl(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *cyl);
-void				intersec_pln(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *pln);
-void				intersec_con(t_hit *hit, t_vec3 o, t_vec3 d, t_fig *con);
+void				intersec_sph(t_lst *lst, t_hit *hit, t_trc trc, t_fig *sph);
+void				intersec_cyl(t_lst *lst, t_hit *hit, t_trc trc, t_fig *cyl);
+void				intersec_pln(t_lst *lst, t_hit *hit, t_trc trc, t_fig *pln);
+void				intersec_con(t_lst *lst, t_hit *hit, t_trc trc, t_fig *con);
 
 float				get_transp_from_file(t_map map, t_vec3 uv);
 void				cls_isec(t_isec **cisec, t_lst *lst, t_trc trc);

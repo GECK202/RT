@@ -36,13 +36,13 @@ int		cre_fig(t_lst *lst)
 
 int		set_type_fig(t_lst *lst, char *word)
 {
-	const char	f_type[4][10] = {"sphere", "cylinder", "plane", "conus"};
+	const char	f_type[MAX_FIGS][10] = {"sphere", "cylinder", "plane", "conus", "inv_sph"};
 	int			i;
 	int			type;
 
 	i = -1;
 	type = -1;
-	while (++i < 4)
+	while (++i < MAX_FIGS)
 	{
 		if (ft_strcmp(word, f_type[i]) == 0)
 		{
