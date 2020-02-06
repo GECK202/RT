@@ -30,7 +30,7 @@
 # define LIGHT (3)
 # define MATERIAL (1)
 
-# define SCENE_LINES (9)
+# define SCENE_LINES (10)
 # define FIGURE_LINES (8)
 # define LIGHT_LINES (6)
 # define MATERIAL_LINES (8)
@@ -193,6 +193,7 @@ typedef struct		s_scn
 	int				shadow;
 	t_map			diff_map;
 	t_fog			fog;
+	int				inv_surf;
 }					t_scn;
 
 typedef struct		s_lst
@@ -331,6 +332,7 @@ int					set_fog_enable(t_lst *lst, char *word);
 int					set_fog_near(t_lst *lst, char *word);
 int					set_fog_max_tr(t_lst *lst, char *word);
 int					set_fog_color(t_lst *lst, char *word);
+int					set_inv_surf(t_lst *lst, char *word);
 
 int					cre_mat(t_lst *lst);
 void				load_map(t_map *map, char *filename);

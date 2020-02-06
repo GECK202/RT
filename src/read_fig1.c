@@ -21,6 +21,7 @@ int		cre_fig(t_lst *lst)
 	if (!(fig = (t_fig*)malloc(sizeof(t_fig))))
 		return (0);
 	fig->next = NULL;
+	fig->mat = lst->scn->mats;
 	if (!lst->scn->figs)
 		lst->scn->figs = fig;
 	else

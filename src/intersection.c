@@ -42,8 +42,11 @@ t_isec	*check_inv_sph(t_lst *lst, t_trc trc, float t, t_fig *isph)
 	float	p;
 	t_isec	*isec;
 
+	// printf("1");
+	trc.p = plus_vec3(trc.o, mult_vec3f(trc.d, t));
 	if (len_vec3(minus_vec3(isph->pos, trc.p)) > isph->rad)
 		return (NULL);
+	// printf("2");
 	oc = minus_vec3(trc.o, isph->pos);
 	k.x = dot(trc.d, trc.d);
 	k.y = dot(oc, trc.d);
@@ -73,9 +76,9 @@ t_isec	*check_inv_sph(t_lst *lst, t_trc trc, float t, t_fig *isph)
 	isec->uv.y = isec->uv.y / M_PI;
 
 	if (dot(trc.d, trc.p) < 0)
-		isec->n = set_vec3(trc.p);
-	else
 		isec->n = invert_vec3(trc.p);
+	else
+		isec->n = set_vec3(trc.p);
 	return (isec);
 }
 
@@ -202,10 +205,14 @@ void	intersec_pln(t_lst *lst, t_hit *hit, t_trc trc, t_fig *pln)
 			if ((hit->isec1 = check_inv_figs(lst, trc, t)))
 			{
 				//printf("ok");
-				// hit->isec1->fig = pln;
-				// hit->count = 1;
-				free(hit->isec1);
-				hit->isec1 = NULL;
+				hit->isec1->fig = pln;
+				hit->count = 1;
+				if (!lst->scn->inv_surf)
+				{
+					free(hit->isec1);
+					hit->isec1 = NULL;
+					hit->count = 0;
+				}
 				return ;
 			}
 			hit->isec1 = malloc(sizeof(t_isec));
@@ -232,7 +239,7 @@ void	intersec_pln(t_lst *lst, t_hit *hit, t_trc trc, t_fig *pln)
 
 
 
-t_isec	*get_isec_cyl(float t, t_trc trc, t_fig *cyl)
+t_isec	*get_isec_cyl(t_lst *lst, t_trc trc, float t, t_fig *cyl)
 {
 	t_isec *isec;
 
@@ -250,6 +257,24 @@ t_isec	*get_isec_cyl(float t, t_trc trc, t_fig *cyl)
 
 	if (cyl->limit.x == 0 || (m >= 0 && m <= cyl->limit.x))
 	{
+		
+		// isec = NULL;
+	
+		if ((isec = check_inv_figs(lst, trc, t)))
+		{
+			isec->fig = cyl;
+		
+
+			// hit->isec1->fig = pln;
+			// hit->count = 1;
+			if (!lst->scn->inv_surf)
+			{
+				free(isec);
+				isec = NULL;
+			}
+			return (isec);
+
+		}
 		isec = malloc(sizeof(t_isec));
 		isec->fig = cyl;
 		isec->t = t;
@@ -308,7 +333,7 @@ void	intersec_cyl(t_lst *lst, t_hit *hit, t_trc trc, t_fig *cyl)
 
 	t = (discr - k.y) / k.x;
 
-	hit->isec1 = get_isec_cyl(t, trc, cyl);
+	hit->isec1 = get_isec_cyl(lst, trc, t, cyl);
 	if (hit->isec1)
 		hit->count = 1;
 
@@ -319,16 +344,16 @@ void	intersec_cyl(t_lst *lst, t_hit *hit, t_trc trc, t_fig *cyl)
 	
 	if (hit->isec1)
 	{
-		hit->isec2 = get_isec_cyl(t, trc, cyl);
-		if (hit->isec2)
+		// hit->isec2 = get_isec_cyl(lst, trc, t, cyl);
+		if ((hit->isec2 = get_isec_cyl(lst, trc, t, cyl)))
 			hit->count = 2;
 	}
 	else
-	{
-		hit->isec1 = get_isec_cyl(t, trc, cyl);
-		if (hit->isec1)
+	// {
+		if ((hit->isec1 = get_isec_cyl(lst, trc, t, cyl)))
+		// if (hit->isec1)
 			hit->count = 1;
-	}
+	// }
 }
 
 /*
@@ -363,7 +388,7 @@ void	intersec_con(t_lst *lst, t_hit *hit, t_trc trc, t_fig *con)
 
 	t = (discr - k.y) / k.x;
 
-	hit->isec1 = get_isec_cyl(t, trc, con);
+	hit->isec1 = get_isec_cyl(lst, trc, t, con);
 	if (hit->isec1)
 		hit->count = 1;
 
@@ -374,14 +399,14 @@ void	intersec_con(t_lst *lst, t_hit *hit, t_trc trc, t_fig *con)
 	
 	if (hit->isec1)
 	{
-		hit->isec2 = get_isec_cyl(t, trc, con);
-		if (hit->isec2)
+		if ((hit->isec2 = get_isec_cyl(lst, trc, t, con)))
+		// if (hit->isec2)
 			hit->count = 2;
 	}
 	else
-	{
-		hit->isec1 = get_isec_cyl(t, trc, con);
-		if (hit->isec1)
+	// {
+		if ((hit->isec1 = get_isec_cyl(lst, trc, t, con)))
+		// if (hit->isec1)
 			hit->count = 1;
-	}
+	// }
 }

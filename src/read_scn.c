@@ -110,7 +110,7 @@ int					set_fog_max_tr(t_lst *lst, char *word)
 {
 	if (!word)
 		return (0);
-	lst->scn->fog.max_tr = clampf(ft_atof(word), 0, 1);
+	lst->scn->fog.max_tr = clampf(1.0 - ft_atof(word), 0, 1);
 	return (1);
 }
 
@@ -131,4 +131,18 @@ int					set_fog_color(t_lst *lst, char *word)
 		return (free_words(col, 1));
 	}
 	return (free_words(col, 0));
+}
+
+int					set_inv_surf(t_lst *lst, char *word)
+{
+	float e;
+	int inv = 1;
+
+	if (!word)
+		return (0);
+	e = ft_atof(word);
+	if (e != 1)
+		inv = 0;
+	lst->scn->inv_surf = inv;
+	return (1);
 }

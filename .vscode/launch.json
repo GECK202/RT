@@ -5,17 +5,12 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "gcc build and debug active file",
+			"name": "(lldb) Attach",
 			"type": "cppdbg",
-			"request": "launch",
+			"request": "attach",
 			"program": "${workspaceFolder}/RT",
-			"args": ["scenes/scene2"],
-			"stopAtEntry": false,
-			"cwd": "${workspaceFolder}",
-			"environment": [],
-			"externalConsole": false,
-			"MIMode": "lldb",
-			"preLaunchTask": "gcc build active file"
+			"processId": "${command:pickProcess}",
+			"MIMode": "lldb"
 		}
 	]
 }

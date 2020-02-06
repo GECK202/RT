@@ -23,6 +23,7 @@ void	init_f_read(t_lst *lst)
 	lst->set->f_scn[6] = set_fog_near;
 	lst->set->f_scn[7] = set_fog_max_tr;
 	lst->set->f_scn[8] = set_fog_color;
+	lst->set->f_scn[9] = set_inv_surf;
 	lst->set->cre_fig = cre_fig;
 	lst->set->f_fig[0] = set_type_fig;
 	lst->set->f_fig[1] = set_pos_fig;

@@ -230,7 +230,7 @@ SDL_Color 	return_background(t_lst *lst, t_trc trc)
 	res.g = clamp(((n & 0xff00)>>8), 0, 255);
 	res.b = clamp((n & 0xff), 0, 255);
 	if (lst->scn->fog.enable)
-		return (mix_color(res, lst->scn->fog.col, lst->scn->fog.max_tr));
+		return (mix_color(lst->scn->fog.col, res, lst->scn->fog.max_tr));
 	return (res);
 	// return ((res.r << 16) + (res.g << 8) + res.b);
 }
@@ -348,7 +348,7 @@ SDL_Color		trace(t_lst *lst, t_trc trc, int depth)
 
 			if (lst->scn->fog.enable)
 			{
-				float fog_n = cur_isec->t / lst->scn->fog.near;
+				float fog_n = cur_isec->t * lst->scn->fog.max_tr / (lst->scn->fog.near);
 				tres = mix_color(lst->scn->fog.col, tres, fog_n);
 			}
 
@@ -371,7 +371,7 @@ SDL_Color		trace(t_lst *lst, t_trc trc, int depth)
 
 	if (lst->scn->fog.enable)
 	{
-		float fog_n = cisec->t / lst->scn->fog.near;
+		float fog_n = cisec->t * lst->scn->fog.max_tr / (lst->scn->fog.near);
 		res = mix_color(lst->scn->fog.col, res, fog_n);
 		// // printf("%f\n", fog_n);
 		// if (fog_n > 1)
