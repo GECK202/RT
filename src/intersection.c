@@ -34,20 +34,20 @@ void	sel_fig_check(t_lst *lst, t_hit *hit, t_trc trc, t_fig *cur_fig)
 }
 
 
-t_isec *check_invert_fig(t_lst *lst, t_trc trc, float t)
-{
-	t_fig *cur_fig;
+// t_isec *check_invert_fig(t_lst *lst, t_trc trc, float t)
+// {
+// 	t_fig *cur_fig;
 
-	cur_fig = lst->scn->figs;
-	while(cur_fig)
-	{
-		// if (cur_fig->type == inv_sph)
-		// {
+// 	cur_fig = lst->scn->figs;
+// 	while(cur_fig)
+// 	{
+// 		// if (cur_fig->type == inv_sph)
+// 		// {
 
-		// }
-		cur_fig = cur_fig->next;
-	}
-}
+// 		// }
+// 		cur_fig = cur_fig->next;
+// 	}
+// }
 
 /*
 ** intersection with sphere

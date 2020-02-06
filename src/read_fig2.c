@@ -27,6 +27,7 @@ int		set_ang_fig(t_lst *lst, char *word)
 	if (!word)
 		return (0);
 	fig = lst->scn->cur_fig;
+	fig->ang = 0;
 	if (fig->rad)
 		return (1);
 	fig->ang = ft_atof(word);

@@ -18,8 +18,9 @@ C_FILES = 	ft_strlen.c ft_strdup.c ft_strdup2.c ft_strndup.c ft_swap.c\
 			ft_atoi.c ft_atoi_16.c ft_strrdup.c ft_strmcat.c ft_strfind.c\
 			ft_isspace.c ft_strncpy.c ft_strsplit.c get_next_line.c\
 			ft_itoa.c ft_pad_left.c ft_memcpy.c ft_putstr_fd.c ft_putstr.c\
-			ft_strcmp.c ft_strcpy.c
-
+			ft_strcmp.c ft_strcpy.c ft_strjoin.c ft_memalloc.c ft_memset.c\
+			ft_putchar_fd.c ft_putnbr_fd.c ft_putchar.c
+ 
 O_FILES = $(C_FILES:.c=.o)
 
 H_DIR = -I./

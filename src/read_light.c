@@ -87,15 +87,14 @@ int		set_dir_lght(t_lst *lst, char *word)
 	if (!word)
 		return (0);
 	lght = lst->scn->cur_lght;
-	if (!word)
-		return (0);
 	coord = ft_strsplit(word, ' ');
 	if (coord[0] && coord[1] && coord[2])
 	{
 		lght->dir.x = ft_atof(coord[0]);
 		lght->dir.y = ft_atof(coord[1]);
 		lght->dir.z = ft_atof(coord[2]);
-		lght->dir = div_vec3f(lght->dir, len_vec3(lght->dir));
+		if (len_vec3(lght->dir) != 0)
+			lght->dir = div_vec3f(lght->dir, len_vec3(lght->dir));
 		return (free_words(coord, 1));
 	}
 	return (free_words(coord, 0));

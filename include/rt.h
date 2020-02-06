@@ -84,6 +84,7 @@ typedef struct		s_map
 {
 	SDL_Surface		*map;
 	int				*data;
+	char			*name_map;///////////////////
 }					t_map;
 
 
@@ -255,6 +256,8 @@ typedef struct		s_l_prm
 	t_vec3			n;
 	t_vec3			v;
 }					t_l_prm;
+
+int					saveScene(t_lst *lst);
 
 void				cls_isec2(t_isec **cisec, t_lst *lst, t_trc trc);
 void				postEffects(t_lst *lst);

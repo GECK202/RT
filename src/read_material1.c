@@ -16,11 +16,14 @@ void	load_map(t_map *map, char *filename)
 {
 	map->map = 0;
 	map->data = 0;
+	map->name_map = ft_strdup("none");
 	if (!filename)
 		return ;
+	free(map->name_map);
 	map->map = IMG_Load(filename);
 	if (map->map)
 		map->data = (int*)(map->map->pixels);
+	map->name_map = ft_strdup(filename);
 }
 
 int		cre_mat(t_lst *lst)

@@ -18,7 +18,7 @@ FLAGS = -g
 C_FILES =	key_press.c move_multy.c main.c light.c events.c scene.c trace.c\
 			matrix.c init.c clear.c	read_fig1.c read_fig2.c read_light.c\
 			read_scn.c tools.c intersection.c vec1.c vec2.c read_material1.c\
-			read_material2.c postEffects.c
+			read_material2.c postEffects.c saveScene.c
 
 O_FILES =	$(C_FILES:.c=.o)
 

@@ -197,62 +197,13 @@ char	*get_nbr(int n)
 	return (str);
 }
 
-void	*ft_memset(void *dest, int n, size_t size)//почему нет в либе??
-{
-	char *str;
-
-	str = (char *)dest;
-	while (size > 0)
-	{
-		str[size - 1] = (char)n;
-		size--;
-	}
-	return (dest);
-}
-
-void	*ft_memalloc(size_t size)//почему нет в либе??
-{
-	void *str;
-
-	if (size + 1 <= 0)
-		return (NULL);
-	str = malloc((size));
-	if (!str)
-		return (NULL);
-	ft_memset(str, 0, size);
-	return (str);
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)//почему нет в либе??
-{
-	char	*str;
-	int		i;
-	int		k;
-
-	if (!s1 || !s2)
-		return (NULL);
-	str = ft_memalloc(ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1);
-	if (!str)
-		return (NULL);
-	i = 0;
-	while (s1[i])
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	k = 0;
-	while (s2[k])
-		str[i++] = s2[k++];
-	str[i] = '\0';
-	return (str);
-}
-
 int		scrin(t_lst *lst)
 {
 
 	SDL_Surface	*surface;
 	char		*str;
 	char		*tmp;
+	int			fd;
 	
 	surface = SDL_CreateRGBSurfaceFrom(lst->img->pixels, lst->img->w, lst->img->h, lst->img->format->BitsPerPixel, lst->img->w * lst->img->format->BytesPerPixel, lst->img->format->Rmask, lst->img->format->Gmask, lst->img->format->Bmask, lst->img->format->Amask);
 	int i = 0;
@@ -273,8 +224,9 @@ int		scrin(t_lst *lst)
     	str = get_nbr(lst->num_file_for_screen);
     	tmp = ft_strjoin("screenshots/screen", str);
     	free(str);
-    	if (open(tmp, O_RDONLY) == -1)//проверить на утечки
+    	if ((fd = open(tmp, O_RDONLY)) == -1)//проверить на утечки
     		break ;
+		close(fd);
     	free(tmp);
     	lst->num_file_for_screen += 1;
 	}
@@ -295,7 +247,9 @@ int		key_press(SDL_Keycode key, t_lst *lst)
 	//else 
 	// printf("%d\n", key);
 
-	if (key == 13)//скриншот на enter
+	if (key == 8)
+		return (saveScene(lst));
+	else if (key == 13)//скриншот на enter
 		return (scrin(lst));
 	else if (key == 91){//смена пост-еффекта
 		lst->postEffects -= 1;
