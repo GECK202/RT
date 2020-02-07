@@ -20,6 +20,9 @@
 # define RATIO ((float)S_W / (float)S_H)
 # define POT (16)
 
+# define MAX(a, b) ((float)(a) > (float)(b) ? (float)(a) : (float)(b)
+# define MIN(a, b) ((float)(a) < (float)(b) ? (float)(a) : (float)(b)
+
 # define INFINITY (1e999)
 # define MIN_OFFSET (0.01f)
 # define RECURCE_DEPTH (3)
