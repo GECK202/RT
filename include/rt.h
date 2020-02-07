@@ -13,8 +13,8 @@
 #ifndef RT_H
 # define RT_H
 
-# define S_W (800)
-# define S_H (600)
+# define S_W (400)
+# define S_H (400)
 # define H_W (S_W / 2)
 # define H_H (S_H / 2)
 # define RATIO ((float)S_W / (float)S_H)
@@ -31,7 +31,7 @@
 # define MATERIAL (1)
 
 # define SCENE_LINES (10)
-# define FIGURE_LINES (8)
+# define FIGURE_LINES (11)
 # define LIGHT_LINES (6)
 # define MATERIAL_LINES (8)
 
@@ -100,6 +100,13 @@ typedef struct		s_mat
 	struct s_mat	*next;
 }					t_mat;
 
+typedef struct		s_uv
+{
+	t_vec3			scale;
+	float			rot;
+	t_vec3			move;
+	t_vec3			rot_tr;
+}					t_uv;
 
 typedef enum		e_tfig
 {
@@ -128,6 +135,7 @@ typedef struct		s_fig
 	t_mat3			mat_y;
 	t_mat3			mat_z;
 	t_mat			*mat;
+	t_uv			uvt;
 	struct s_fig	*next;
 }					t_fig;
 
@@ -354,6 +362,10 @@ int					set_rad_fig(t_lst *lst, char *word);
 int					set_ang_fig(t_lst *lst, char *word);
 int					set_lim_fig(t_lst *lst, char *word);
 int					set_mat_fig(t_lst *lst, char *word);
+
+int					set_uv_scale(t_lst *lst, char *word);
+int					set_uv_rot(t_lst *lst, char *word);
+int					set_uv_move(t_lst *lst, char *word);
 
 int					cre_lght(t_lst *lst);
 int					set_type_lght(t_lst *lst, char *word);

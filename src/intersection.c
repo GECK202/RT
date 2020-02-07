@@ -17,6 +17,78 @@
 ** selection figure for check
 */
 
+void	transform_uv(t_isec *isec)
+{
+	t_uv	uvt;
+
+// printf("[%f %f] = ", isec->uv.x, isec->uv.y);
+	uvt = isec->fig->uvt;
+	isec->uv.x = isec->uv.x * uvt.scale.x;
+	isec->uv.y = isec->uv.y * uvt.scale.y;
+	float x = isec->uv.x;
+	isec->uv.x = isec->uv.x * uvt.rot_tr.x - isec->uv.y * uvt.rot_tr.y;
+
+	isec->uv.y = x * uvt.rot_tr.y + isec->uv.y * uvt.rot_tr.x;
+	
+	isec->uv.x = isec->uv.x + uvt.move.x;
+	isec->uv.y = isec->uv.y + uvt.move.y;
+	// printf("[%f %f]\n", isec->uv.x, isec->uv.y);
+	if (isec->uv.x > 1 || isec->uv.x < 0)
+		isec->uv.x -= (int)(isec->uv.x);
+	if (isec->uv.x < 0)
+		isec->uv.x += 1.0;
+	if (isec->uv.y > 1 || isec->uv.y < 0)
+		isec->uv.y -= (int)(isec->uv.y);
+	if (isec->uv.y < 0)
+		isec->uv.y += 1.0;
+	
+}
+
+void	check_count_isec(t_hit *hit)
+{
+	if (hit->isec1 && hit->isec2)
+		hit->count = 2;
+	else if (!hit->isec1 && !hit->isec2)
+		hit->count = 0;
+	else if (hit->isec1 && !hit->isec2)
+		hit->count = 1;
+	else
+	{
+		hit->isec1 = hit->isec2;
+		hit->isec2 = NULL;
+		hit->count = 1;
+	}
+	if (hit->isec1)
+		transform_uv(hit->isec1);
+	// if (hit->isec2)
+	// 	transform_uv(hit->isec2);
+}
+
+void	check_isec(t_hit *hit)
+{
+	float tr;
+
+	if (hit->isec1 && hit->isec1->fig->mat && hit->isec1->fig->mat->mask_map.map)
+	{
+		tr = get_transp_from_file(hit->isec1->fig->mat->mask_map, hit->isec1->uv);
+		if (tr == 1)
+		{
+			free(hit->isec1);
+			hit->isec1 = NULL;
+		}
+	}
+	if (hit->isec2 && hit->isec2->fig->mat && hit->isec2->fig->mat->mask_map.map)
+	{
+		tr = get_transp_from_file(hit->isec2->fig->mat->mask_map, hit->isec2->uv);
+		if (tr == 1)
+		{
+			free(hit->isec2);
+			hit->isec2 = NULL;
+		}
+	}
+	check_count_isec(hit);
+}
+
 void	sel_fig_check(t_lst *lst, t_hit *hit, t_trc trc, t_fig *cur_fig)
 {
 	hit->isec1 = NULL;
@@ -31,7 +103,12 @@ void	sel_fig_check(t_lst *lst, t_hit *hit, t_trc trc, t_fig *cur_fig)
 		intersec_con(lst, hit, trc, cur_fig);
 	else if (cur_fig->type == plane)
 		intersec_pln(lst, hit, trc, cur_fig);
+	if (hit->count)
+		check_isec(hit);
+	
 }
+
+
 
 
 t_isec	*check_inv_sph(t_lst *lst, t_trc trc, float t, t_fig *isph)
@@ -198,7 +275,6 @@ void	intersec_sph(t_lst *lst, t_hit *hit, t_trc trc, t_fig *sph)
 	hit->isec2->uv.y = acos(x);
 	x = sin(hit->isec2->uv.y);
 	hit->isec2->uv.x = (acos(dot(trc.p, sph->look)/x)) / (2 * M_PI);
-	// if (dot(cross(sph->dir, sph->look), Vp) > 0)
 	if (dot(sph->right, trc.p) > 0)
 		hit->isec2->uv.x = 1.0 - hit->isec2->uv.x;
 	hit->isec2->uv.y = hit->isec2->uv.y / M_PI;
@@ -208,12 +284,13 @@ void	intersec_sph(t_lst *lst, t_hit *hit, t_trc trc, t_fig *sph)
 	else
 		hit->isec2->n = invert_vec3(trc.p);
 	hit->count = 1;
-	if (hit->isec1 && hit->isec2)
-		hit->count = 2;
-	else if (!hit->isec1 && !hit->isec2)
-		hit->count = 0;
-	else if (hit->isec2)
-		hit->isec1 = hit->isec2;
+
+	// if (hit->isec1 && hit->isec2)
+	// 	hit->count = 2;
+	// else if (!hit->isec1 && !hit->isec2)
+	// 	hit->count = 0;
+	// else if (hit->isec2)
+	// 	hit->isec1 = hit->isec2;
 }
 
 /*

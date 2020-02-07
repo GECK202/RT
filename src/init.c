@@ -33,6 +33,11 @@ void	init_f_read(t_lst *lst)
 	lst->set->f_fig[5] = set_ang_fig;
 	lst->set->f_fig[6] = set_lim_fig;
 	lst->set->f_fig[7] = set_mat_fig;
+
+	lst->set->f_fig[8] = set_uv_scale;
+	lst->set->f_fig[9] = set_uv_rot;
+	lst->set->f_fig[10] = set_uv_move;
+
 	lst->set->cre_lght = cre_lght;
 	lst->set->f_lght[0] = set_type_lght;
 	lst->set->f_lght[1] = set_pos_lght;

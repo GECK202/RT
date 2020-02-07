@@ -147,6 +147,27 @@ SDL_Color	get_refl_col(t_lst *lst, t_trc trc, t_vec3 n, int depth)
 }
 
 /*
+** calculate refraction color for dot
+*/
+
+SDL_Color	get_refr_col(t_lst *lst, t_trc trc, t_vec3 n)
+{
+	// int			r_col;
+	SDL_Color	refr_col;
+	float		angle;
+
+	angle = 10.0;
+	trc.min = MIN_OFFSET;
+	trc.max = INFINITY;
+	trc.d = refl_r(trc.d, n);//set_vec3()
+	refr_col = trace(lst, trc, 0);
+	// refl_col.r = (r_col & 0xFF0000) >> 16;
+	// refl_col.g = (r_col & 0xFF00) >> 8;
+	// refl_col.b = r_col & 0xFF;
+	return (refr_col);
+}
+
+/*
 ** set parametr for call light function
 */
 
@@ -358,6 +379,7 @@ SDL_Color		trace(t_lst *lst, t_trc trc, int depth)
 				refl_col = get_refl_col(lst, trc, cur_isec->n, depth - 1);
 				tres = plus_sdl_color(mult_sdl_color(tres, 1.0 - cur_isec->fig->mat->refl), mult_sdl_color(refl_col, cur_isec->fig->mat->refl));
 			}
+
 			koef = (1.0 - transp) * full;
 			res = plus_sdl_color(res, mult_sdl_color(tres, koef));
 			full -= koef;
@@ -373,16 +395,7 @@ SDL_Color		trace(t_lst *lst, t_trc trc, int depth)
 	{
 		float fog_n = cisec->t * lst->scn->fog.max_tr / (lst->scn->fog.near);
 		res = mix_color(lst->scn->fog.col, res, fog_n);
-		// // printf("%f\n", fog_n);
-		// if (fog_n > 1)
-		// 	fog_n = 1;
-		// res.r = res.r * (1 - fog_n) + fog_col.r * fog_n;
-		// res.g = res.g * (1 - fog_n) + fog_col.g * fog_n;
-		// res.b = res.b * (1 - fog_n) + fog_col.b * fog_n;
 	}
-	// int color;
-	// color = (res.r << 16) + (res.g << 8) + res.b;
-	
 	free_isec_list(cisec);
 	return (res);
 }
