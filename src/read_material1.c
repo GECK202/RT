@@ -39,6 +39,7 @@ int		cre_mat(t_lst *lst)
 		load_map(&(mat->norm_map), 0);
 		load_map(&(mat->mask_map), 0);
 		mat->refl = 0;
+		mat->refr = 1;
 		mat->spec = 1000;	
 		mat->transpare = 0;
 		lst->scn->mats = mat;

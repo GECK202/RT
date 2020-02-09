@@ -150,7 +150,64 @@ SDL_Color	get_refl_col(t_lst *lst, t_trc trc, t_vec3 n, int depth)
 ** calculate refraction color for dot
 */
 
-SDL_Color	get_refr_col(t_lst *lst, t_trc trc, t_vec3 n)
+SDL_Color	get_refr_col(t_lst *lst, t_trc trc, t_vec3 n, float ito)
+{
+	// int			r_col;
+	SDL_Color	refr_col;
+	// float		angle;
+	
+	// angle = 10;
+	trc.d = div_vec3f(trc.d, len_vec3(trc.d));
+	// if (dot(trc.d, n) < 0)
+	// 	// angle = -angle;
+	// angle = angle * M_PI / 180;
+	
+	// refr_col.r = 255;
+	// refr_col.g = 0;
+	// refr_col.b = 0;
+
+	// n = invert_vec3(n);
+	// n = div_vec3f(n, len_vec3(n));
+
+    float cosi = -clampf(dot(trc.d, n), -1.0, 1.0);
+
+    float etai = 1.0;
+    float etat = ito;
+    // cosi = -dot(trc.d, n);
+    if (cosi < 0)
+    {
+    	cosi = -cosi;
+    
+    	float tmp = etai;
+    	etai = etat;
+    	etat = tmp;
+    	n = invert_vec3(n);
+    } 
+    float eta = etai / etat; 
+    float k = 1 - eta * eta * (1 - cosi * cosi); 
+    if (k < 0)
+    	// k = 0.5;
+    	// trc.d = cross(n, trc.d);
+    	// angle=0;
+    	// return(refr_col);
+    	// trc.d = invert_vec3(trc.d);
+    	trc.d = cre_vec3(1,0,0);
+    else
+    	trc.d = plus_vec3(mult_vec3f(trc.d, eta), mult_vec3f(n, (eta * cosi - sqrtf(k)))); 
+
+    trc.d = div_vec3f(trc.d, len_vec3(trc.d));
+    trc.d = invert_vec3(trc.d);
+
+
+	// float cosi = MIN(1.0, dot(trc.p, n));
+
+	trc.min = MIN_OFFSET;
+	trc.max = INFINITY;
+	refr_col = trace(lst, trc, 0);
+	return (refr_col);
+}
+
+SDL_Color	get_refr_col2(t_lst *lst, t_trc trc, t_vec3 n)
 {
 	// int			r_col;
 	SDL_Color	refr_col;
@@ -165,6 +222,7 @@ SDL_Color	get_refr_col(t_lst *lst, t_trc trc, t_vec3 n)
 
 
 	// float cosi = MIN(1.0, dot(trc.p, n));
+	n = invert_vec3(n);
 	float cosi = dot(trc.p, n);
 	cosi = (cosi >= 1.0) ? cosi : 1.0;
 	cosi = (cosi > -1.0) ? -cosi : 1.0;
@@ -174,6 +232,7 @@ SDL_Color	get_refr_col(t_lst *lst, t_trc trc, t_vec3 n)
 	if (cosi < 0)
 	{
 		cosi = -cosi;
+		cosi = clampf(cosi,0.0,1.0);
 		float tmp = etai;
 		etai = etat;
 		etat = tmp;
@@ -184,7 +243,7 @@ SDL_Color	get_refr_col(t_lst *lst, t_trc trc, t_vec3 n)
 	if (k < 0)
 		trc.d = cre_vec3(1,0,0);
 	else
-		trc.d = plus_vec3(mult_vec3f(trc.p, eta), mult_vec3f(n, eta * cosi - sqrtf(k)));
+		trc.d = plus_vec3(mult_vec3f(trc.d, eta), mult_vec3f(n, eta * cosi - sqrtf(k)));
 
 	trc.min = MIN_OFFSET;
 	trc.max = INFINITY;
@@ -195,6 +254,8 @@ SDL_Color	get_refr_col(t_lst *lst, t_trc trc, t_vec3 n)
 	// refl_col.b = r_col & 0xFF;
 	return (refr_col);
 }
+
+
 
 /*
 ** set parametr for call light function
@@ -403,13 +464,20 @@ SDL_Color		trace(t_lst *lst, t_trc trc, int depth)
 			}
 			
 			trc.o = set_vec3(trc.p);
-			tres = get_refr_col(lst, trc, n);
+			
 
 			if (depth > 0 && cur_isec->fig->mat->refl > 0)
 			{
-				trc.o = set_vec3(trc.p);
+				// trc.o = set_vec3(trc.p);
 				refl_col = get_refl_col(lst, trc, cur_isec->n, depth - 1);
 				tres = plus_sdl_color(mult_sdl_color(tres, 1.0 - cur_isec->fig->mat->refl), mult_sdl_color(refl_col, cur_isec->fig->mat->refl));
+			}
+
+			if (cur_isec->fig->mat->refr > 1)// || cur_isec->fig->type == plane)
+			{
+				trc.o = set_vec3(trc.p);
+				SDL_Color refr_col = get_refr_col(lst, trc, cur_isec->n2, cur_isec->fig->mat->refr);
+				tres = mix_color(refr_col, tres, 1-transp);
 			}
 
 			koef = (1.0 - transp) * full;

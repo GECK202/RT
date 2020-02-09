@@ -23,7 +23,7 @@ void	mult(t_lst *lst, t_trc *trc, int x, int y)
 	mult_m3(&trc->d, trc->d, lst->camera_x);
 	mult_m3(&trc->d, trc->d, lst->camera_y);
 	col = trace(lst, *trc, RECURCE_DEPTH);
-	lst->data[(S_H - y - H_H - 1) * S_W + x + H_W] = (col.r << 16) + (col.g << 8) + col.b;
+	lst->data[(S_H - y - H_H - 1) * S_W + x + H_W] = (COLR << 16) + (col.g << 8) + COLB;
 		// trace(lst, *trc, RECURCE_DEPTH);
 		
 	lst->data_dop[(S_H - y - H_H - 1) * S_W + x + H_W] = lst->data[(S_H - y - H_H - 1) * S_W + x + H_W];

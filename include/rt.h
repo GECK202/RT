@@ -13,12 +13,12 @@
 #ifndef RT_H
 # define RT_H
 
-# define S_W (400)
-# define S_H (400)
+# define S_W (800)
+# define S_H (600)
 # define H_W (S_W / 2)
 # define H_H (S_H / 2)
 # define RATIO ((float)S_W / (float)S_H)
-# define POT (16)
+# define POT (32)
 
 # define MAX(a, b) ((float)(a) > (float)(b) ? (float)(a) : (float)(b)
 # define MIN(a, b) ((float)(a) < (float)(b) ? (float)(a) : (float)(b)
@@ -36,7 +36,7 @@
 # define SCENE_LINES (10)
 # define FIGURE_LINES (11)
 # define LIGHT_LINES (6)
-# define MATERIAL_LINES (8)
+# define MATERIAL_LINES (9)
 
 # define SCENE_FUNCTIONS (SCENE_LINES + 1)
 # define FIGURE_FUNCTIONS FIGURE_LINES
@@ -44,6 +44,14 @@
 # define MATERIAL_FUNCTIONS MATERIAL_LINES
 
 # define END_FOR_POST_EFFECTS 10
+
+# ifdef __linux__
+#  define COLR (col.b)
+#  define COLB (col.r)
+# else
+#  define COLR (col.r)
+#  define COLB (col.b)
+# endif
 
 # include <pthread.h>
 # include <math.h>
@@ -99,6 +107,7 @@ typedef struct		s_mat
 	t_map			mask_map;
 	int				spec;
 	float			refl;
+	float			refr;
 	float			transpare;
 	struct s_mat	*next;
 }					t_mat;
@@ -169,6 +178,7 @@ typedef struct		s_isec
 	t_fig			*fig;
 	float			check;
 	t_vec3			n;
+	t_vec3			n2;
 	t_vec3			uv;
 	struct s_isec	*next;
 	struct s_isec	*prev;
@@ -354,6 +364,7 @@ int					set_norm_map_mat(t_lst *lst, char *word);
 int					set_mask_map_mat(t_lst *lst, char *word);
 int					set_spec_mat(t_lst *lst, char *word);
 int					set_refl_mat(t_lst *lst, char *word);
+int					set_refr_mat(t_lst *lst, char *word);
 int					set_transpare_mat(t_lst *lst, char *word);
 
 int					cre_fig(t_lst *lst);

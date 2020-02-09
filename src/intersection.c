@@ -103,7 +103,7 @@ void	sel_fig_check(t_lst *lst, t_hit *hit, t_trc trc, t_fig *cur_fig)
 		intersec_con(lst, hit, trc, cur_fig);
 	else if (cur_fig->type == plane)
 		intersec_pln(lst, hit, trc, cur_fig);
-	if (hit->count)
+	if (hit->count && lst->scn->inv_surf == 0)
 		check_isec(hit);
 	
 }
@@ -152,10 +152,12 @@ t_isec	*check_inv_sph(t_lst *lst, t_trc trc, float t, t_fig *isph)
 		isec->uv.x = 1.0 - isec->uv.x;
 	isec->uv.y = isec->uv.y / M_PI;
 
+	
 	if (dot(trc.d, trc.p) < 0)
 		isec->n = invert_vec3(trc.p);
 	else
 		isec->n = set_vec3(trc.p);
+	isec->n2 = set_vec3(isec->n);
 	return (isec);
 }
 
@@ -235,6 +237,7 @@ void	intersec_sph(t_lst *lst, t_hit *hit, t_trc trc, t_fig *sph)
 			hit->isec1->uv.x = 1.0 - hit->isec1->uv.x;
 		hit->isec1->uv.y = hit->isec1->uv.y / M_PI;
 
+		hit->isec1->n2 = set_vec3(trc.p);
 		if (dot(trc.d, trc.p) < 0)
 			hit->isec1->n = set_vec3(trc.p);
 		else
@@ -279,6 +282,7 @@ void	intersec_sph(t_lst *lst, t_hit *hit, t_trc trc, t_fig *sph)
 		hit->isec2->uv.x = 1.0 - hit->isec2->uv.x;
 	hit->isec2->uv.y = hit->isec2->uv.y / M_PI;
 
+	hit->isec2->n2 = set_vec3(trc.p);
 	if (dot(trc.d, trc.p) < 0)
 		hit->isec2->n = set_vec3(trc.p);
 	else
@@ -340,6 +344,7 @@ void	intersec_pln(t_lst *lst, t_hit *hit, t_trc trc, t_fig *pln)
 			hit->isec1->fig = pln;
 			hit->isec1->t = t;
 			hit->isec1->n = set_vec3(n);
+			hit->isec1->n2 = invert_vec3(n);
 			hit->count = 1;
 			uv.x -= (int)uv.x;
 			uv.y -= (int)uv.y;
@@ -402,6 +407,7 @@ t_isec	*get_isec_cyl(t_lst *lst, t_trc trc, float t, t_fig *cyl)
 
 		p = plus_vec3(mult_vec3f(trc.d, isec->t), trc.o);
 		isec->n = minus_vec3(minus_vec3(p, c), mult_vec3f(dir, m));
+		isec->n2 = set_vec3(isec->n);
 		if (dot(trc.d, isec->n)>0)
 			isec->n = invert_vec3(isec->n);
 		isec->n = div_vec3f(isec->n, len_vec3(isec->n));
