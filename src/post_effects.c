@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   postEffects.c                                      :+:      :+:    :+:   */
+/*   post_effects.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/24 16:59:46 by vabraham          #+#    #+#             */
-/*   Updated: 2020/01/24 16:59:47 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/10 23:14:56 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,28 @@
 
 SDL_Color	post_effects3(t_lst *lst, int i, SDL_Color res)
 {
-	if (lst->postEffects == 9)
+	if (lst->post_effects == 9)
 	{
 		res.g = (res.r + res.g + res.b) / 3;
 		res.r = 0;
 		res.b = 0;
 	}
-	else if (lst->postEffects == 10)
+	else if (lst->post_effects == 10)
 	{
 		res.b = (res.r + res.g + res.b) / 3;
 		res.g = 0;
 		res.r = 0;
 	}
-	else if (lst->postEffects == 11)
+	else if (lst->post_effects == 11)
 		res = blur(lst->data_dop, i, 4, 4);
-	else if (lst->postEffects == 12)
+	else if (lst->post_effects == 12)
 		res = pixel_picture(lst->data_dop, i, 7, 7);
 	return (res);
 }
 
 SDL_Color	post_effects2(t_lst *lst, int i, SDL_Color res)
 {
-	if (lst->postEffects == 7)
+	if (lst->post_effects == 7)
 	{
 		if (res.r >= 128)
 			res.r = 255;
@@ -50,7 +50,7 @@ SDL_Color	post_effects2(t_lst *lst, int i, SDL_Color res)
 		else
 			res.b = 0;
 	}
-	else if (lst->postEffects == 8)
+	else if (lst->post_effects == 8)
 	{
 		res.r = (res.r + res.g + res.b) / 3;
 		res.g = 0;
@@ -63,7 +63,7 @@ SDL_Color	post_effects2(t_lst *lst, int i, SDL_Color res)
 
 SDL_Color	post_effects1(t_lst *lst, int i, SDL_Color res)
 {
-	if (lst->postEffects == 4)
+	if (lst->post_effects == 4)
 	{
 		res.r = (res.r + res.g + res.b) / 3;
 		res.b = res.r;
@@ -74,7 +74,7 @@ SDL_Color	post_effects1(t_lst *lst, int i, SDL_Color res)
 			res.r = res.b;
 		}
 	}
-	else if (lst->postEffects == 5)
+	else if (lst->post_effects == 5)
 	{
 		res.g = (res.r + res.g + res.b) / 3;
 		res.b = res.g;
@@ -92,17 +92,17 @@ SDL_Color	post_effects1(t_lst *lst, int i, SDL_Color res)
 
 SDL_Color	post_effects0(t_lst *lst, int i, SDL_Color res)
 {
-	if (lst->postEffects == 2 || lst->postEffects == 6)
+	if (lst->post_effects == 2 || lst->post_effects == 6)
 	{
 		res.r = (res.r + res.g + res.b) / 3;
-		if (lst->postEffects == 6 && res.r >= 128)
+		if (lst->post_effects == 6 && res.r >= 128)
 			res.r = 255;
-		else if (lst->postEffects == 6)
+		else if (lst->post_effects == 6)
 			res.r = 0;
 		res.g = res.r;
 		res.b = res.r;
 	}
-	else if (lst->postEffects == 3)
+	else if (lst->post_effects == 3)
 	{
 		res.r = (res.r + res.g + res.b) / 3;
 		res.g = res.r;
@@ -129,7 +129,7 @@ void		post_effects(t_lst *lst)
 		res.r = lst->data_dop[i] / 256 / 256;
 		res.g = lst->data_dop[i] / 256 % 256;
 		res.b = lst->data_dop[i] % (256 * 256);
-		if (lst->postEffects == 1)
+		if (lst->post_effects == 1)
 		{
 			res.r = 255 - res.r;
 			res.g = 255 - res.g;

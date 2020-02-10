@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:06 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/10 18:55:59 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/10 23:25:26 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	mult(t_lst *lst, t_trc *trc, int x, int y)
 	mult_m3(&trc->d, trc->d, lst->camera_y);
 	col = trace(lst, *trc, RECURCE_DEPTH, cisec);
 	lst->data[(S_H - y - H_H - 1) * S_W + x + H_W] =
-		(COLR << 16) + (col.g << 8) + COLB;
+		(col.r << 16) + (col.g << 8) + col.b;
 	lst->data_dop[(S_H - y - H_H - 1) * S_W + x + H_W] =
 		lst->data[(S_H - y - H_H - 1) * S_W + x + H_W];
 }

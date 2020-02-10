@@ -6,54 +6,43 @@
 /*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/10 22:11:31 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/10 23:25:29 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RT_H
 # define RT_H
 
-# define S_W (600)
-# define S_H (400)
-# define H_W (S_W / 2)
-# define H_H (S_H / 2)
-# define RATIO ((float)S_W / (float)S_H)
-# define POT (16)
+# define S_W 600
+# define S_H 400
+# define H_W 300
+# define H_H 200
+# define RATIO 1.5
+# define POT 16
 
-# define MAX(a, b) ((float)(a) > (float)(b) ? (float)(a) : (float)(b)
-# define MIN(a, b) ((float)(a) < (float)(b) ? (float)(a) : (float)(b)
+# define INFINITY 1e999
+# define MIN_OFFSET 0.01f
+# define RECURCE_DEPTH 3
 
-# define INFINITY (1e999)
-# define MIN_OFFSET (0.01f)
-# define RECURCE_DEPTH (3)
+# define TAGS 4
+# define SCENE 0
+# define FIGURE 2
+# define LIGHT 3
+# define MATERIAL 1
 
-# define TAGS (4)
-# define SCENE (0)
-# define FIGURE (2)
-# define LIGHT (3)
-# define MATERIAL (1)
+# define SCENE_LINES 10
+# define FIGURE_LINES 11
+# define LIGHT_LINES 6
+# define MATERIAL_LINES 9
 
-# define SCENE_LINES (10)
-# define FIGURE_LINES (11)
-# define LIGHT_LINES (6)
-# define MATERIAL_LINES (9)
-
-# define SCENE_FUNCTIONS (SCENE_LINES + 1)
-# define FIGURE_FUNCTIONS FIGURE_LINES
-# define LIGHT_FUNCTIONS LIGHT_LINES 
-# define MATERIAL_FUNCTIONS MATERIAL_LINES
+# define SCENE_FUNCTIONS 11
+# define FIGURE_FUNCTIONS 11
+# define LIGHT_FUNCTIONS 6
+# define MATERIAL_FUNCTIONS 9
 
 # define END_FOR_POST_EFFECTS 12
 # define RAD_BLUR_X 5
 # define RAD_BLUR_Y 5
-
-# ifdef __linux__
-#  define COLR (col.b)
-#  define COLB (col.r)
-# else
-#  define COLR (col.r)
-#  define COLB (col.b)
-# endif
 
 # include <pthread.h>
 # include <math.h>
@@ -67,11 +56,8 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 
-// # include <sys\stat.h>
-//# include <mlx.h>
 # include <SDL2/SDL.h>
 # include <SDL2/SDL_image.h>
-//# include <SDL2/SDL_ttf.h>
 
 typedef struct		s_tag
 {
@@ -99,9 +85,8 @@ typedef struct		s_map
 {
 	SDL_Surface		*map;
 	int				*data;
-	char			*name_map;///////////////////
+	char			*name_map;
 }					t_map;
-
 
 typedef struct		s_mat
 {
@@ -171,7 +156,7 @@ typedef struct		s_lght
 	t_vec3			pos;
 	t_vec3			begin_pos;
 	t_vec3			dir;
-	float 			angle;
+	float			angle;
 	float			ints;
 	SDL_Color		col;
 	struct s_lght	*next;
@@ -198,7 +183,7 @@ typedef struct		s_hit
 
 typedef struct		s_fog
 {
-	int 			enable;
+	int				enable;
 	float			max_tr;
 	float			near;
 	SDL_Color		col;
@@ -232,10 +217,8 @@ typedef struct		s_lst
 	int				*data;
 	int				depth;
 	SDL_Color		res_help;
-	
 	SDL_Point		cursor;
-
-	int				postEffects;
+	int				post_effects;
 	int				*data_dop;
 	int				num_file_for_screen;
 	int				change;
@@ -258,7 +241,7 @@ typedef struct		s_read
 {
 	t_r_scn			f_scn[SCENE_FUNCTIONS];
 	int				(*cre_mat)(t_lst*);
-	t_r_mat			f_mat[MATERIAL_FUNCTIONS];//Тест с прозрачностью
+	t_r_mat			f_mat[MATERIAL_FUNCTIONS];
 	int				(*cre_fig)(t_lst*);
 	t_r_fig			f_fig[FIGURE_FUNCTIONS];
 	int				(*cre_lght)(t_lst*);
@@ -283,11 +266,16 @@ typedef struct		s_l_prm
 
 SDL_Color			return_background(t_lst *lst, t_trc trc);
 SDL_Color			mix_color(SDL_Color c1, SDL_Color c2, float koef);
-SDL_Color			return_trace(t_lst *lst, t_vec3 fkt, SDL_Color col, t_isec **cisec);
-void				init_trace0(t_lst *lst, int depth, t_vec3 *fkt, SDL_Color *res);
-int					idono(t_vec3 *fkt, SDL_Color *res, SDL_Color tres, t_isec **cur_isec);
-int					init_trace(t_lst *lst, t_isec **cisec, t_trc trc, SDL_Color *col);
-void				check_refr(t_lst *lst, t_trc *trc, t_isec *ci, SDL_Color *tres);
+SDL_Color			return_trace(t_lst *lst, t_vec3 fkt,
+						SDL_Color col, t_isec **cisec);
+void				init_trace0(t_lst *lst, int depth,
+						t_vec3 *fkt, SDL_Color *res);
+int					idono(t_vec3 *fkt, SDL_Color *res,
+						SDL_Color tres, t_isec **cur_isec);
+int					init_trace(t_lst *lst, t_isec **cisec,
+						t_trc trc, SDL_Color *col);
+void				check_refr(t_lst *lst, t_trc *trc,
+						t_isec *ci, SDL_Color *tres);
 void				get_normal_from_file(t_isec *cisec, t_lst *lst);
 t_l_prm				set_l_prm(t_trc trc, t_vec3 n);
 SDL_Color			plus_sdl_color(SDL_Color col1, SDL_Color col2);
@@ -297,7 +285,8 @@ SDL_Color			get_refl_col(t_lst *lst, t_trc trc, t_vec3 n, int depth);
 SDL_Color			get_refr_col(t_lst *lst, t_trc trc, t_vec3 n, float ito);
 int					set_refr_mat(t_lst *lst, char *word);
 int					set_inv_surf(t_lst *lst, char *word);
-t_trc				get_all_really(t_vec3 *ints, t_l_prm b, t_lght **c_lght, int check);
+t_trc				get_all_really(t_vec3 *ints, t_l_prm b,
+						t_lght **c_lght, int check);
 void				trc_init(t_trc *trc, t_lght *c_lght, t_l_prm b);
 t_vec3				transpare_shadow(t_isec *shdw, t_vec3 kof);
 void				cls_isec3(t_isec **cisec, t_lst *lst, t_trc trc);
@@ -308,7 +297,7 @@ int					key_press0(SDL_Keycode key, t_lst *lst);
 int					key_press_dop(SDL_Keycode key, t_lst *lst);
 int					scrin(t_lst *lst);
 void				sdl_cycle(t_lst *lst);
-void				sld_events(t_lst *lst, SDL_Event e, int *quit, int *repaint);
+void				sld_events(t_lst *lst, SDL_Event e, int *qt, int *repaint);
 void				sld_events0(t_lst *lst, SDL_Event e, int *repaint);
 void				close_sdl(t_lst *lst);
 void				write_figure(int fd, t_lst *lst);
@@ -318,8 +307,8 @@ int					get_file_scene(void);
 char				*get_fnbr_to_string(int min, float num, char *s);
 char				*get_inbr_to_string(int min, int num, char *s);
 
-SDL_Color			pixel_picture(int *data, int i, int pixX, int pixY);
-SDL_Color			blur(int *data, int i, float blurX, float blurY);
+SDL_Color			pixel_picture(int *data, int i, int pix_x, int pix_y);
+SDL_Color			blur(int *data, int i, float blur_x, float blur_y);
 void				draw(t_lst *lst);
 int					save_scene(t_lst *lst);
 
@@ -330,7 +319,6 @@ int					scene_init(t_lst *lst, char *file);
 void				init_f_read(t_lst *lst);
 int					check_tag(t_lst *l, char **word, t_tag *ctag);
 int					read_scene(t_lst *l, char *file);
-
 
 int					init_sdl(t_lst *lst);
 
@@ -376,7 +364,6 @@ float				get_transp_from_file(t_map map, t_vec3 uv);
 void				cls_isec(t_isec **cisec, t_lst *lst, t_trc trc);
 SDL_Color			trace(t_lst *lst, t_trc trc, int depth, t_isec *cisec);
 t_vec3				light(t_lst *lst, t_l_prm b, t_fig *fig, t_lght *c_lght);
-
 
 void				rain(t_lst *lst);
 void				set_m4_rz(t_mat3 *m, float fi);
@@ -428,8 +415,8 @@ int					set_type_lght(t_lst *lst, char *word);
 int					set_pos_lght(t_lst *lst, char *word);
 int					set_dir_lght(t_lst *lst, char *word);
 int					set_ints_lght(t_lst *lst, char *word);
-int 				set_col_lght(t_lst *lst, char *word);
-int 				set_angle_lght(t_lst *lst, char *word);
+int					set_col_lght(t_lst *lst, char *word);
+int					set_angle_lght(t_lst *lst, char *word);
 
 void				move_light(t_lst *lst, SDL_Point p);
 void				move_fig(t_lst *lst, SDL_Point p);

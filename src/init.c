@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:37:19 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/10 19:14:17 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/10 23:15:40 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int		scene_init(t_lst *lst, char *file)
 	lst->scn->cam_pos0.x = 0;
 	lst->scn->cam_pos0.y = 0;
 	lst->scn->cam_pos0.z = 0;
-	lst->postEffects = 0;
+	lst->post_effects = 0;
 	lst->data_dop = malloc(sizeof(int) * (S_H * S_W));
 	lst->num_file_for_screen = 0;
 	if (!(read_scene(lst, file)))

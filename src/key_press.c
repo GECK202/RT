@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   key_press.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 22:07:39 by vabraham          #+#    #+#             */
-/*   Updated: 2020/01/09 19:38:16 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/10 23:15:05 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,16 +114,16 @@ int		key_press(SDL_Keycode key, t_lst *lst)
 		return (scrin(lst));
 	else if (key == 91)
 	{
-		lst->postEffects -= 1;
-		if (lst->postEffects < 0)
-			lst->postEffects = END_FOR_POST_EFFECTS;
+		lst->post_effects -= 1;
+		if (lst->post_effects < 0)
+			lst->post_effects = END_FOR_POST_EFFECTS;
 		return (0);
 	}
 	else if (key == 93)
 	{
-		lst->postEffects += 1;
-		if (lst->postEffects > END_FOR_POST_EFFECTS)
-			lst->postEffects = 0;
+		lst->post_effects += 1;
+		if (lst->post_effects > END_FOR_POST_EFFECTS)
+			lst->post_effects = 0;
 		return (0);
 	}
 	return (key_press_dop(key, lst));
