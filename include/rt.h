@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rt.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/10 23:25:29 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/11 00:01:02 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,6 +277,16 @@ int					init_trace(t_lst *lst, t_isec **cisec,
 void				check_refr(t_lst *lst, t_trc *trc,
 						t_isec *ci, SDL_Color *tres);
 void				get_normal_from_file(t_isec *cisec, t_lst *lst);
+
+t_isec				*check_inv_figs(t_lst *lst, t_trc trc, float t);
+void				set_inv_surf1(t_lst *lst, t_hit *h, t_fig *fig);
+t_isec				*set_isec_inv_sph(t_trc trc, t_fig *isph, float p);
+t_isec				*check_inv_sph(t_lst *lst, t_trc trc, float t, t_fig *isph);
+t_isec				*check_inv_figs(t_lst *lst, t_trc trc, float t);
+t_isec				*ret_inv_isec(t_lst *lst, t_isec *isec, t_fig *fig);
+t_isec				*ret_cyl_con_isec(t_trc trc, t_fig *cyl, float t, float m);
+t_isec				*get_isec_cyl(t_lst *lst, t_trc trc, float t, t_fig *cyl);
+
 t_l_prm				set_l_prm(t_trc trc, t_vec3 n);
 SDL_Color			plus_sdl_color(SDL_Color col1, SDL_Color col2);
 SDL_Color			mult_int_color(int c, float koef);

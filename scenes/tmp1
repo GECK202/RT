@@ -13,7 +13,7 @@
 [material]:
 name: earth
 1	color: 5 5 5
-2	diffuse: res/fig1_dif.png1
+2	diffuse: res/water3_nm.png1
 3	normal: res/fig1_nm.png1
 4	mask: res/fig1_mask.png1
 5	specular: 1000
