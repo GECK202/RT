@@ -6,7 +6,7 @@
 #    By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/09/23 17:12:18 by vkaron            #+#    #+#              #
-#    Updated: 2020/02/10 18:53:27 by vabraham         ###   ########.fr        #
+#    Updated: 2020/02/10 22:12:40 by vabraham         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,8 @@ C_FILES =	key_press.c move_multy.c main.c light.c events.c scene.c trace.c\
 			read_scn.c tools.c intersection.c vec1.c vec2.c read_material1.c\
 			read_material2.c post_effects.c save_scene.c blur_and_pp.c get.c\
 			write_figure.c act_sdl.c screenshot.c read_fig_light_mat.c\
-			read_scn0.c scene0.c tools0.c vec3.c clear0.c light0.c read_uv.c
+			read_scn0.c scene0.c tools0.c vec3.c clear0.c light0.c read_uv.c\
+			cls_isec.c get_color.c get_refl_refr.c trace0.c bgc_mixcol.c
 
 O_FILES =	$(C_FILES:.c=.o)
 

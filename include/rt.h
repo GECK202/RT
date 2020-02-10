@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/10 19:15:53 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/10 22:11:31 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define RT_H
 
 # define S_W (600)
-# define S_H (300)
+# define S_H (400)
 # define H_W (S_W / 2)
 # define H_H (S_H / 2)
 # define RATIO ((float)S_W / (float)S_H)
@@ -281,6 +281,20 @@ typedef struct		s_l_prm
 	t_vec3			v;
 }					t_l_prm;
 
+SDL_Color			return_background(t_lst *lst, t_trc trc);
+SDL_Color			mix_color(SDL_Color c1, SDL_Color c2, float koef);
+SDL_Color			return_trace(t_lst *lst, t_vec3 fkt, SDL_Color col, t_isec **cisec);
+void				init_trace0(t_lst *lst, int depth, t_vec3 *fkt, SDL_Color *res);
+int					idono(t_vec3 *fkt, SDL_Color *res, SDL_Color tres, t_isec **cur_isec);
+int					init_trace(t_lst *lst, t_isec **cisec, t_trc trc, SDL_Color *col);
+void				check_refr(t_lst *lst, t_trc *trc, t_isec *ci, SDL_Color *tres);
+void				get_normal_from_file(t_isec *cisec, t_lst *lst);
+t_l_prm				set_l_prm(t_trc trc, t_vec3 n);
+SDL_Color			plus_sdl_color(SDL_Color col1, SDL_Color col2);
+SDL_Color			mult_int_color(int c, float koef);
+SDL_Color			mult_sdl_color(SDL_Color col, float koef);
+SDL_Color			get_refl_col(t_lst *lst, t_trc trc, t_vec3 n, int depth);
+SDL_Color			get_refr_col(t_lst *lst, t_trc trc, t_vec3 n, float ito);
 int					set_refr_mat(t_lst *lst, char *word);
 int					set_inv_surf(t_lst *lst, char *word);
 t_trc				get_all_really(t_vec3 *ints, t_l_prm b, t_lght **c_lght, int check);

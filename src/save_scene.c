@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   saveScene.c                                        :+:      :+:    :+:   */
+/*   save_scene.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 16:07:50 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/05 16:07:51 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/10 22:57:24 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	write_scene(int fd, t_lst *lst)
 {
-	ft_putstr_fd("[scene]:\n1	camera position: ", fd);
 	ft_putstr_fd(get_thre_int((int)(lst->scn->cam_pos.x + lst->scn->cam_pos0.x),
 		(int)(lst->scn->cam_pos.y + lst->scn->cam_pos0.y),
 		(int)(lst->scn->cam_pos.z + lst->scn->cam_pos0.z)), fd);
@@ -37,13 +36,13 @@ void	write_scene(int fd, t_lst *lst)
 	ft_putstr_fd("\n9	fog color:", fd);
 	ft_putstr_fd(get_thre_int(lst->scn->fog.col.r,
 		lst->scn->fog.col.g, lst->scn->fog.col.b), fd);
+	ft_putstr_fd("\n10	invert intersect surface: ", fd);
+	ft_putstr_fd(get_inbr_to_string(1, lst->scn->inv_surf, ""), fd);
 	ft_putstr_fd("\n\n", fd);
 }
 
-void	write_materials(int fd, t_lst *lst)
+void	write_materials(int fd, t_lst *lst, t_mat *mat)
 {
-	t_mat *mat;
-
 	mat = lst->scn->mats->next;
 	while (mat)
 	{
@@ -61,7 +60,9 @@ void	write_materials(int fd, t_lst *lst)
 		ft_putstr_fd(get_inbr_to_string(1, mat->spec, ""), fd);
 		ft_putstr_fd("\n6	reflection: ", fd);
 		ft_putstr_fd(get_fnbr_to_string(1, mat->refl, ""), fd);
-		ft_putstr_fd("\n7	transpare: ", fd);
+		ft_putstr_fd("\n7	refraction: ", fd);
+		ft_putstr_fd(get_fnbr_to_string(1, mat->refr, ""), fd);
+		ft_putstr_fd("\n8	transpare: ", fd);
 		ft_putstr_fd(get_fnbr_to_string(1, mat->transpare, ""), fd);
 		ft_putstr_fd("\n\n", fd);
 		mat = mat->next;
@@ -110,10 +111,12 @@ void	write_light(int fd, t_lst *lst)
 int		save_scene(t_lst *lst)
 {
 	int		fd;
+	t_mat	*mat;
 
 	fd = get_file_scene();
+	ft_putstr_fd("[scene]:\n1	camera position: ", fd);
 	write_scene(fd, lst);
-	write_materials(fd, lst);
+	write_materials(fd, lst, mat);
 	write_figure(fd, lst);
 	write_light(fd, lst);
 	close(fd);

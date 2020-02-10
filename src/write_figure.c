@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   write_figure.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 23:24:29 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/08 23:24:30 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/10 22:50:56 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,16 @@ void	write_figure0(int fd, t_lst *lst, t_fig *fig)
 	ft_putstr_fd(get_fnbr_to_string(1, fig->limit.y, ""), fd);
 	ft_putstr_fd("\n7	material: ", fd);
 	ft_putstr_fd(fig->mat->name, fd);
+	ft_putstr_fd("\n8	uv scale:", fd);
+	ft_putstr_fd(get_fnbr_to_string(1, fig->uvt.scale.x, ""), fd);
+	ft_putchar_fd(' ', fd);
+	ft_putstr_fd(get_fnbr_to_string(1, fig->uvt.scale.y, ""), fd);
+	ft_putstr_fd("\n9	uv rotation: ", fd);
+	ft_putstr_fd(get_fnbr_to_string(1, fig->uvt.rot, ""), fd);
+	ft_putstr_fd("\n10	uv move: ", fd);
+	ft_putstr_fd(get_fnbr_to_string(1, fig->uvt.move.x, ""), fd);
+	ft_putchar_fd(' ', fd);
+	ft_putstr_fd(get_fnbr_to_string(1, fig->uvt.move.y, ""), fd);
 	ft_putstr_fd("\n\n", fd);
 }
 
@@ -49,7 +59,7 @@ void	write_figure(int fd, t_lst *lst)
 			ft_putstr_fd("inv_sph", fd);
 		ft_putstr_fd("\n1	position:", fd);
 		ft_putstr_fd(get_thre_float(fig->pos.x, fig->pos.y, fig->pos.z), fd);
-		ft_putstr_fd("\n2	direction:", fd);
+		ft_putstr_fd("\n2	center:", fd);
 		ft_putstr_fd(get_thre_float(fig->dir.x, fig->dir.y, fig->dir.z), fd);
 		ft_putstr_fd("\n3	rotation:", fd);
 		write_figure0(fd, lst, fig);
