@@ -21,6 +21,7 @@ int		cre_fig(t_lst *lst)
 	if (!(fig = (t_fig*)malloc(sizeof(t_fig))))
 		return (0);
 	fig->next = NULL;
+	fig->mat = lst->scn->mats;
 	if (!lst->scn->figs)
 		lst->scn->figs = fig;
 	else
@@ -36,7 +37,8 @@ int		cre_fig(t_lst *lst)
 
 int		set_type_fig(t_lst *lst, char *word)
 {
-	const char	f_type[MAX_FIGS][10] = {"sphere", "cylinder", "plane", "conus", "inv_sph"};
+	const char	f_type[MAX_FIGS][10] =
+	{"sphere", "cylinder", "plane", "conus", "inv_sph"};
 	int			i;
 	int			type;
 
@@ -53,7 +55,6 @@ int		set_type_fig(t_lst *lst, char *word)
 	if (type < 0)
 		return (0);
 	lst->scn->cur_fig->type = type;
-	// printf("%s ", f_type[type]);
 	return (1);
 }
 
@@ -102,108 +103,20 @@ void	rotation_fig(t_fig *fig, t_lst *lst)
 {
 	t_vec3	tmp;
 
-	mult_m3(&fig->dir, cre_vec3(0,1.0,0), fig->mat_z);
+	mult_m3(&fig->dir, cre_vec3(0, 1.0, 0), fig->mat_z);
 	mult_m3(&fig->dir, fig->dir, fig->mat_x);
 	mult_m3(&fig->dir, fig->dir, fig->mat_y);
 	fig->dir = div_vec3f(fig->dir, len_vec3(fig->dir));
-
-	mult_m3(&fig->look, cre_vec3(0,0,1.0), fig->mat_z);
+	mult_m3(&fig->look, cre_vec3(0, 0, 1.0), fig->mat_z);
 	mult_m3(&fig->look, fig->look, fig->mat_x);
 	mult_m3(&fig->look, fig->look, fig->mat_y);
 	fig->look = div_vec3f(fig->look, len_vec3(fig->look));
-
-	mult_m3(&fig->right, cre_vec3(1.0,0,0), fig->mat_z);
+	mult_m3(&fig->right, cre_vec3(1.0, 0, 0), fig->mat_z);
 	mult_m3(&fig->right, fig->right, fig->mat_x);
 	mult_m3(&fig->right, fig->right, fig->mat_y);
 	fig->right = div_vec3f(fig->right, len_vec3(fig->right));
-
 	mult_m3(&tmp, fig->begin, fig->mat_z);
 	mult_m3(&tmp, tmp, fig->mat_x);
 	mult_m3(&tmp, tmp, fig->mat_y);
 	fig->pos = plus_vec3(minus_vec3(fig->begin_pos, fig->begin), tmp);
-}
-
-int		set_rot_fig(t_lst *lst, char *word)
-{
-	char	**coord;
-	t_fig	*fig;
-
-	if (!word)
-		return (0);
-	fig = lst->scn->cur_fig;
-	coord = ft_strsplit(word, ' ');
-	if (coord[0] && coord[1] && coord[2])
-	{
-		fig->alpha.x = ft_atof(coord[0]);
-		fig->alpha.y = ft_atof(coord[1]);
-		fig->alpha.z = ft_atof(coord[2]);
-		set_m4_rx(&fig->mat_x, fig->alpha.x);
-		set_m4_ry(&fig->mat_y, fig->alpha.y);
-		set_m4_rz(&fig->mat_z, fig->alpha.z);
-
-		rotation_fig(fig, lst);
-		
-		// mult_m3(&lst->scn->cur_fig->dir,
-		// cre_vec3(0,1,0), lst->scn->cur_fig->mat_z);
-		// mult_m3(&lst->scn->cur_fig->dir,
-		// lst->scn->cur_fig->dir, lst->scn->cur_fig->mat_x);
-		// mult_m3(&lst->scn->cur_fig->dir,
-		// lst->scn->cur_fig->dir, lst->scn->cur_fig->mat_y);
-
-		// mult_m3(&lst->scn->cur_fig->look,
-		// cre_vec3(0,0,1), lst->scn->cur_fig->mat_z);
-		// mult_m3(&lst->scn->cur_fig->look,
-		// lst->scn->cur_fig->look, lst->scn->cur_fig->mat_x);
-		// mult_m3(&lst->scn->cur_fig->look,
-		// lst->scn->cur_fig->look, lst->scn->cur_fig->mat_y);
-
-		// mult_m3(&lst->scn->cur_fig->right,
-		// cre_vec3(1,0,0), lst->scn->cur_fig->mat_z);
-		// mult_m3(&lst->scn->cur_fig->right,
-		// lst->scn->cur_fig->right, lst->scn->cur_fig->mat_x);
-		// mult_m3(&lst->scn->cur_fig->right,
-		// lst->scn->cur_fig->right, lst->scn->cur_fig->mat_y);
-
-		return (free_words(coord, 1));
-	}
-	return (free_words(coord, 0));
-}
-
-int		set_mat_fig(t_lst *lst, char *word)
-{
-	char	**name;
-	t_mat	*mat;
-	char	mat_name[18];
-	int		flag;
-
-	// write(1,"1",1);
-	// printf("1");
-	if (!word || !(*word))
-		return (0);
-	if (!(name = ft_strsplit(word, ' ')) || !(name[0]))
-	{
-		lst->scn->cur_fig->mat = lst->scn->mats;
-		return (free_words(name, 1));
-	}
-	ft_strncpy(mat_name, name[0], 18);
-	mat = lst->scn->mats;
-	flag = 0;
-	// write(1,"2",1);
-	// printf("2");
-	while (mat)
-	{
-		if (ft_strcmp(mat_name, mat->name) == 0)
-		{
-			lst->scn->cur_fig->mat = mat;
-			flag = 1;
-			break; 
-		}
-		mat = mat->next;
-	}
-	if (!flag)
-		lst->scn->cur_fig->mat = lst->scn->mats;
-	// char *c = lst->scn->cur_fig->mat->name;
-	// write(1,c,5);
-	// printf("3");
-	return (free_words(name, 1));
 }

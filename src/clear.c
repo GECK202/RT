@@ -12,17 +12,6 @@
 
 #include "rt.h"
 
-int		free_words(char **words, int res)
-{
-	int i;
-
-	i = 0;
-	while (words[i])
-		free(words[i++]);
-	free(words);
-	return (res);
-}
-
 void	free_figs(t_fig *figs)
 {
 	t_fig *cur;

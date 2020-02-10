@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+         #
+#    By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/09/23 17:12:18 by vkaron            #+#    #+#              #
-#    Updated: 2020/01/19 14:56:13 by vabraham         ###   ########.fr        #
+#    Updated: 2020/02/10 18:53:27 by vabraham         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,9 @@ FLAGS = -g
 C_FILES =	key_press.c move_multy.c main.c light.c events.c scene.c trace.c\
 			matrix.c init.c clear.c	read_fig1.c read_fig2.c read_light.c\
 			read_scn.c tools.c intersection.c vec1.c vec2.c read_material1.c\
-			read_material2.c postEffects.c saveScene.c
+			read_material2.c post_effects.c save_scene.c blur_and_pp.c get.c\
+			write_figure.c act_sdl.c screenshot.c read_fig_light_mat.c\
+			read_scn0.c scene0.c tools0.c vec3.c clear0.c light0.c read_uv.c
 
 O_FILES =	$(C_FILES:.c=.o)
 

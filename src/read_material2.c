@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_material2.c                                    :+:      :+:    :+:   */
+/*   read_material2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/21 13:43:40 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/11 22:53:29 by vkaron           ###   ########.fr       */
+/*   Created: 2020/02/09 17:33:16 by vabraham          #+#    #+#             */
+/*   Updated: 2020/02/09 17:33:17 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,17 @@ int		set_transpare_mat(t_lst *lst, char *word)
 {
 	if (!word)
 		return (0);
-	lst->scn->cur_mat->transpare = ft_atof(word);
+	if (lst->scn->cur_mat->mask_map.map != 0)
+		lst->scn->cur_mat->transpare = 1;
+	else
+		lst->scn->cur_mat->transpare = ft_atof(word);
+	return (1);
+}
+
+int		set_refr_mat(t_lst *lst, char *word)
+{
+	if (!word)
+		return (0);
+	lst->scn->cur_mat->refr = ft_atof(word);
 	return (1);
 }

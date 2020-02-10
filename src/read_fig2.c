@@ -12,6 +12,43 @@
 
 #include "rt.h"
 
+void	set_mat_fig0(t_lst *lst, t_mat *mat, char mat_name[18], int *flag)
+{
+	while (mat)
+	{
+		if (ft_strcmp(mat_name, mat->name) == 0)
+		{
+			lst->scn->cur_fig->mat = mat;
+			*flag = 1;
+			break ;
+		}
+		mat = mat->next;
+	}
+}
+
+int		set_mat_fig(t_lst *lst, char *word)
+{
+	char	**name;
+	t_mat	*mat;
+	char	mat_name[18];
+	int		flag;
+
+	if (!word || !(*word))
+		return (0);
+	if (!(name = ft_strsplit(word, ' ')) || !(name[0]))
+	{
+		lst->scn->cur_fig->mat = lst->scn->mats;
+		return (free_words(name, 1));
+	}
+	ft_strncpy(mat_name, name[0], 18);
+	mat = lst->scn->mats;
+	flag = 0;
+	set_mat_fig0(lst, mat, mat_name, &flag);
+	if (!flag)
+		lst->scn->cur_fig->mat = lst->scn->mats;
+	return (free_words(name, 1));
+}
+
 int		set_rad_fig(t_lst *lst, char *word)
 {
 	if (!word)

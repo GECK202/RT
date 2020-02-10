@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_material1.c                                    :+:      :+:    :+:   */
+/*   read_material1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/21 13:43:40 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/11 22:53:29 by vkaron           ###   ########.fr       */
+/*   Created: 2020/02/09 17:33:08 by vabraham          #+#    #+#             */
+/*   Updated: 2020/02/10 19:25:39 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,37 +24,6 @@ void	load_map(t_map *map, char *filename)
 	if (map->map)
 		map->data = (int*)(map->map->pixels);
 	map->name_map = ft_strdup(filename);
-}
-
-int		cre_mat(t_lst *lst)
-{
-	t_mat	*mat;
-	t_mat	*cur_mat;
-
-	if (!(mat = (t_mat*)malloc(sizeof(t_mat))))
-		return (0);
-	mat->next = NULL;
-	if (!lst->scn->mats)
-	{
-		ft_strcpy(mat->name, "default");
-		mat->col = set_col(128, 128, 128, 255);
-		load_map(&(mat->diff_map), 0);
-		load_map(&(mat->norm_map), 0);
-		load_map(&(mat->mask_map), 0);
-		mat->refl = 0;
-		mat->spec = 1000;	
-		mat->transpare = 0;
-		lst->scn->mats = mat;
-	}
-	else
-	{
-		cur_mat = lst->scn->mats;
-		while (cur_mat->next)
-			cur_mat = cur_mat->next;
-		cur_mat->next = mat;
-	}
-	lst->scn->cur_mat = mat;
-	return (1);
 }
 
 int		set_name_mat(t_lst *lst, char *word)

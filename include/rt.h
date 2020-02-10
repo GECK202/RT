@@ -3,22 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   rt.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/01/14 16:50:14 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/10 19:15:53 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RT_H
 # define RT_H
 
-# define S_W (400)
+# define S_W (600)
 # define S_H (300)
 # define H_W (S_W / 2)
 # define H_H (S_H / 2)
 # define RATIO ((float)S_W / (float)S_H)
 # define POT (16)
+
+# define MAX(a, b) ((float)(a) > (float)(b) ? (float)(a) : (float)(b)
+# define MIN(a, b) ((float)(a) < (float)(b) ? (float)(a) : (float)(b)
 
 # define INFINITY (1e999)
 # define MIN_OFFSET (0.01f)
@@ -30,17 +33,27 @@
 # define LIGHT (3)
 # define MATERIAL (1)
 
-# define SCENE_LINES (9)
-# define FIGURE_LINES (8)
+# define SCENE_LINES (10)
+# define FIGURE_LINES (11)
 # define LIGHT_LINES (6)
-# define MATERIAL_LINES (8)
+# define MATERIAL_LINES (9)
 
 # define SCENE_FUNCTIONS (SCENE_LINES + 1)
 # define FIGURE_FUNCTIONS FIGURE_LINES
 # define LIGHT_FUNCTIONS LIGHT_LINES 
 # define MATERIAL_FUNCTIONS MATERIAL_LINES
 
-# define END_FOR_POST_EFFECTS 10
+# define END_FOR_POST_EFFECTS 12
+# define RAD_BLUR_X 5
+# define RAD_BLUR_Y 5
+
+# ifdef __linux__
+#  define COLR (col.b)
+#  define COLB (col.r)
+# else
+#  define COLR (col.r)
+#  define COLB (col.b)
+# endif
 
 # include <pthread.h>
 # include <math.h>
@@ -48,6 +61,8 @@
 # include <unistd.h>
 # include "libft.h"
 # include <fcntl.h>
+
+# include <time.h>
 
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -97,10 +112,18 @@ typedef struct		s_mat
 	t_map			mask_map;
 	int				spec;
 	float			refl;
+	float			refr;
 	float			transpare;
 	struct s_mat	*next;
 }					t_mat;
 
+typedef struct		s_uv
+{
+	t_vec3			scale;
+	float			rot;
+	t_vec3			move;
+	t_vec3			rot_tr;
+}					t_uv;
 
 typedef enum		e_tfig
 {
@@ -129,6 +152,7 @@ typedef struct		s_fig
 	t_mat3			mat_y;
 	t_mat3			mat_z;
 	t_mat			*mat;
+	t_uv			uvt;
 	struct s_fig	*next;
 }					t_fig;
 
@@ -159,6 +183,7 @@ typedef struct		s_isec
 	t_fig			*fig;
 	float			check;
 	t_vec3			n;
+	t_vec3			n2;
 	t_vec3			uv;
 	struct s_isec	*next;
 	struct s_isec	*prev;
@@ -194,6 +219,7 @@ typedef struct		s_scn
 	int				shadow;
 	t_map			diff_map;
 	t_fog			fog;
+	int				inv_surf;
 }					t_scn;
 
 typedef struct		s_lst
@@ -201,18 +227,17 @@ typedef struct		s_lst
 	void			*mlx;
 	SDL_Window		*win;
 	SDL_Surface		*img;
+	SDL_Surface		*second_img;
+	int				*second_data;
 	int				*data;
+	int				depth;
+	SDL_Color		res_help;
 	
 	SDL_Point		cursor;
 
 	int				postEffects;
 	int				*data_dop;
 	int				num_file_for_screen;
-	int				t;
-	
-	int				n0;
-	int				n1;
-	int				n2;
 	int				change;
 	int				pot;
 	int				mouse_light;
@@ -222,7 +247,6 @@ typedef struct		s_lst
 	t_mat3			camera_z;
 	t_scn			*scn;
 	struct s_read	*set;
-	int				norm;
 }					t_lst;
 
 typedef int			(*t_r_fig)(t_lst*, char*);
@@ -257,10 +281,36 @@ typedef struct		s_l_prm
 	t_vec3			v;
 }					t_l_prm;
 
-int					saveScene(t_lst *lst);
+int					set_refr_mat(t_lst *lst, char *word);
+int					set_inv_surf(t_lst *lst, char *word);
+t_trc				get_all_really(t_vec3 *ints, t_l_prm b, t_lght **c_lght, int check);
+void				trc_init(t_trc *trc, t_lght *c_lght, t_l_prm b);
+t_vec3				transpare_shadow(t_isec *shdw, t_vec3 kof);
+void				cls_isec3(t_isec **cisec, t_lst *lst, t_trc trc);
+void				free_isec_list(t_isec *cisec);
+int					check_valid_iter(t_tag *ctag);
+int					cre_cur_obj(t_lst *l, t_tag *ctag);
+int					key_press0(SDL_Keycode key, t_lst *lst);
+int					key_press_dop(SDL_Keycode key, t_lst *lst);
+int					scrin(t_lst *lst);
+void				sdl_cycle(t_lst *lst);
+void				sld_events(t_lst *lst, SDL_Event e, int *quit, int *repaint);
+void				sld_events0(t_lst *lst, SDL_Event e, int *repaint);
+void				close_sdl(t_lst *lst);
+void				write_figure(int fd, t_lst *lst);
+char				*get_thre_float(float x, float y, float z);
+char				*get_thre_int(int x, int y, int z);
+int					get_file_scene(void);
+char				*get_fnbr_to_string(int min, float num, char *s);
+char				*get_inbr_to_string(int min, int num, char *s);
+
+SDL_Color			pixel_picture(int *data, int i, int pixX, int pixY);
+SDL_Color			blur(int *data, int i, float blurX, float blurY);
+void				draw(t_lst *lst);
+int					save_scene(t_lst *lst);
 
 void				cls_isec2(t_isec **cisec, t_lst *lst, t_trc trc);
-void				postEffects(t_lst *lst);
+void				post_effects(t_lst *lst);
 
 int					scene_init(t_lst *lst, char *file);
 void				init_f_read(t_lst *lst);
@@ -310,8 +360,8 @@ void				intersec_con(t_lst *lst, t_hit *hit, t_trc trc, t_fig *con);
 
 float				get_transp_from_file(t_map map, t_vec3 uv);
 void				cls_isec(t_isec **cisec, t_lst *lst, t_trc trc);
-SDL_Color			trace(t_lst *lst, t_trc trc, int depth);
-t_vec3				light(t_lst *lst, t_l_prm b, t_fig *fig);
+SDL_Color			trace(t_lst *lst, t_trc trc, int depth, t_isec *cisec);
+t_vec3				light(t_lst *lst, t_l_prm b, t_fig *fig, t_lght *c_lght);
 
 
 void				rain(t_lst *lst);
@@ -355,6 +405,9 @@ int					set_rad_fig(t_lst *lst, char *word);
 int					set_ang_fig(t_lst *lst, char *word);
 int					set_lim_fig(t_lst *lst, char *word);
 int					set_mat_fig(t_lst *lst, char *word);
+int					set_uv_rot(t_lst *lst, char *word);
+int					set_uv_move(t_lst *lst, char *word);
+int					set_uv_scale(t_lst *lst, char *word);
 
 int					cre_lght(t_lst *lst);
 int					set_type_lght(t_lst *lst, char *word);

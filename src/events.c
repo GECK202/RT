@@ -33,38 +33,28 @@ void	mouse_move(SDL_MouseMotionEvent *e, t_lst *lst)
 
 void	mouse_weel(Sint32 y, t_lst *lst)
 {
-	if (y > 0)
+	if (lst->mouse_light)
 	{
-		if (lst->mouse_light)
-		{
-			lst->scn->cur_lght->begin_pos.z -= 3;
-			move_light(lst, lst->cursor);
-		}
-		else
-		{
-			lst->scn->cur_fig->begin_pos.z -= 3;
-			move_fig(lst, lst->cursor);
-		}
+		lst->scn->cur_lght->begin_pos.z -= 3;
+		if (y < 0)
+			lst->scn->cur_lght->begin_pos.z += 6;
+		move_light(lst, lst->cursor);
 	}
-	if (y < 0)
+	else
 	{
-		if (lst->mouse_light)
-		{
-			lst->scn->cur_lght->begin_pos.z += 3;
-			move_light(lst, lst->cursor);
-		}
-		else
-		{
-			lst->scn->cur_fig->begin_pos.z += 3;
-			move_fig(lst, lst->cursor);
-		}
+		lst->scn->cur_fig->begin_pos.z -= 3;
+		if (y < 0)
+			lst->scn->cur_fig->begin_pos.z += 6;
+		move_fig(lst, lst->cursor);
 	}
 }
 
 void	mouse_press(SDL_MouseButtonEvent *e, t_lst *lst)
 {
-	if (e->button == SDL_BUTTON_LEFT && lst->change && e->x >= 0 && e->y >= 0 && e->x < S_W && e->y < S_H)
+	if (e->button == SDL_BUTTON_LEFT && lst->change && e->x >= 0
+		&& e->y >= 0 && e->x < S_W && e->y < S_H)
 		lst->change = 0;
-	else if (e->button == SDL_BUTTON_LEFT && e->x >= 0 && e->y >= 0 && e->x < S_W && e->y < S_H)
+	else if (e->button == SDL_BUTTON_LEFT && e->x >= 0
+		&& e->y >= 0 && e->x < S_W && e->y < S_H)
 		lst->change = 1;
 }

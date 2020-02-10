@@ -12,33 +12,17 @@
 
 #include "rt.h"
 
-float	dot(t_vec3 v1, t_vec3 v2)
-{
-	float d;
-
-	d = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
-	return (d);
-}
-
-float	modul(t_vec3 v)
-{
-	float d;
-
-	d = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
-	return (d);
-}
-
-t_vec3	cross(t_vec3 v1, t_vec3 v2)
+t_vec3		cross(t_vec3 v1, t_vec3 v2)
 {
 	t_vec3 dst;
-	
+
 	dst.x = v1.y * v2.z - v1.z * v2.y;
 	dst.y = v1.z * v2.x - v1.x * v2.z;
 	dst.z = v1.x * v2.y - v1.y * v2.x;
 	return (dst);
 }
 
-float	len_vec3(t_vec3 v)
+float		len_vec3(t_vec3 v)
 {
 	float len;
 
@@ -46,7 +30,7 @@ float	len_vec3(t_vec3 v)
 	return (len);
 }
 
-t_vec3	set_vec3(t_vec3 src)
+t_vec3		set_vec3(t_vec3 src)
 {
 	t_vec3 dst;
 
@@ -67,7 +51,7 @@ SDL_Color	set_col(int r, int g, int b, int a)
 	return (c);
 }
 
-t_vec3	cre_vec3(float x, float y, float z)
+t_vec3		cre_vec3(float x, float y, float z)
 {
 	t_vec3 v;
 
@@ -75,5 +59,5 @@ t_vec3	cre_vec3(float x, float y, float z)
 	v.y = y;
 	v.z = z;
 	v.w = 0;
-	return (v);	
+	return (v);
 }
