@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_color.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/10 22:01:15 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/10 22:03:31 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/11 18:12:43 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,18 +54,18 @@ t_l_prm		set_l_prm(t_trc trc, t_vec3 n)
 
 void		get_normal_from_file(t_isec *cisec, t_lst *lst)
 {
-	t_vec3	norm;
-	t_vec3	koeff_w_h;
-	t_vec3	index;
-	uint	n;
+	t_vec3		norm;
+	SDL_Rect	size;
+	SDL_Rect	index;
+	uint		n;
 
-	koeff_w_h.w = cisec->fig->mat->norm_map.map->w;
-	koeff_w_h.y = cisec->fig->mat->norm_map.map->h;
-	index.x = cisec->uv.x * koeff_w_h.w;
-	index.y = cisec->uv.y * koeff_w_h.y;
-	index.z = clamp((int)(index.x + index.y * koeff_w_h.w),
-		0, (int)(koeff_w_h.w * koeff_w_h.y));
-	n = cisec->fig->mat->norm_map.data[(int)index.z];
+	size.w = cisec->fig->mat->norm_map.map->w;
+	size.h = cisec->fig->mat->norm_map.map->h;
+	index.x = cisec->uv.x * size.w;
+	index.y = cisec->uv.y * size.h;
+	index.w = clamp((int)(index.x + index.y * size.w),
+		0, size.w * size.h);
+	n = cisec->fig->mat->norm_map.data[(int)index.w];
 	norm.x = 0.5 - ((n & 0xff0000) >> 16) / 255.0f;
 	norm.y = 0.5 - ((n & 0xff00) >> 8) / 255.0f;
 	norm.z = 1.0 - (n & 0xff) / 255.0f;

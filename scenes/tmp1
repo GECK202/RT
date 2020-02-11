@@ -2,17 +2,17 @@
 1	camera position: 6 0 -15
 2	camera rotation: 0 -35 0
 3	camera focus_distance: 2
-4	background color: 255 255 200
-5	diffuse map: res/HDRI_sky.png
+4	background color: 255 255 255
+5	diffuse map: res/HDRI_sky2.jpg
 6	fog enable:0
 7	fog near:35
 8	fog max transparent:0.25
 9	fog color:125 155 155
-10	invert intersect surface: 0
+10	invert intersect surface: 1
 
 [material]:
 name: earth
-1	color: 5 5 5
+1	color: 255 5 5
 2	diffuse: res/water3_nm.png1
 3	normal: res/fig1_nm.png1
 4	mask: res/fig1_mask.png1

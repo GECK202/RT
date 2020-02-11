@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/10 23:42:47 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/10 23:58:34 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/11 20:34:55 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	set_isec2_sph(t_hit *h, t_trc t, t_fig *s, float tr)
 		h->isec2->n = set_vec3(t.p);
 	else
 		h->isec2->n = invert_vec3(t.p);
-	h->count = 1;
+	h->count = 2;
 }
 
 /*

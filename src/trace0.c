@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   trace0.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/10 22:05:40 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/10 22:10:19 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/11 20:23:56 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,17 @@ void		init_trace0(t_lst *lst, int depth, t_vec3 *fkt, SDL_Color *res)
 
 SDL_Color	return_trace(t_lst *lst, t_vec3 fkt, SDL_Color col, t_isec **cisec)
 {
-	if (fkt.x > 0)
-		lst->res_help = plus_sdl_color(lst->res_help,
-			mult_sdl_color(col, fkt.x));
-	if (lst->scn->fog.enable)
-		lst->res_help = mix_color(lst->scn->fog.col,
-			lst->res_help, (*cisec)->t / lst->scn->fog.near);
+	if (lst->shd < TRASPARENT)
+		lst->res_help = plus_sdl_color(lst->res_help, col);
+	else
+	{
+		if (fkt.x > 0)
+			lst->res_help = plus_sdl_color(lst->res_help,
+				mult_sdl_color(col, fkt.x));
+		if (lst->shd && lst->scn->fog.enable)
+			lst->res_help = mix_color(lst->scn->fog.col,
+				lst->res_help, (*cisec)->t / lst->scn->fog.near);
+	}
 	free_isec_list(*cisec);
 	return (lst->res_help);
 }

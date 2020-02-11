@@ -6,23 +6,25 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/11 00:01:02 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/11 19:57:13 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RT_H
 # define RT_H
 
-# define S_W 600
-# define S_H 400
-# define H_W 300
-# define H_H 200
+# define S_W 1600
+# define S_H 1200
+# define H_W 800
+# define H_H 600
 # define RATIO 1.5
-# define POT 16
+# define POT 32
 
+# define INF 1e999
 # define INFINITY 1e999
 # define MIN_OFFSET 0.01f
 # define RECURCE_DEPTH 3
+# define REFR_DEPTH 2
 
 # define TAGS 4
 # define SCENE 0
@@ -189,6 +191,16 @@ typedef struct		s_fog
 	SDL_Color		col;
 }					t_fog;
 
+typedef enum		e_shader
+{
+	SIMPLE,
+	TEXTURE,
+	TRASPARENT,
+	REFRLECT,
+	REFRACT,
+	MAX_SHADER
+}					t_shader;
+
 typedef struct		s_scn
 {
 	t_fig			*figs;
@@ -230,6 +242,8 @@ typedef struct		s_lst
 	t_mat3			camera_z;
 	t_scn			*scn;
 	struct s_read	*set;
+	int				depth_refr;
+	t_shader		shd;
 }					t_lst;
 
 typedef int			(*t_r_fig)(t_lst*, char*);

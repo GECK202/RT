@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:37:19 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/10 23:15:40 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/11 20:33:37 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int		init_sdl(t_lst *lst)
 	lst->scn->bgc.r = 0;
 	lst->scn->bgc.g = 0;
 	lst->scn->bgc.b = 0;
+	lst->shd = REFRACT;
 	return (1);
 }
 

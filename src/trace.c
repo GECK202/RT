@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   trace.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 21:30:06 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/10 22:12:55 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/11 20:35:18 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,59 +65,60 @@ void		free_isec_list(t_isec *cisec)
 ** ray trace function
 */
 
-void		cycle_trace(t_lst *lst, t_trc *trc,
-	t_isec *ci, SDL_Color *tres)
+void		cycle_trace(t_lst *l, t_trc *trc,
+	t_isec *ci, SDL_Color *c)
 {
-	t_vec3 l;
+	t_vec3 lt;
 
 	trc->p = plus_vec3(mult_vec3f(trc->d, ci->t), (trc->o));
-	if (ci->fig->mat->norm_map.map && ci->uv.x && ci->uv.x != INFINITY)
-		get_normal_from_file(ci, lst);
+	if (l->shd && ci->fig->mat->norm_map.map && ci->uv.x && ci->uv.x != INF)
+		get_normal_from_file(ci, l);
 	trc->d = invert_vec3(trc->d);
-	l = light(lst, set_l_prm(*trc, ci->n), ci->fig, lst->scn->lghts);
-	if (ci->fig->mat->diff_map.map && ci->uv.x && ci->uv.x != INFINITY)
-		*tres = get_color_from_file(ci->fig->mat->diff_map, ci->uv, l);
+	lt = light(l, set_l_prm(*trc, ci->n), ci->fig, l->scn->lghts);
+	if (l->shd && ci->fig->mat->diff_map.map && ci->uv.x && ci->uv.x != INF)
+		*c = get_color_from_file(ci->fig->mat->diff_map, ci->uv, lt);
 	else
 	{
-		tres->r = clamp(ci->fig->mat->col.r * l.x, 0, 255);
-		tres->g = clamp(ci->fig->mat->col.g * l.y, 0, 255);
-		tres->b = clamp(ci->fig->mat->col.b * l.z, 0, 255);
+		c->r = clamp(ci->fig->mat->col.r * lt.x, 0, 255);
+		c->g = clamp(ci->fig->mat->col.g * lt.y, 0, 255);
+		c->b = clamp(ci->fig->mat->col.b * lt.z, 0, 255);
 	}
-	if (lst->scn->fog.enable)
-		*tres = mix_color(lst->scn->fog.col, *tres, ci->t / lst->scn->fog.near);
+	if (!l->shd && l->scn->fog.enable)
+		*c = mix_color(l->scn->fog.col, *c, ci->t / l->scn->fog.near);
 	trc->o = set_vec3(trc->p);
-	if (lst->depth > 0 && ci->fig->mat->refl > 0)
-		*tres = plus_sdl_color(mult_sdl_color(*tres, 1.0 - ci->fig->mat->refl),
-			mult_sdl_color(get_refl_col(lst, *trc,
-			ci->n, lst->depth - 1), ci->fig->mat->refl));
-	check_refr(lst, trc, ci, tres);
+	if (l->shd >= REFRLECT && l->depth > 0 && ci->fig->mat->refl > 0)
+		*c = plus_sdl_color(mult_sdl_color(*c, 1.0 - ci->fig->mat->refl),
+			mult_sdl_color(get_refl_col(l, *trc,
+			ci->n, l->depth - 1), ci->fig->mat->refl));
+	if (l->shd >= REFRACT && l->depth_refr)
+		check_refr(l, trc, ci, c);
 }
 
-SDL_Color	trace(t_lst *lst, t_trc trc, int depth, t_isec *cisec)
+SDL_Color	trace(t_lst *l, t_trc trc, int dep, t_isec *csc)
 {
 	SDL_Color	res;
 	t_vec3		fkt;
 	SDL_Color	tres;
-	t_isec		*cur_isec;
+	t_isec		*c_isc;
 	SDL_Color	col;
 
-	if (init_trace(lst, &cisec, trc, &col))
+	if (init_trace(l, &csc, trc, &col))
 		return (col);
-	cur_isec = cisec;
-	init_trace0(lst, depth, &fkt, &res);
-	while (cur_isec)
+	c_isc = csc;
+	init_trace0(l, dep, &fkt, &res);
+	while (c_isc)
 	{
-		if (cur_isec->fig->mat->mask_map.map &&
-			cur_isec->uv.x && cur_isec->uv.x != INFINITY)
-			fkt.z = get_transp_from_file(cur_isec->fig->mat->mask_map,
-				cur_isec->uv);
+		if (l->shd && c_isc->fig->mat->mask_map.map
+			&& c_isc->uv.x && c_isc->uv.x != INF)
+			fkt.z = get_transp_from_file(c_isc->fig->mat->mask_map,
+				c_isc->uv);
 		else
-			fkt.z = cur_isec->fig->mat->transpare;
+			fkt.z = c_isc->fig->mat->transpare;
 		if (fkt.z < 1.0)
-			cycle_trace(lst, &trc, cur_isec, &tres);
-		if (idono(&fkt, &res, tres, &cur_isec))
+			cycle_trace(l, &trc, c_isc, &tres);
+		if (idono(&fkt, &res, tres, &c_isc) || l->shd < TRASPARENT)
 			break ;
 	}
-	lst->res_help = res;
-	return (return_trace(lst, fkt, col, &cisec));
+	l->res_help = res;
+	return (return_trace(l, fkt, col, &csc));
 }

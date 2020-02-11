@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   key_press.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 22:07:39 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/10 23:15:05 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/11 19:51:21 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ int		key_press1(SDL_Keycode key, t_lst *lst)
 	}
 	else if (key == SDLK_SPACE)
 		lst->scn->shadow = (lst->scn->shadow) ? 0 : 1;
+	else if (key == SDLK_F5)
+		lst->shd = (lst->shd == REFRACT) ? SIMPLE : lst->shd + 1;
 	else if (key == SDLK_l)
 		multy_y(lst, 3);
 	else if (key == SDLK_y)
