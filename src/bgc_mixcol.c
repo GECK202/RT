@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/10 22:12:28 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/11 20:26:41 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/11 20:51:16 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ SDL_Color	return_background(t_lst *lst, t_trc trc)
 
 	if (lst->shd && lst->scn->fog.enable && lst->scn->fog.max_tr == 0)
 		return (lst->scn->fog.col);
-	if ((lst->shd > 0 && !lst->scn->diff_map.map) || lst->shd == 0)
+	if ((lst->shd && !lst->scn->diff_map.map) || !lst->shd)
 	{
 		if (lst->shd && lst->scn->fog.enable)
 			return (mix_color(lst->scn->bgc,

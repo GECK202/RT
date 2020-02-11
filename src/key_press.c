@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 22:07:39 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/11 19:51:21 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/11 20:54:37 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ int		key_press1(SDL_Keycode key, t_lst *lst)
 		multy_z(lst, 3);
 	else if (key == SDLK_g && !mouse_light(lst))
 		return (0);
+	if (lst->shd == 1)
+		lst->shd = 2;
 	return (1);
 }
 

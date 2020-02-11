@@ -49,8 +49,8 @@ name: earth
 2	diffuse: res/water3.png
 3	normal: res/water3_nm.png
 4	mask: 
-5	specular: 100
-6	reflection: 0
+5	specular: 1000
+6	reflection: 0.4
 7	refraction: 1
 8	transpare: 0
 

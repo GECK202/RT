@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 21:30:06 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/11 20:35:18 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/11 20:44:06 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,11 @@ void		cycle_trace(t_lst *l, t_trc *trc,
 	t_vec3 lt;
 
 	trc->p = plus_vec3(mult_vec3f(trc->d, ci->t), (trc->o));
-	if (l->shd && ci->fig->mat->norm_map.map && ci->uv.x && ci->uv.x != INF)
+	if (l->shd && ci->fig->mat->norm_map.map && ci->uv.x && ci->uv.x != INFY)
 		get_normal_from_file(ci, l);
 	trc->d = invert_vec3(trc->d);
 	lt = light(l, set_l_prm(*trc, ci->n), ci->fig, l->scn->lghts);
-	if (l->shd && ci->fig->mat->diff_map.map && ci->uv.x && ci->uv.x != INF)
+	if (l->shd && ci->fig->mat->diff_map.map && ci->uv.x && ci->uv.x != INFY)
 		*c = get_color_from_file(ci->fig->mat->diff_map, ci->uv, lt);
 	else
 	{
@@ -109,7 +109,7 @@ SDL_Color	trace(t_lst *l, t_trc trc, int dep, t_isec *csc)
 	while (c_isc)
 	{
 		if (l->shd && c_isc->fig->mat->mask_map.map
-			&& c_isc->uv.x && c_isc->uv.x != INF)
+			&& c_isc->uv.x && c_isc->uv.x != INFY)
 			fkt.z = get_transp_from_file(c_isc->fig->mat->mask_map,
 				c_isc->uv);
 		else

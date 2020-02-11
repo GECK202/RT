@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:37:19 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/11 20:33:37 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/11 20:55:23 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int		init_sdl(t_lst *lst)
 	lst->scn->bgc.r = 0;
 	lst->scn->bgc.g = 0;
 	lst->scn->bgc.b = 0;
-	lst->shd = REFRACT;
+	lst->shd = 0;
 	return (1);
 }
 

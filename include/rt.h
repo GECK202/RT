@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/11 19:57:13 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/11 21:08:17 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@
 # define RATIO 1.5
 # define POT 32
 
-# define INF 1e999
-# define INFINITY 1e999
+# define INFINITY 1e99
+# define INFY 1e99
 # define MIN_OFFSET 0.01f
 # define RECURCE_DEPTH 3
-# define REFR_DEPTH 2
+# define REFR_DEPTH 10
 
 # define TAGS 4
 # define SCENE 0
@@ -53,7 +53,7 @@
 # include "libft.h"
 # include <fcntl.h>
 
-# include <time.h>
+// # include <time.h>
 
 # include <sys/types.h>
 # include <sys/stat.h>
