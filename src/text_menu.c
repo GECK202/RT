@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/12 19:15:01 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/12 20:32:10 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/12 22:41:31 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ void		draw_text_menu1(t_lst *l)
 	SDL_FillRect(l->mimg, NULL, SDL_MapRGB(l->mimg->format,
 		180, 180, 180));
 	print_ttf(l->mimg, "Camera:", 14, set_rect(&d, l->mrect.x + 5,
-		l->mrect.y + 5));
+		l->mrect.y + 20));
 	print_ttf(l->mimg, "position:", 14, set_rect(&d, l->mrect.x + 10,
-		l->mrect.x + 18));
+		l->mrect.x + 40));
 }
 
 void		draw_text_menu2(t_lst *l)
@@ -61,4 +61,5 @@ void		draw_text_menu2(t_lst *l)
 		l->mrect.y + 5));
 	print_ttf(l->mimg, "position:", 14, set_rect(&d, l->mrect.x + 10,
 		l->mrect.x + 18));
+	
 }
