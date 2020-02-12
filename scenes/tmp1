@@ -12,18 +12,18 @@
 
 [material]:
 0	name: earth
-1	color: 255 5 5
-2	diffuse: res/water3_nm.png1
-3	normal: res/fig1_nm.png1
+1	color: 2 255 255
+2	diffuse: res/fig1_dif.png
+3	normal: res/fig1_nm.png
 4	mask: res/fig1_mask.png1
 5	specular: 1000
-6	reflection: 0
-7	refraction: 1.5
-8	transpare: 0
+6	reflection: 0.3
+7	refraction: 1
+8	transpare: 0.2
 
 [material]:
 0	name: blue_cyl
-1	color: 100 100 100
+1	color: 100 250 100
 2	diffuse: res/cube_mask.png1
 3	normal: res/water3_nm.png1
 4	mask: res/cube_mask.png1
@@ -33,19 +33,19 @@
 8	transpare: 0.2
 
 [material]:
-0	name: blue_con
+0	name: tree
 1	color: 0 255 255
 2	diffuse: res/tree1.png
 3	normal: 
 4	mask: res/tree_mask1.png
-5	specular: 1500
+5	specular: 100
 6	reflection: 0
 7	refraction: 1
 8	transpare: 0
 
 [material]:
 0	name: water
-1	color: 255 255 255
+1	color: 255 255 2
 2	diffuse: res/water3.png
 3	normal: res/water3_nm.png
 4	mask: 
@@ -54,7 +54,18 @@
 7	refraction: 1
 8	transpare: 0
 
-
+[figure]:
+0	type:plane
+1	position:-3 3 2
+2	center:0 0 0
+3	rotation:-90 -45 0
+4	radius:0
+5	angle:0
+6	limit:1 1
+7	material: tree
+8	uv scale:1 1
+9	uv rotation: 0
+10	uv move: 0 0
 
 [figure]:
 0	type:plane
@@ -119,19 +130,6 @@
 6	limit:1 1
 7	material: blue_cyl
 8	uv scale:1 1
-9	uv rotation: 0
-10	uv move: 0 0
-
-[figure]:
-0	type:sphere
-1	position:-15 -2.5 -3
-2	center:0 1 0
-3	rotation:0 114 0
-4	radius:3
-5	angle:0
-6	limit:0 0
-7	material: earth
-8	uv scale:2 2
 9	uv rotation: 0
 10	uv move: 0 0
 
@@ -524,6 +522,20 @@
 9	uv rotation: 0
 10	uv move: 0 0
 
+[figure]:
+0	type:sphere
+1	position:-15 -2.5 -3
+2	center:0 1 0
+3	rotation:0 114 0
+4	radius:3
+5	angle:0
+6	limit:0 0
+7	material: earth
+8	uv scale:2 2
+9	uv rotation: 0
+10	uv move: 0 0
+
+
 [light]:
 0	type:ambient
 1	position:0 0 0
@@ -539,6 +551,14 @@
 3	angle:30
 4	intens:0.8
 5	color:255 255 255
+
+[light]:
+0	type:lconus
+1	position:3 15 -2
+2	direction:0 1 0
+3	angle:30
+4	intens:0.8
+5	color:255 2 255
 
 [light]:
 0	type:direct
