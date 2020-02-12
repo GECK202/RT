@@ -6,11 +6,11 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 15:14:53 by vkaron            #+#    #+#             */
-/*   Updated: 2019/12/01 17:22:35 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/01/09 18:24:38 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 float	ft_atof(char *f)
 {
@@ -31,15 +31,6 @@ float	ft_atof(char *f)
 	res += i;
 	free_words(num, 0);
 	return (res);
-}
-
-int		clamp(int n, int min, int max)
-{
-	if (n < min)
-		return (min);
-	if (n > max)
-		return (max);
-	return (n);
 }
 
 void	ret(t_lst *lst)

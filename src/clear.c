@@ -6,22 +6,11 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 15:16:15 by vkaron            #+#    #+#             */
-/*   Updated: 2019/12/01 17:28:14 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/01/11 23:01:48 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
-
-int		free_words(char **words, int res)
-{
-	int i;
-
-	i = 0;
-	while (words[i])
-		free(words[i++]);
-	free(words);
-	return (res);
-}
+#include "rt.h"
 
 void	free_figs(t_fig *figs)
 {
@@ -31,6 +20,23 @@ void	free_figs(t_fig *figs)
 	if (!figs)
 		return ;
 	prev = figs;
+	while (prev->next)
+	{
+		cur = prev->next;
+		free(prev);
+		prev = cur;
+	}
+	free(prev);
+}
+
+void	free_mats(t_mat *mats)
+{
+	t_mat *cur;
+	t_mat *prev;
+
+	if (!mats)
+		return ;
+	prev = mats;
 	while (prev->next)
 	{
 		cur = prev->next;
@@ -67,6 +73,8 @@ void	free_l(t_lst *lst)
 			free_figs(lst->scn->figs);
 		if (lst->scn->lghts)
 			free_lghts(lst->scn->lghts);
+		if (lst->scn->mats)
+			free_mats(lst->scn->mats);
 		free(lst->scn);
 	}
 	free(lst);

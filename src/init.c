@@ -6,17 +6,45 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:37:19 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/30 19:00:19 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/12 20:07:47 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
+
+void	init_f_read0(t_lst *lst)
+{
+	lst->set->cre_lght = cre_lght;
+	lst->set->f_lght[0] = set_type_lght;
+	lst->set->f_lght[1] = set_pos_lght;
+	lst->set->f_lght[2] = set_dir_lght;
+	lst->set->f_lght[3] = set_angle_lght;
+	lst->set->f_lght[4] = set_ints_lght;
+	lst->set->f_lght[5] = set_col_lght;
+	lst->set->cre_mat = cre_mat;
+	lst->set->f_mat[0] = set_name_mat;
+	lst->set->f_mat[1] = set_col_mat;
+	lst->set->f_mat[2] = set_diff_map_mat;
+	lst->set->f_mat[3] = set_norm_map_mat;
+	lst->set->f_mat[4] = set_mask_map_mat;
+	lst->set->f_mat[5] = set_spec_mat;
+	lst->set->f_mat[6] = set_refl_mat;
+	lst->set->f_mat[7] = set_refr_mat;
+	lst->set->f_mat[8] = set_transpare_mat;
+}
 
 void	init_f_read(t_lst *lst)
 {
 	lst->set->f_scn[0] = set_pos_cam;
 	lst->set->f_scn[1] = set_rot_cam;
-	lst->set->f_scn[2] = set_col_bgc;
+	lst->set->f_scn[2] = set_cam_focus_dist;
+	lst->set->f_scn[3] = set_col_bgc;
+	lst->set->f_scn[4] = set_diff_map_scn;
+	lst->set->f_scn[5] = set_fog_enable;
+	lst->set->f_scn[6] = set_fog_near;
+	lst->set->f_scn[7] = set_fog_max_tr;
+	lst->set->f_scn[8] = set_fog_color;
+	lst->set->f_scn[9] = set_inv_surf;
 	lst->set->cre_fig = cre_fig;
 	lst->set->f_fig[0] = set_type_fig;
 	lst->set->f_fig[1] = set_pos_fig;
@@ -24,31 +52,44 @@ void	init_f_read(t_lst *lst)
 	lst->set->f_fig[3] = set_rot_fig;
 	lst->set->f_fig[4] = set_rad_fig;
 	lst->set->f_fig[5] = set_ang_fig;
-	lst->set->f_fig[6] = set_col_fig;
-	lst->set->f_fig[7] = set_spec_fig;
-	lst->set->f_fig[8] = set_refl_fig;
-	lst->set->cre_lght = cre_lght;
-	lst->set->f_lght[0] = set_type_lght;
-	lst->set->f_lght[1] = set_pos_lght;
-	lst->set->f_lght[2] = set_dir_lght;
-	lst->set->f_lght[3] = set_ints_lght;
+	lst->set->f_fig[6] = set_lim_fig;
+	lst->set->f_fig[7] = set_mat_fig;
+	lst->set->f_fig[8] = set_uv_scale;
+	lst->set->f_fig[9] = set_uv_rot;
+	lst->set->f_fig[10] = set_uv_move;
+	init_f_read0(lst);
 }
 
-void	init_mlx(t_lst *lst)
+int		init_font(void)
 {
-	int	bpp;
-	int	sline;
-	int	endian;
+	if (TTF_Init() == -1)
+		return (0);
+	return (1);
+}
 
-	lst->mlx = mlx_init();
-	lst->win = mlx_new_window(lst->mlx, S_W, S_H, "RTV1");
-	lst->img = mlx_new_image(lst->mlx, S_W, S_H);
-	lst->data = (int *)mlx_get_data_addr(lst->img,
-		&bpp, &sline, &endian);
-	mlx_hook(lst->win, 2, 0, key_press, (void *)lst);
-	mlx_hook(lst->win, 17, 0, close_window, (void *)0);
-	mlx_hook(lst->win, 6, 0, mouse_move, (void *)lst);
-	mlx_hook(lst->win, 4, 0, mouse_press, (void *)lst);
+int		init_sdl(t_lst *lst)
+{
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		return (0);
+	if (!init_font())
+		return (0);
+	lst->win = 0;
+	lst->win = SDL_CreateWindow("RT", SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED, S_W, S_H, SDL_WINDOW_SHOWN);
+	if (!lst->win)
+		return (0);
+	lst->img = SDL_GetWindowSurface(lst->win);
+	lst->data = (int *)lst->img->pixels;
+	lst->mimg = IMG_Load("prgres/panel.png");
+	set_rect(&lst->mrect, 10, 10);
+	lst->mrect.w = S_W;
+	lst->mrect.h = H_W;
+	lst->scn->bgc.r = 0;
+	lst->scn->bgc.g = 0;
+	lst->scn->bgc.b = 0;
+	lst->shd = 0;
+	lst->show_menu = 1;
+	return (1);
 }
 
 int		scene_init(t_lst *lst, char *file)
@@ -58,9 +99,9 @@ int		scene_init(t_lst *lst, char *file)
 	init_f_read(lst);
 	if (!(lst->scn = (t_scn*)malloc(sizeof(t_scn))))
 		return (0);
-	lst->scn->bgc = 0;
 	lst->scn->cur_fig = NULL;
 	lst->scn->cur_lght = NULL;
+	lst->scn->mats = NULL;
 	lst->scn->figs = NULL;
 	lst->scn->lghts = NULL;
 	lst->scn->shadow = 1;
@@ -69,6 +110,9 @@ int		scene_init(t_lst *lst, char *file)
 	lst->scn->cam_pos0.x = 0;
 	lst->scn->cam_pos0.y = 0;
 	lst->scn->cam_pos0.z = 0;
+	lst->post_effects = 0;
+	lst->data_dop = malloc(sizeof(int) * (S_H * S_W));
+	lst->num_file_for_screen = 0;
 	if (!(read_scene(lst, file)))
 		return (0);
 	if (!lst->scn->cur_fig || !lst->scn->cur_lght)

@@ -6,11 +6,11 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/20 19:10:09 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/22 13:16:49 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/09 18:24:17 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 void	set_m4_rz(t_mat3 *m, float fi)
 {

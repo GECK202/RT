@@ -6,11 +6,11 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 14:44:55 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/21 21:23:16 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/09 18:24:29 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 int		cre_lght(t_lst *lst)
 {
@@ -35,13 +35,13 @@ int		cre_lght(t_lst *lst)
 
 int		set_type_lght(t_lst *lst, char *word)
 {
-	const char	l_type[3][8] = {"ambient", "point", "direct"};
+	const char	l_type[MAX_LGHT][8] = {"ambient", "point", "direct", "lconus"};
 	int			i;
 	int			type;
 
 	i = -1;
 	type = -1;
-	while (++i < 4)
+	while (++i < MAX_LGHT)
 	{
 		if (ft_strcmp(word, l_type[i]) == 0)
 		{
@@ -87,23 +87,28 @@ int		set_dir_lght(t_lst *lst, char *word)
 	if (!word)
 		return (0);
 	lght = lst->scn->cur_lght;
-	if (!word)
-		return (0);
 	coord = ft_strsplit(word, ' ');
 	if (coord[0] && coord[1] && coord[2])
 	{
 		lght->dir.x = ft_atof(coord[0]);
 		lght->dir.y = ft_atof(coord[1]);
 		lght->dir.z = ft_atof(coord[2]);
+		if (len_vec3(lght->dir) != 0)
+			lght->dir = div_vec3f(lght->dir, len_vec3(lght->dir));
 		return (free_words(coord, 1));
 	}
 	return (free_words(coord, 0));
 }
 
-int		set_ints_lght(t_lst *lst, char *word)
+int		set_angle_lght(t_lst *lst, char *word)
 {
+	float angle;
+
 	if (!word)
 		return (0);
-	lst->scn->cur_lght->ints = ft_atof(word);
+	angle = ft_atof(word);
+	if (angle < 0)
+		angle = -angle;
+	lst->scn->cur_lght->angle = angle;
 	return (1);
 }

@@ -6,21 +6,23 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 13:39:18 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/23 18:19:52 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/01/14 15:00:02 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
-float	dot(t_vec3 v1, t_vec3 v2)
+t_vec3		cross(t_vec3 v1, t_vec3 v2)
 {
-	float d;
+	t_vec3 dst;
 
-	d = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
-	return (d);
+	dst.x = v1.y * v2.z - v1.z * v2.y;
+	dst.y = v1.z * v2.x - v1.x * v2.z;
+	dst.z = v1.x * v2.y - v1.y * v2.x;
+	return (dst);
 }
 
-float	len_vec3(t_vec3 v)
+float		len_vec3(t_vec3 v)
 {
 	float len;
 
@@ -28,7 +30,7 @@ float	len_vec3(t_vec3 v)
 	return (len);
 }
 
-t_vec3	set_vec3(t_vec3 src)
+t_vec3		set_vec3(t_vec3 src)
 {
 	t_vec3 dst;
 
@@ -38,12 +40,24 @@ t_vec3	set_vec3(t_vec3 src)
 	return (dst);
 }
 
-t_col	set_col(int r, int g, int b)
+SDL_Color	set_col(int r, int g, int b, int a)
 {
-	t_col c;
+	SDL_Color	c;
 
 	c.r = r;
 	c.g = g;
 	c.b = b;
+	c.a = a;
 	return (c);
+}
+
+t_vec3		cre_vec3(float x, float y, float z)
+{
+	t_vec3 v;
+
+	v.x = x;
+	v.y = y;
+	v.z = z;
+	v.w = 0;
+	return (v);
 }

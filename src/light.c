@@ -3,46 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   light.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 14:02:07 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/23 15:06:29 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/10 19:04:58 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 /*
 ** calculate vector of reflection
 */
 
-t_vec3	refl_r(t_vec3 l, t_vec3 n)
+t_vec3		get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght)
 {
-	float	k;
-	t_vec3	r;
+	t_isec	*shdw;
+	t_vec3	s;
+	t_vec3	b_col;
 
-	k = 2 * dot(n, l);
-	r.x = k * n.x - l.x;
-	r.y = k * n.y - l.y;
-	r.z = k * n.z - l.z;
-	return (r);
-}
-
-/*
-** check shadow for current point or directional light
-*/
-
-int		get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght)
-{
-	t_isec	shdw;
-
-	if (c_lght->type == point)
-	{
-		trc->d.x = c_lght->pos.x - b.p.x;
-		trc->d.y = c_lght->pos.y - b.p.y;
-		trc->d.z = c_lght->pos.z - b.p.z;
-		trc->max = 1;
-	}
+	b_col = cre_vec3(c_lght->col.r * c_lght->ints / 255.0, c_lght->col.g
+		* c_lght->ints / 255.0, c_lght->col.b * c_lght->ints / 255.0);
+	if (c_lght->type == point || c_lght->type == lconus)
+		trc_init(trc, c_lght, b);
 	else if (c_lght->type == direct)
 	{
 		trc->d.x = c_lght->dir.x;
@@ -50,17 +33,23 @@ int		get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght)
 		trc->d.z = c_lght->dir.z;
 		trc->max = INFINITY;
 	}
-	shdw = cls_isec(lst, *trc);
-	if (lst->scn->shadow && shdw.fig != NULL)
-		return (1);
-	return (0);
+	shdw = malloc(sizeof(t_isec));
+	cls_isec(&shdw, lst, *trc);
+	if (lst->scn->shadow && shdw->fig != NULL)
+	{
+		s = transpare_shadow(shdw, b_col);
+		free_isec_list(shdw);
+		return (s);
+	}
+	free(shdw);
+	return (b_col);
 }
 
 /*
 ** calculate brightness for point or directional light
 */
 
-float	get_diffuse(t_trc trc, t_l_prm b, t_lght *c_lght)
+float		get_diffuse(t_trc trc, t_l_prm b, t_lght *c_lght)
 {
 	float	n_dot;
 	float	ints;
@@ -76,7 +65,7 @@ float	get_diffuse(t_trc trc, t_l_prm b, t_lght *c_lght)
 ** calculate specular for point or directional light
 */
 
-float	get_specular(t_trc trc, t_l_prm b, float f_spec, float l_ints)
+float		get_specular(t_trc trc, t_l_prm b, float f_spec, float l_ints)
 {
 	t_vec3	r;
 	float	r_dot;
@@ -102,28 +91,59 @@ float	get_specular(t_trc trc, t_l_prm b, float f_spec, float l_ints)
 ** calculate intenses of lights for current dot
 */
 
-float	light(t_lst *lst, t_l_prm b, t_fig *fig)
+t_vec3		get_sds(t_vec3 kof, float diff, float spec, t_vec3 ints)
 {
-	float	ints;
-	t_trc	trc;
-	t_lght	*c_lght;
+	if (diff == -1 && spec == -1)
+	{
+		ints.x = clampf(ints.x, 0, 1);
+		ints.y = clampf(ints.y, 0, 1);
+		ints.z = clampf(ints.z, 0, 1);
+	}
+	else
+	{
+		if (kof.x > 0)
+		{
+			ints.x += kof.x * diff;
+			ints.x += kof.x * spec;
+		}
+		if (kof.y > 0)
+		{
+			ints.y += kof.y * diff;
+			ints.y += kof.y * spec;
+		}
+		if (kof.z > 0)
+		{
+			ints.z += kof.z * diff;
+			ints.z += kof.z * spec;
+		}
+	}
+	return (ints);
+}
 
-	ints = 0.0f;
-	trc.min = MIN_OFFSET;
-	c_lght = lst->scn->lghts;
-	trc.o = set_vec3(b.p);
+t_vec3		light(t_lst *lst, t_l_prm b, t_fig *fig, t_lght *c_lght)
+{
+	t_vec3	ints;
+	t_trc	trc;
+
+	trc = get_all_really(&ints, b, &c_lght, 1);
 	while (c_lght)
 	{
 		if (c_lght->type == ambient)
-			ints += c_lght->ints;
+			ints = plus_vec3(ints, (t_vec3){c_lght->ints * c_lght->col.r / 255,
+c_lght->ints * c_lght->col.g / 255.0, c_lght->ints * c_lght->col.b / 255.0, 1});
 		else
 		{
-			if (!get_shadow(lst, &trc, b, c_lght))
+			if (c_lght->type == lconus)
 			{
-				ints += get_diffuse(trc, b, c_lght);
-				ints += get_specular(trc, b, fig->spec, c_lght->ints);
+				if (acos(dot(div_vec3f(minus_vec3(c_lght->pos, b.p), len_vec3(
+minus_vec3(c_lght->pos, b.p))), c_lght->dir)) * 180 / M_PI > c_lght->angle)
+					if (get_all_really(&ints, b, &c_lght, 0).min)
+						continue;
 			}
+			ints = get_sds(get_shadow(lst, &trc, b, c_lght), get_diffuse(trc,
+		b, c_lght), get_specular(trc, b, fig->mat->spec, c_lght->ints), ints);
 		}
+		ints = get_sds((t_vec3){0, 0, 0, 0}, -1, -1, ints);
 		c_lght = c_lght->next;
 	}
 	return (ints);

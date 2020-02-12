@@ -6,11 +6,12 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:43:40 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/22 19:33:27 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/12 21:19:16 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
+#include <stdio.h>
 
 int		cre_fig(t_lst *lst)
 {
@@ -20,6 +21,7 @@ int		cre_fig(t_lst *lst)
 	if (!(fig = (t_fig*)malloc(sizeof(t_fig))))
 		return (0);
 	fig->next = NULL;
+	fig->mat = lst->scn->mats;
 	if (!lst->scn->figs)
 		lst->scn->figs = fig;
 	else
@@ -35,13 +37,14 @@ int		cre_fig(t_lst *lst)
 
 int		set_type_fig(t_lst *lst, char *word)
 {
-	const char	f_type[4][10] = {"sphere", "cylinder", "plane", "conus"};
+	const char	f_type[MAX_FIGS][10] =
+	{"sphere", "cylinder", "plane", "conus", "inv_sph"};
 	int			i;
 	int			type;
 
 	i = -1;
 	type = -1;
-	while (++i < 4)
+	while (++i < MAX_FIGS)
 	{
 		if (ft_strcmp(word, f_type[i]) == 0)
 		{
@@ -91,38 +94,29 @@ int		set_dir_fig(t_lst *lst, char *word)
 		fig->begin.x = ft_atof(coord[0]);
 		fig->begin.y = ft_atof(coord[1]);
 		fig->begin.z = ft_atof(coord[2]);
-		fig->dir.x = fig->begin.x;
-		fig->dir.y = fig->begin.y;
-		fig->dir.z = fig->begin.z;
 		return (free_words(coord, 1));
 	}
 	return (free_words(coord, 0));
 }
 
-int		set_rot_fig(t_lst *lst, char *word)
+void	rotation_fig(t_fig *fig)
 {
-	char	**coord;
-	t_fig	*fig;
+	t_vec3	tmp;
 
-	if (!word)
-		return (0);
-	fig = lst->scn->cur_fig;
-	coord = ft_strsplit(word, ' ');
-	if (coord[0] && coord[1] && coord[2])
-	{
-		fig->alpha.x = ft_atof(coord[0]);
-		fig->alpha.y = ft_atof(coord[1]);
-		fig->alpha.z = ft_atof(coord[2]);
-		set_m4_rx(&fig->mat_x, fig->alpha.x);
-		set_m4_ry(&fig->mat_y, fig->alpha.y);
-		set_m4_rz(&fig->mat_z, fig->alpha.z);
-		mult_m3(&lst->scn->cur_fig->dir,
-		lst->scn->cur_fig->begin, lst->scn->cur_fig->mat_z);
-		mult_m3(&lst->scn->cur_fig->dir,
-		lst->scn->cur_fig->dir, lst->scn->cur_fig->mat_x);
-		mult_m3(&lst->scn->cur_fig->dir,
-		lst->scn->cur_fig->dir, lst->scn->cur_fig->mat_y);
-		return (free_words(coord, 1));
-	}
-	return (free_words(coord, 0));
+	mult_m3(&fig->dir, cre_vec3(0, 1.0, 0), fig->mat_z);
+	mult_m3(&fig->dir, fig->dir, fig->mat_x);
+	mult_m3(&fig->dir, fig->dir, fig->mat_y);
+	fig->dir = div_vec3f(fig->dir, len_vec3(fig->dir));
+	mult_m3(&fig->look, cre_vec3(0, 0, 1.0), fig->mat_z);
+	mult_m3(&fig->look, fig->look, fig->mat_x);
+	mult_m3(&fig->look, fig->look, fig->mat_y);
+	fig->look = div_vec3f(fig->look, len_vec3(fig->look));
+	mult_m3(&fig->right, cre_vec3(1.0, 0, 0), fig->mat_z);
+	mult_m3(&fig->right, fig->right, fig->mat_x);
+	mult_m3(&fig->right, fig->right, fig->mat_y);
+	fig->right = div_vec3f(fig->right, len_vec3(fig->right));
+	mult_m3(&tmp, fig->begin, fig->mat_z);
+	mult_m3(&tmp, tmp, fig->mat_x);
+	mult_m3(&tmp, tmp, fig->mat_y);
+	fig->pos = plus_vec3(minus_vec3(fig->begin_pos, fig->begin), tmp);
 }

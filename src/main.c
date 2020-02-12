@@ -6,22 +6,30 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:06 by vabraham          #+#    #+#             */
-/*   Updated: 2019/12/01 17:28:44 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/12 21:18:10 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 void	mult(t_lst *lst, t_trc *trc, int x, int y)
 {
+	SDL_Color	col;
+	t_isec		*cisec;
+
+	cisec = NULL;
 	trc->d.x = (float)x * RATIO / H_W;
 	trc->d.y = (float)y / H_H;
-	trc->d.z = 2;
+	trc->d.z = lst->scn->cam_focus_dist;
 	mult_m3(&trc->d, trc->d, lst->camera_z);
 	mult_m3(&trc->d, trc->d, lst->camera_x);
 	mult_m3(&trc->d, trc->d, lst->camera_y);
+	lst->depth_refr = REFR_DEPTH;
+	col = trace(lst, *trc, RECURCE_DEPTH, cisec);
 	lst->data[(S_H - y - H_H - 1) * S_W + x + H_W] =
-		trace(lst, *trc, RECURCE_DEPTH);
+		(col.r << 16) + (col.g << 8) + col.b;
+	lst->data_dop[(S_H - y - H_H - 1) * S_W + x + H_W] =
+		lst->data[(S_H - y - H_H - 1) * S_W + x + H_W];
 }
 
 void	*pixel(void *l)
@@ -74,21 +82,17 @@ void	rain(t_lst *lst)
 
 int		main(int ac, char *av[])
 {
-	t_lst	*lst;
+	t_lst		*lst;
 
 	if (ac == 2)
 	{
 		lst = (t_lst *)malloc(sizeof(t_lst));
-		if (scene_init(lst, av[1]))
-		{
-			init_mlx(lst);
-			lst->norm = 0;
-			rain(lst);
-			mlx_put_image_to_window(lst->mlx, lst->win, lst->img, 0, 0);
-			mlx_loop(lst->mlx);
-		}
+		if (scene_init(lst, av[1]) && init_sdl(lst))
+			sdl_cycle(lst);
+		else
+			write(1, "Usage:./RT filename\n", 20);
+		close_sdl(lst);
 		free_l(lst);
 	}
-	ft_putstr("Usage : ./RTv1 scene_file\n");
 	return (0);
 }

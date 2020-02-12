@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   events.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 22:08:27 by vabraham          #+#    #+#             */
-/*   Updated: 2019/11/21 22:08:30 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/01/09 20:34:17 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
+#include <stdio.h>
 
 int		close_window(void *lst)
 {
@@ -18,63 +19,42 @@ int		close_window(void *lst)
 	exit(0);
 }
 
-int		mouse_move(int x, int y, void *l)
+void	mouse_move(SDL_MouseMotionEvent *e, t_lst *lst)
 {
-	t_lst *lst;
-
-	lst = (t_lst*)l;
+	lst->cursor.x = e->x;
+	lst->cursor.y = e->y;
 	if (!lst->change)
-		return (0);
+		return ;
 	if (lst->mouse_light)
-		move_light(lst, x, y);
+		move_light(lst, lst->cursor);
 	else
-		move_fig(lst, x, y);
-	rain(lst);
-	mlx_put_image_to_window(lst->mlx, lst->win, lst->img, 0, 0);
-	return (0);
+		move_fig(lst, lst->cursor);
 }
 
-int		mouse_press0(int b, int x, int y, t_lst *lst)
+void	mouse_weel(Sint32 y, t_lst *lst)
 {
-	if (b == 5)
+	if (lst->mouse_light)
 	{
-		if (lst->mouse_light)
-		{
-			lst->scn->cur_lght->begin_pos.z -= 3;
-			move_light(lst, x, y);
-		}
-		else
-		{
-			lst->scn->cur_fig->begin_pos.z -= 3;
-			move_fig(lst, x, y);
-		}
+		lst->scn->cur_lght->begin_pos.z -= 3;
+		if (y < 0)
+			lst->scn->cur_lght->begin_pos.z += 6;
+		move_light(lst, lst->cursor);
 	}
-	else if (b == 1 && lst->change && x >= 0 && y >= 0 && x < S_W && y < S_H)
+	else
+	{
+		lst->scn->cur_fig->begin_pos.z -= 3;
+		if (y < 0)
+			lst->scn->cur_fig->begin_pos.z += 6;
+		move_fig(lst, lst->cursor);
+	}
+}
+
+void	mouse_press(SDL_MouseButtonEvent *e, t_lst *lst)
+{
+	if (e->button == SDL_BUTTON_LEFT && lst->change && e->x >= 0
+		&& e->y >= 0 && e->x < S_W && e->y < S_H)
 		lst->change = 0;
-	else if (b == 1 && x >= 0 && y >= 0 && x < S_W && y < S_H)
+	else if (e->button == SDL_BUTTON_LEFT && e->x >= 0
+		&& e->y >= 0 && e->x < S_W && e->y < S_H)
 		lst->change = 1;
-	rain(lst);
-	mlx_put_image_to_window(lst->mlx, lst->win, lst->img, 0, 0);
-	return (0);
-}
-
-int		mouse_press(int b, int x, int y, void *l)
-{
-	t_lst *lst;
-
-	lst = (t_lst*)l;
-	if (b == 4)
-	{
-		if (lst->mouse_light)
-		{
-			lst->scn->cur_lght->begin_pos.z += 3;
-			move_light(lst, x, y);
-		}
-		else
-		{
-			lst->scn->cur_fig->begin_pos.z += 3;
-			move_fig(lst, x, y);
-		}
-	}
-	return (mouse_press0(b, x, y, lst));
 }

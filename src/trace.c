@@ -6,132 +6,119 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 21:30:06 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/22 20:54:02 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/12 21:46:31 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
-/*
-** calculate intersection and return figure and distatnce of intersection
-*/
-
-t_isec	cls_isec(t_lst *lst, t_trc trc)
+SDL_Color	get_color_from_file(t_map map, t_vec3 uv, t_vec3 l)
 {
-	t_fig	*cur_fig;
-	t_vec3	t;
-	t_isec	cisec;
+	int				index_x;
+	int				index_y;
+	unsigned int	index;
+	int				c;
+	SDL_Color		res;
 
-	cisec.t = INFINITY;
-	cisec.fig = NULL;
-	cur_fig = lst->scn->figs;
-	while (cur_fig)
+	index_x = (uv.x) * map.map->w;
+	index_y = (uv.y) * map.map->h;
+	index = clamp(index_x + index_y * map.map->w, 1,
+		map.map->w * map.map->h - 1);
+	c = map.data[index];
+	res.r = clamp(((c & 0xff0000) >> 16) * l.x, 0, 255);
+	res.g = clamp(((c & 0xff00) >> 8) * l.y, 0, 255);
+	res.b = clamp((c & 0xff) * l.z, 0, 255);
+	return (res);
+}
+
+float		get_transp_from_file(t_map map, t_vec3 uv)
+{
+	int		index_x;
+	int		index_y;
+	int		index;
+	int		c;
+	float	res;
+
+	index_x = (uv.x) * map.map->w;
+	index_y = (uv.y) * map.map->h;
+	index = clamp(index_x + index_y * map.map->w, 0, map.map->w * map.map->h);
+	c = map.data[index];
+	res = 1.0 - clamp(((c & 0xff)), 0, 255) / 255.0;
+	if (res > 0.5)
+		res = 1;
+	return (res);
+}
+
+void		free_isec_list(t_isec *cisec)
+{
+	t_isec	*tmp;
+
+	while (cisec)
 	{
-		sel_fig_check(&t, trc.o, trc.d, cur_fig);
-		if (t.x >= trc.min && t.x <= trc.max && t.x < cisec.t)
-		{
-			cisec.t = t.x;
-			cisec.fig = cur_fig;
-		}
-		if (t.y >= trc.min && t.y <= trc.max && t.y < cisec.t)
-		{
-			cisec.t = t.y;
-			cisec.fig = cur_fig;
-		}
-		cur_fig = cur_fig->next;
+		tmp = cisec;
+		cisec = cisec->next;
+		free(tmp);
 	}
-	return (cisec);
-}
-
-/*
-** calculate normal for intersection dot of figure
-*/
-
-t_vec3	get_normal(t_isec *cisec, t_trc trc)
-{
-	t_vec3	n;
-	t_fig	fig;
-	float	m;
-	t_vec3	vt;
-	t_vec3	c;
-
-	fig = *(cisec->fig);
-	n.x = 0;
-	if (fig.type == plane)
-		n = set_vec3(fig.dir);
-	else if (fig.type == sphere)
-		n = minus_vec3(trc.p, fig.pos);
-	else if ((fig.type == cylinder) || (fig.type == conus))
-	{
-		vt = mult_vec3f(fig.dir, cisec->t);
-		c = set_vec3(fig.pos);
-		m = dot(trc.d, vt) + dot(minus_vec3(trc.o, c), fig.dir);
-		n = minus_vec3(minus_vec3(trc.p, c), mult_vec3f(fig.dir, m));
-	}
-	return (div_vec3f(n, len_vec3(n)));
-}
-
-/*
-** calculate reflection color for dot
-*/
-
-t_col	get_refl_col(t_lst *lst, t_trc trc, t_vec3 n, int depth)
-{
-	int		r_col;
-	t_col	refl_col;
-
-	trc.min = MIN_OFFSET;
-	trc.max = INFINITY;
-	trc.d = set_vec3(refl_r(trc.d, n));
-	r_col = trace(lst, trc, depth);
-	refl_col.r = (r_col & 0xFF0000) >> 16;
-	refl_col.g = (r_col & 0xFF00) >> 8;
-	refl_col.b = r_col & 0xFF;
-	return (refl_col);
-}
-
-/*
-** set parametr for call light function
-*/
-
-t_l_prm	set_l_prm(t_trc trc, t_vec3 n)
-{
-	t_l_prm b;
-
-	b.n = set_vec3(n);
-	b.p = set_vec3(trc.p);
-	b.v = set_vec3(trc.d);
-	return (b);
 }
 
 /*
 ** ray trace function
 */
 
-int		trace(t_lst *lst, t_trc trc, int depth)
+void		cycle_trace(t_lst *l, t_trc *trc,
+	t_isec *ci, SDL_Color *c)
 {
-	t_col	res;
-	t_vec3	n;
-	float	l;
-	t_isec	cisec;
-	t_col	refl_col;
+	t_vec3 lt;
 
-	cisec = cls_isec(lst, trc);
-	if (cisec.fig == NULL)
-		return (lst->scn->bgc);
-	trc.p = plus_vec3(mult_vec3f(trc.d, cisec.t), (trc.o));
-	n = get_normal(&cisec, trc);
-	trc.d = invert_vec3(trc.d);
-	l = light(lst, set_l_prm(trc, n), cisec.fig);
-	res.r = clamp(cisec.fig->col.r * l, 0, 255);
-	res.g = clamp(cisec.fig->col.g * l, 0, 255);
-	res.b = clamp(cisec.fig->col.b * l, 0, 255);
-	if (depth <= 0 || cisec.fig->refl <= 0)
-		return ((res.r << 16) + (res.g << 8) + res.b);
-	trc.o = set_vec3(trc.p);
-	refl_col = get_refl_col(lst, trc, n, depth - 1);
-	res.r = res.r * (1 - cisec.fig->refl) + refl_col.r * cisec.fig->refl;
-	res.g = res.g * (1 - cisec.fig->refl) + refl_col.g * cisec.fig->refl;
-	res.b = res.b * (1 - cisec.fig->refl) + refl_col.b * cisec.fig->refl;
-	return ((res.r << 16) + (res.g << 8) + res.b);
+	trc->p = plus_vec3(mult_vec3f(trc->d, ci->t), (trc->o));
+	if (l->shd && ci->fig->mat->norm_map.map && ci->uv.x && ci->uv.x != INFY)
+		get_normal_from_file(ci);
+	trc->d = invert_vec3(trc->d);
+	lt = light(l, set_l_prm(*trc, ci->n), ci->fig, l->scn->lghts);
+	if (l->shd && ci->fig->mat->diff_map.map && ci->uv.x && ci->uv.x != INFY)
+		*c = get_color_from_file(ci->fig->mat->diff_map, ci->uv, lt);
+	else
+	{
+		c->r = clamp(ci->fig->mat->col.r * lt.x, 0, 255);
+		c->g = clamp(ci->fig->mat->col.g * lt.y, 0, 255);
+		c->b = clamp(ci->fig->mat->col.b * lt.z, 0, 255);
+	}
+	if (!l->shd && l->scn->fog.enable)
+		*c = mix_color(l->scn->fog.col, *c, ci->t / l->scn->fog.near);
+	trc->o = set_vec3(trc->p);
+	if (l->shd >= REFRLECT && l->depth > 0 && ci->fig->mat->refl > 0)
+		*c = plus_sdl_color(mult_sdl_color(*c, 1.0 - ci->fig->mat->refl),
+			mult_sdl_color(get_refl_col(l, *trc,
+			ci->n, l->depth - 1), ci->fig->mat->refl));
+	if (l->shd >= REFRACT && l->depth_refr)
+		check_refr(l, trc, ci, c);
+}
+
+SDL_Color	trace(t_lst *l, t_trc trc, int dep, t_isec *csc)
+{
+	SDL_Color	res;
+	t_vec3		fkt;
+	SDL_Color	tres;
+	t_isec		*c_isc;
+	SDL_Color	col;
+
+	if (init_trace(l, &csc, trc, &col))
+		return (col);
+	c_isc = csc;
+	init_trace0(l, dep, &fkt, &res);
+	while (c_isc)
+	{
+		if (l->shd && c_isc->fig->mat->mask_map.map
+			&& c_isc->uv.x && c_isc->uv.x != INFY)
+			fkt.z = get_transp_from_file(c_isc->fig->mat->mask_map,
+				c_isc->uv);
+		else
+			fkt.z = c_isc->fig->mat->transpare;
+		if (fkt.z < 1.0)
+			cycle_trace(l, &trc, c_isc, &tres);
+		if (idono(&fkt, &res, tres, &c_isc) || l->shd < TRASPARENT)
+			break ;
+	}
+	l->res_help = res;
+	return (return_trace(l, fkt, col, &csc));
 }

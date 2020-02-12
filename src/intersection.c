@@ -6,122 +6,95 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 13:12:56 by vkaron            #+#    #+#             */
-/*   Updated: 2019/11/22 20:54:50 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/11 00:05:05 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 /*
 ** selection figure for check
 */
 
-void	sel_fig_check(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *cur_fig)
+void	transform_uv(t_isec *isec)
 {
-	if (cur_fig->type == sphere)
-		intersec_sph(t, o, d, cur_fig);
-	else if (cur_fig->type == cylinder)
-		intersec_cyl(t, o, d, cur_fig);
-	else if (cur_fig->type == conus)
-		intersec_con(t, o, d, cur_fig);
-	else if (cur_fig->type == plane)
-		intersec_pln(t, o, d, cur_fig);
+	t_uv	uvt;
+	float	x;
+
+	uvt = isec->fig->uvt;
+	isec->uv.x = isec->uv.x * uvt.scale.x;
+	isec->uv.y = isec->uv.y * uvt.scale.y;
+	x = isec->uv.x;
+	isec->uv.x = isec->uv.x * uvt.rot_tr.x - isec->uv.y * uvt.rot_tr.y;
+	isec->uv.y = x * uvt.rot_tr.y + isec->uv.y * uvt.rot_tr.x;
+	isec->uv.x = isec->uv.x + uvt.move.x;
+	isec->uv.y = isec->uv.y + uvt.move.y;
+	if (isec->uv.x > 1 || isec->uv.x < 0)
+		isec->uv.x -= (int)(isec->uv.x);
+	if (isec->uv.x < 0)
+		isec->uv.x += 1.0;
+	if (isec->uv.y > 1 || isec->uv.y < 0)
+		isec->uv.y -= (int)(isec->uv.y);
+	if (isec->uv.y < 0)
+		isec->uv.y += 1.0;
 }
 
-/*
-** intersection with sphere
-*/
-
-void	intersec_sph(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *sph)
+void	check_count_isec(t_hit *hit)
 {
-	t_vec3	oc;
-	t_vec3	k;
-	float	discr;
-
-	t->x = INFINITY;
-	t->y = INFINITY;
-	oc = minus_vec3(o, sph->pos);
-	k.x = dot(d, d);
-	k.y = 2 * dot(oc, d);
-	k.z = dot(oc, oc) - sph->rad * sph->rad;
-	discr = k.y * k.y - 4 * k.x * k.z;
-	if (discr < 0)
-		return ;
-	discr = sqrt(discr);
-	k.x *= 2;
-	t->x = (discr - k.y) / k.x;
-	t->y = (-discr - k.y) / k.x;
-}
-
-/*
-** intersection with hyper_cylinder
-*/
-
-void	intersec_cyl(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *cyl)
-{
-	t_vec3	oc;
-	t_vec3	k;
-	t_vec3	v;
-	float	discr;
-
-	v = div_vec3f(cyl->dir, len_vec3(cyl->dir));
-	t->x = INFINITY;
-	t->y = INFINITY;
-	oc = minus_vec3(o, cyl->pos);
-	k.x = dot(d, d) - pow(dot(d, cyl->dir), 2);
-	k.y = 2 * (dot(oc, d) - dot(d, cyl->dir) * dot(oc, cyl->dir));
-	k.z = dot(oc, oc) - pow(dot(oc, cyl->dir), 2) - cyl->rad * cyl->rad;
-	discr = k.y * k.y - 4 * k.x * k.z;
-	if (discr < 0)
-		return ;
-	discr = sqrt(discr);
-	k.x *= 2;
-	t->x = (discr - k.y) / k.x;
-	t->y = (-discr - k.y) / k.x;
-}
-
-/*
-** intersection with plane
-*/
-
-void	intersec_pln(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *pln)
-{
-	t_vec3	oc;
-	t_vec3	v;
-
-	v = invert_vec3(div_vec3f(pln->dir, len_vec3(pln->dir)));
-	t->x = INFINITY;
-	t->y = INFINITY;
-	if (dot(d, v) > 0)
+	if (hit->isec1 && hit->isec2)
+		hit->count = 2;
+	else if (!hit->isec1 && !hit->isec2)
+		hit->count = 0;
+	else if (hit->isec1 && !hit->isec2)
+		hit->count = 1;
+	else
 	{
-		oc = invert_vec3(minus_vec3(o, pln->pos));
-		t->x = dot(oc, v) / dot(d, v);
+		hit->isec1 = hit->isec2;
+		hit->isec2 = NULL;
+		hit->count = 1;
 	}
+	if (hit->isec1)
+		transform_uv(hit->isec1);
 }
 
-/*
-** intersection with hyper_conus
-*/
-
-void	intersec_con(t_vec3 *t, t_vec3 o, t_vec3 d, t_fig *con)
+void	check_isec(t_hit *h)
 {
-	t_vec3	oc;
-	t_vec3	k;
-	t_vec3	v;
-	float	discr;
+	float tr;
 
-	v = div_vec3f(con->dir, len_vec3(con->dir));
-	t->x = INFINITY;
-	t->y = INFINITY;
-	oc = minus_vec3(o, con->pos);
-	k.x = dot(d, d) - con->rad * pow(dot(d, con->dir), 2);
-	k.y = 2 * (dot(oc, d) - con->rad * dot(d, con->dir) * dot(oc, con->dir));
-	k.z = dot(oc, oc) - con->rad * pow(dot(oc, con->dir), 2);
-	discr = k.y * k.y - 4 * k.x * k.z;
-	if (discr < 0)
-		return ;
-	discr = sqrt(discr);
-	k.x *= 2;
-	t->x = (discr - k.y) / k.x;
-	t->y = (-discr - k.y) / k.x;
+	if (h->isec1 && h->isec1->fig->mat && h->isec1->fig->mat->mask_map.map)
+	{
+		tr = get_transp_from_file(h->isec1->fig->mat->mask_map, h->isec1->uv);
+		if (tr == 1)
+		{
+			free(h->isec1);
+			h->isec1 = NULL;
+		}
+	}
+	if (h->isec2 && h->isec2->fig->mat && h->isec2->fig->mat->mask_map.map)
+	{
+		tr = get_transp_from_file(h->isec2->fig->mat->mask_map, h->isec2->uv);
+		if (tr == 1)
+		{
+			free(h->isec2);
+			h->isec2 = NULL;
+		}
+	}
+	check_count_isec(h);
+}
+
+void	sel_fig_check(t_lst *lst, t_hit *hit, t_trc trc, t_fig *cur_fig)
+{
+	hit->isec1 = NULL;
+	hit->isec2 = NULL;
+	hit->count = 0;
+	if (cur_fig->type == sphere)
+		intersec_sph(lst, hit, trc, cur_fig);
+	else if (cur_fig->type == cylinder)
+		intersec_cyl(lst, hit, trc, cur_fig);
+	else if (cur_fig->type == conus)
+		intersec_con(lst, hit, trc, cur_fig);
+	else if (cur_fig->type == plane)
+		intersec_pln(lst, hit, trc, cur_fig);
+	if (hit->count && lst->scn->inv_surf == 0)
+		check_isec(hit);
 }
