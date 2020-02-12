@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/10 22:05:40 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/11 20:23:56 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/12 21:48:09 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ void		check_refr(t_lst *lst, t_trc *trc,
 
 int			init_trace(t_lst *lst, t_isec **cisec, t_trc trc, SDL_Color *col)
 {
-	*cisec = malloc(sizeof(t_isec));
+	if (!(*cisec = ft_memalloc(sizeof(t_isec))))
+		ft_exit("failed to alloc cisec");
 	cls_isec(cisec, lst, trc);
 	*col = return_background(lst, trc);
 	if ((*cisec)->fig == NULL)
@@ -62,7 +63,7 @@ int			idono(t_vec3 *fkt, SDL_Color *res,
 void		init_trace0(t_lst *lst, int depth, t_vec3 *fkt, SDL_Color *res)
 {
 	fkt->x = 1.0f;
-	*res = (SDL_Color){0, 0, 0};
+	*res = (SDL_Color){0, 0, 0, 255};
 	lst->depth = depth;
 }
 

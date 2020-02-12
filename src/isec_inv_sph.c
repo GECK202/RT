@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/10 23:55:07 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/11 19:17:37 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/12 21:48:56 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_isec	*set_isec_inv_sph(t_trc trc, t_fig *isph, float p)
 	return (isec);
 }
 
-t_isec	*check_inv_sph(t_lst *lst, t_trc trc, float t, t_fig *isph)
+t_isec	*check_inv_sph(t_trc trc, float t, t_fig *isph)
 {
 	t_vec3	oc;
 	t_vec3	k;
@@ -69,7 +69,7 @@ t_isec	*check_inv_figs(t_lst *lst, t_trc trc, float t)
 	{
 		if (cur_fig->type == inv_sph)
 		{
-			if ((isec = check_inv_sph(lst, trc, t, cur_fig)))
+			if ((isec = check_inv_sph(trc, t, cur_fig)))
 				return (isec);
 		}
 		cur_fig = cur_fig->next;

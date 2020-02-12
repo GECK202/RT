@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:43:40 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/12 01:18:44 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/12 21:19:16 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int		set_dir_fig(t_lst *lst, char *word)
 	return (free_words(coord, 0));
 }
 
-void	rotation_fig(t_fig *fig, t_lst *lst)
+void	rotation_fig(t_fig *fig)
 {
 	t_vec3	tmp;
 

@@ -6,19 +6,19 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/11 21:08:17 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/12 21:48:37 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RT_H
 # define RT_H
 
-# define S_W 1600
-# define S_H 1200
-# define H_W 800
-# define H_H 600
+# define S_W 800
+# define S_H 600
+# define H_W 400
+# define H_H 300
 # define RATIO 1.5
-# define POT 32
+# define POT 16
 
 # define INFINITY 1e99
 # define INFY 1e99
@@ -53,13 +53,12 @@
 # include "libft.h"
 # include <fcntl.h>
 
-// # include <time.h>
-
 # include <sys/types.h>
 # include <sys/stat.h>
 
 # include <SDL2/SDL.h>
 # include <SDL2/SDL_image.h>
+# include <SDL2/SDL_ttf.h>
 
 typedef struct		s_tag
 {
@@ -224,6 +223,9 @@ typedef struct		s_lst
 	void			*mlx;
 	SDL_Window		*win;
 	SDL_Surface		*img;
+	SDL_Surface		*mimg;
+	SDL_Rect		mrect;
+	int				show_menu;
 	SDL_Surface		*second_img;
 	int				*second_data;
 	int				*data;
@@ -290,12 +292,12 @@ int					init_trace(t_lst *lst, t_isec **cisec,
 						t_trc trc, SDL_Color *col);
 void				check_refr(t_lst *lst, t_trc *trc,
 						t_isec *ci, SDL_Color *tres);
-void				get_normal_from_file(t_isec *cisec, t_lst *lst);
+void				get_normal_from_file(t_isec *cisec);
 
 t_isec				*check_inv_figs(t_lst *lst, t_trc trc, float t);
 void				set_inv_surf1(t_lst *lst, t_hit *h, t_fig *fig);
 t_isec				*set_isec_inv_sph(t_trc trc, t_fig *isph, float p);
-t_isec				*check_inv_sph(t_lst *lst, t_trc trc, float t, t_fig *isph);
+t_isec				*check_inv_sph(t_trc trc, float t, t_fig *isph);
 t_isec				*check_inv_figs(t_lst *lst, t_trc trc, float t);
 t_isec				*ret_inv_isec(t_lst *lst, t_isec *isec, t_fig *fig);
 t_isec				*ret_cyl_con_isec(t_trc trc, t_fig *cyl, float t, float m);
@@ -328,7 +330,7 @@ void				write_figure(int fd, t_lst *lst);
 char				*get_thre_float(float x, float y, float z);
 char				*get_thre_int(int x, int y, int z);
 int					get_file_scene(void);
-char				*get_fnbr_to_string(int min, float num, char *s);
+char				*get_fnbr_to_string(float num);
 char				*get_inbr_to_string(int min, int num, char *s);
 
 SDL_Color			pixel_picture(int *data, int i, int pix_x, int pix_y);
@@ -393,7 +395,7 @@ void				rain(t_lst *lst);
 void				set_m4_rz(t_mat3 *m, float fi);
 void				set_m4_rx(t_mat3 *m, float fi);
 void				set_m4_ry(t_mat3 *m, float fi);
-void				rotation_fig(t_fig *fig, t_lst *lst);
+void				rotation_fig(t_fig *fig);
 void				mult_m3(t_vec3 *d, t_vec3 s, t_mat3 m);
 void				rot_v3z(t_vec3 *dst, t_vec3 *src, float fi);
 void				rot_v3x(t_vec3 *dst, t_vec3 *src, float fi);
@@ -448,5 +450,10 @@ void				multy_x(t_lst *lst, int tmp);
 void				multy_y(t_lst *lst, int tmp);
 void				multy_z(t_lst *lst, int tmp);
 void				ret(t_lst *lst);
+
+void				draw_text_menu1(t_lst *lst);
+void				draw_text_menu2(t_lst *lst);
+SDL_Rect			*set_rect(SDL_Rect *rect, int x, int y);
+void				ft_exit(char *line);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:37:19 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/11 20:55:23 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/12 20:07:47 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,18 @@ void	init_f_read(t_lst *lst)
 	init_f_read0(lst);
 }
 
+int		init_font(void)
+{
+	if (TTF_Init() == -1)
+		return (0);
+	return (1);
+}
+
 int		init_sdl(t_lst *lst)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		return (0);
+	if (!init_font())
 		return (0);
 	lst->win = 0;
 	lst->win = SDL_CreateWindow("RT", SDL_WINDOWPOS_UNDEFINED,
@@ -71,10 +80,15 @@ int		init_sdl(t_lst *lst)
 		return (0);
 	lst->img = SDL_GetWindowSurface(lst->win);
 	lst->data = (int *)lst->img->pixels;
+	lst->mimg = IMG_Load("prgres/panel.png");
+	set_rect(&lst->mrect, 10, 10);
+	lst->mrect.w = S_W;
+	lst->mrect.h = H_W;
 	lst->scn->bgc.r = 0;
 	lst->scn->bgc.g = 0;
 	lst->scn->bgc.b = 0;
 	lst->shd = 0;
+	lst->show_menu = 1;
 	return (1);
 }
 

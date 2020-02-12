@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/10 21:58:06 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/11 18:29:47 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/12 21:47:55 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ SDL_Color	get_refl_col(t_lst *lst, t_trc trc, t_vec3 n, int depth)
 	trc.min = MIN_OFFSET;
 	trc.max = INFINITY;
 	trc.d = refl_r(trc.d, n);
+	cisec = NULL;
 	refl_col = trace(lst, trc, depth, cisec);
 	return (refl_col);
 }
@@ -64,6 +65,7 @@ SDL_Color	get_refr_col(t_lst *lst, t_trc trc, t_vec3 n, float ito)
 	trc.min = MIN_OFFSET;
 	trc.max = INFINITY;
 	lst->depth_refr -= 1;
+	cisec = NULL;
 	refr_col = trace(lst, trc, 0, cisec);
 	return (refr_col);
 }

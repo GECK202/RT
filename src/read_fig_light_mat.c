@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_fig3.c                                        :+:      :+:    :+:   */
+/*   read_fig_light_mat.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/09 17:29:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/09 17:29:19 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/12 21:28:49 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int		set_rot_fig(t_lst *lst, char *word)
 		set_m4_rx(&fig->mat_x, fig->alpha.x);
 		set_m4_ry(&fig->mat_y, fig->alpha.y);
 		set_m4_rz(&fig->mat_z, fig->alpha.z);
-		rotation_fig(fig, lst);
+		rotation_fig(fig);
 		return (free_words(coord, 1));
 	}
 	return (free_words(coord, 0));

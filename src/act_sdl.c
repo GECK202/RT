@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   act_sdl.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 23:44:09 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/08 23:44:09 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/12 20:27:08 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
+#include <stdio.h>
 
 void	close_sdl(t_lst *lst)
 {
@@ -18,6 +19,7 @@ void	close_sdl(t_lst *lst)
 	lst->img = 0;
 	SDL_DestroyWindow(lst->win);
 	lst->win = 0;
+	TTF_Quit();
 	SDL_Quit();
 }
 
@@ -62,6 +64,22 @@ void	sld_events(t_lst *lst, SDL_Event e, int *quit, int *repaint)
 	}
 }
 
+void	show_menu(t_lst *lst)
+{
+	SDL_Rect r;
+
+	r.x = 0;
+	r.y = 0;
+	r.w = 200;
+	r.h = 285;
+	lst->mrect.y = 10;
+	draw_text_menu1(lst);
+	SDL_BlitSurface(lst->mimg, &r, lst->img, &lst->mrect);
+	draw_text_menu2(lst);
+	lst->mrect.y = 305;
+	SDL_BlitSurface(lst->mimg, &r, lst->img, &lst->mrect);
+}
+
 void	sdl_cycle(t_lst *lst)
 {
 	int			quit;
@@ -82,6 +100,8 @@ void	sdl_cycle(t_lst *lst)
 			{
 				rain(lst);
 				post_effects(lst);
+				if (lst->show_menu)
+					show_menu(lst);
 				SDL_UpdateWindowSurface(lst->win);
 				first = 0;
 			}

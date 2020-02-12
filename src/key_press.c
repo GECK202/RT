@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 22:07:39 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/11 20:54:37 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/12 19:57:43 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,5 +130,7 @@ int		key_press(SDL_Keycode key, t_lst *lst)
 			lst->post_effects = 0;
 		return (0);
 	}
+	else if (key == SDLK_F6)
+		lst->show_menu = (lst->show_menu == 1) ? 0 : 1;
 	return (key_press_dop(key, lst));
 }

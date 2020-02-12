@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/10 22:01:15 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/11 18:12:43 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/12 21:46:04 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_l_prm		set_l_prm(t_trc trc, t_vec3 n)
 	return (b);
 }
 
-void		get_normal_from_file(t_isec *cisec, t_lst *lst)
+void		get_normal_from_file(t_isec *cisec)
 {
 	t_vec3		norm;
 	SDL_Rect	size;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   blurAndPP.c                                        :+:      :+:    :+:   */
+/*   blur_and_pp.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 22:34:42 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/08 22:34:43 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/12 21:21:57 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ SDL_Color	blur0(int *data, int k, float blur_x, float blur_y)
 
 SDL_Color	blur(int *data, int i, float blur_x, float blur_y)
 {
-	SDL_Color	res;
 	int			k;
 
 	k = i - blur_x;

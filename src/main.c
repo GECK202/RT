@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:06 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/11 19:13:39 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/12 21:18:10 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	mult(t_lst *lst, t_trc *trc, int x, int y)
 	SDL_Color	col;
 	t_isec		*cisec;
 
+	cisec = NULL;
 	trc->d.x = (float)x * RATIO / H_W;
 	trc->d.y = (float)y / H_H;
 	trc->d.z = lst->scn->cam_focus_dist;

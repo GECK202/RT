@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/11 00:03:35 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/11 00:04:04 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/12 21:49:09 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	set_isec1_pln(t_hit *h, t_trc trc, t_fig *pln, t_trc t)
 void	intersec_pln(t_lst *lst, t_hit *h, t_trc trc, t_fig *p)
 {
 	t_vec3	oc;
-	int		tmp;
 	t_trc	t;
 
 	t.d = set_vec3(p->dir);

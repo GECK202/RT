@@ -6,14 +6,14 @@
 #    By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/09/23 17:12:18 by vkaron            #+#    #+#              #
-#    Updated: 2020/02/11 00:07:26 by vkaron           ###   ########.fr        #
+#    Updated: 2020/02/12 21:45:06 by vkaron           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 .PHONY: all, clean, fclean, re, libr
 
-#FLAGS = -Wall -Wextra -Werror
-FLAGS = -g
+FLAGS = -Wall -Wextra -Werror
+#FLAGS = -g
 
 C_FILES =	key_press.c move_multy.c main.c light.c events.c scene.c trace.c\
 			matrix.c init.c clear.c	read_fig1.c read_fig2.c read_light.c\
@@ -22,7 +22,8 @@ C_FILES =	key_press.c move_multy.c main.c light.c events.c scene.c trace.c\
 			write_figure.c act_sdl.c screenshot.c read_fig_light_mat.c\
 			read_scn0.c scene0.c tools0.c vec3.c clear0.c light0.c read_uv.c\
 			cls_isec.c get_color.c get_refl_refr.c trace0.c bgc_mixcol.c\
-			isec_sphere.c isec_inv_sph.c isec_cyl.c isec_con.c isec_pln.c
+			isec_sphere.c isec_inv_sph.c isec_cyl.c isec_con.c isec_pln.c\
+			text_menu.c service_stuff.c
 
 O_FILES =	$(C_FILES:.c=.o)
 

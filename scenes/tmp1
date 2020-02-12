@@ -8,10 +8,10 @@
 7	fog near:35
 8	fog max transparent:0.25
 9	fog color:125 155 155
-10	invert intersect surface: 1
+10	invert intersect surface: 0
 
 [material]:
-name: earth
+0	name: earth
 1	color: 255 5 5
 2	diffuse: res/water3_nm.png1
 3	normal: res/fig1_nm.png1

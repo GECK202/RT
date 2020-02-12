@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 22:03:57 by vabraham          #+#    #+#             */
-/*   Updated: 2020/01/09 20:30:11 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/12 21:20:08 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,19 @@ void	multy_x(t_lst *lst, int tmp)
 {
 	lst->scn->cur_fig->alpha.x += tmp;
 	set_m4_rx(&lst->scn->cur_fig->mat_x, lst->scn->cur_fig->alpha.x);
-	rotation_fig(lst->scn->cur_fig, lst);
+	rotation_fig(lst->scn->cur_fig);
 }
 
 void	multy_y(t_lst *lst, int tmp)
 {
 	lst->scn->cur_fig->alpha.y += tmp;
 	set_m4_ry(&lst->scn->cur_fig->mat_y, lst->scn->cur_fig->alpha.y);
-	rotation_fig(lst->scn->cur_fig, lst);
+	rotation_fig(lst->scn->cur_fig);
 }
 
 void	multy_z(t_lst *lst, int tmp)
 {
 	lst->scn->cur_fig->alpha.z += tmp;
 	set_m4_rz(&lst->scn->cur_fig->mat_z, lst->scn->cur_fig->alpha.z);
-	rotation_fig(lst->scn->cur_fig, lst);
+	rotation_fig(lst->scn->cur_fig);
 }

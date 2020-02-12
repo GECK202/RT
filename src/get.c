@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 23:22:12 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/08 23:22:13 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/12 21:26:00 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*get_inbr_to_string(int min, int num, char *s)
 	return (get_inbr_to_string(min, num, str));
 }
 
-char	*get_fnbr_to_string(int min, float num, char *s)
+char	*get_fnbr_to_string(float num)
 {
 	float tmp;
 
@@ -104,18 +104,18 @@ char	*get_thre_float(float x, float y, float z)
 	char *tmp;
 
 	s = "";
-	tmp = ft_strjoin(s, get_fnbr_to_string(1, x, ""));
+	tmp = ft_strjoin(s, get_fnbr_to_string(x));
 	s = tmp;
 	tmp = ft_strjoin(s, " ");
 	free(s);
 	s = tmp;
-	tmp = ft_strjoin(s, get_fnbr_to_string(1, y, ""));
+	tmp = ft_strjoin(s, get_fnbr_to_string(y));
 	free(s);
 	s = tmp;
 	tmp = ft_strjoin(s, " ");
 	free(s);
 	s = tmp;
-	tmp = ft_strjoin(s, get_fnbr_to_string(1, z, ""));
+	tmp = ft_strjoin(s, get_fnbr_to_string(z));
 	free(s);
 	return (tmp);
 }
