@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:37:19 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/12 20:07:47 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/13 17:52:14 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ int		init_font(void)
 
 int		init_sdl(t_lst *lst)
 {
+	int *data;
+
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		return (0);
 	if (!init_font())
@@ -80,14 +82,17 @@ int		init_sdl(t_lst *lst)
 		return (0);
 	lst->img = SDL_GetWindowSurface(lst->win);
 	lst->data = (int *)lst->img->pixels;
-	lst->mimg = IMG_Load("prgres/panel.png");
+	lst->mimg = SDL_CreateRGBSurface(0, S_W , S_H, 32, 0xff0000, 0x00ff00, 0x0000ff, 0xff000000);//IMG_Load("prgres/panel.png");
+	data = (int *)lst->mimg->pixels;
+	for (int h = 0; h < S_W / 5 * S_H; h++)
+		data[h] = 0x77ff0000;
 	set_rect(&lst->mrect, 10, 10);
 	lst->mrect.w = S_W;
 	lst->mrect.h = H_W;
 	lst->scn->bgc.r = 0;
 	lst->scn->bgc.g = 0;
 	lst->scn->bgc.b = 0;
-	lst->shd = 0;
+	lst->shd = 3;
 	lst->show_menu = 1;
 	return (1);
 }

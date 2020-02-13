@@ -163,6 +163,14 @@ name: earth
 5	color:255 255 255
 
 [light]:
+0	type:lconus
+1	position:-1 15 -2
+2	direction:0 1 0
+3	angle:30
+4	intens:0.8
+5	color:255 255 255
+
+[light]:
 0	type:direct
 1	position:0 0 0
 2	direction:1 1 4

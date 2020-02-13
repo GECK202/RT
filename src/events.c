@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 22:08:27 by vabraham          #+#    #+#             */
-/*   Updated: 2020/01/09 20:34:17 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/13 22:21:08 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,13 @@ void	mouse_weel(Sint32 y, t_lst *lst)
 
 void	mouse_press(SDL_MouseButtonEvent *e, t_lst *lst)
 {
-	if (e->button == SDL_BUTTON_LEFT && lst->change && e->x >= 0
+	if (e->button == SDL_BUTTON_RIGHT && lst->change && e->x >= 0
 		&& e->y >= 0 && e->x < S_W && e->y < S_H)
 		lst->change = 0;
-	else if (e->button == SDL_BUTTON_LEFT && e->x >= 0
+	else if (e->button == SDL_BUTTON_RIGHT && e->x >= 0
 		&& e->y >= 0 && e->x < S_W && e->y < S_H)
 		lst->change = 1;
+	else if (e->button == SDL_BUTTON_LEFT && e->x >= 0
+		&& e->y >= 0 && e->x < S_W && e->y < S_H)
+		search_fig(lst, e->x, e->y);
 }

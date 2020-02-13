@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 22:07:39 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/12 19:57:43 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/13 20:32:30 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void	cycle(t_lst *lst)
 	while (lst->scn->cur_lght)
 	{
 		lst->scn->cur_lght = lst->scn->cur_lght->next;
-		if (lst->scn->cur_lght && lst->scn->cur_lght->type == point)
+		if (lst->scn->cur_lght && (lst->scn->cur_lght->type == point ||
+			lst->scn->cur_lght->type == lconus))
 			break ;
 	}
 	if (!lst->scn->cur_lght)

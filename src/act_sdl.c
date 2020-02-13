@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 23:44:09 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/12 20:27:08 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/13 21:50:05 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,35 @@ void	sld_events0(t_lst *lst, SDL_Event e, int *repaint)
 	}
 }
 
+void	show_menu(t_lst *lst)
+{
+	SDL_Rect r;
+
+	r.x = 0;
+	r.y = 0;
+	r.w = 230;
+	r.h = 85;
+	lst->mrect.y = 10;
+	draw_text_menu1(lst);
+	SDL_BlitSurface(lst->mimg, &r, lst->img, &lst->mrect);
+	
+	if (lst->mouse_light)
+		draw_text_menu3(lst);
+	else
+		draw_text_menu2(lst);
+	r.h = 185;
+	lst->mrect.y = 100;
+	SDL_BlitSurface(lst->mimg, &r, lst->img, &lst->mrect);
+	
+	if (!lst->mouse_light)
+	{
+		draw_text_menu4(lst);
+		r.h = 185;
+		lst->mrect.y = 290;
+		SDL_BlitSurface(lst->mimg, &r, lst->img, &lst->mrect);
+	}
+}
+
 void	sld_events(t_lst *lst, SDL_Event e, int *quit, int *repaint)
 {
 	if (e.type == SDL_QUIT)
@@ -53,6 +82,7 @@ void	sld_events(t_lst *lst, SDL_Event e, int *quit, int *repaint)
 			else
 			{
 				post_effects(lst);
+				show_menu(lst);
 				SDL_UpdateWindowSurface(lst->win);
 			}
 		}
@@ -62,22 +92,6 @@ void	sld_events(t_lst *lst, SDL_Event e, int *quit, int *repaint)
 		mouse_press(&(e.button), lst);
 		*repaint = 1;
 	}
-}
-
-void	show_menu(t_lst *lst)
-{
-	SDL_Rect r;
-
-	r.x = 0;
-	r.y = 0;
-	r.w = 200;
-	r.h = 285;
-	lst->mrect.y = 10;
-	draw_text_menu1(lst);
-	SDL_BlitSurface(lst->mimg, &r, lst->img, &lst->mrect);
-	draw_text_menu2(lst);
-	lst->mrect.y = 305;
-	SDL_BlitSurface(lst->mimg, &r, lst->img, &lst->mrect);
 }
 
 void	sdl_cycle(t_lst *lst)

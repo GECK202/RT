@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/12 21:48:37 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/13 22:18:51 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -453,7 +453,13 @@ void				ret(t_lst *lst);
 
 void				draw_text_menu1(t_lst *lst);
 void				draw_text_menu2(t_lst *lst);
+void				draw_text_menu3(t_lst *lst);
+void				draw_text_menu4(t_lst *l);
 SDL_Rect			*set_rect(SDL_Rect *rect, int x, int y);
 void				ft_exit(char *line);
+
+void				add_figure(t_lst *lst, int num_fig);
+void				next_mat(t_lst *lst);
+void				search_fig(t_lst *lst, int x, int y);
 
 #endif
