@@ -6,6 +6,7 @@
 		"algorithm": "c",
 		"iterator": "c",
 		"ostream": "c",
-		"*.tcc": "c"
+		"*.tcc": "c",
+		"rt.h": "c"
 	}
 }

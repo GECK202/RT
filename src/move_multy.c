@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   move_multy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 22:03:57 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/12 21:20:08 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/14 17:42:52 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	move_light(t_lst *lst, SDL_Point p)
 		((lght->begin_pos.z - lst->scn->cam_pos.z) / 2) + lst->scn->cam_pos.x;
 	lght->begin_pos.y = -((float)p.y - H_H) / H_H *
 		((lght->begin_pos.z - lst->scn->cam_pos.z) / 2) + lst->scn->cam_pos.y;
-	// lght->begin_pos.x *= RATIO;
+	lght->begin_pos.x *= RATIO;
 	lght->pos = set_vec3(lght->begin_pos);
 	lght->pos = minus_vec3(lght->pos, lst->scn->cam_pos);
 	mult_m3(&lght->pos, lght->pos, lst->camera_z);
@@ -55,7 +55,7 @@ void	move_fig(t_lst *lst, SDL_Point p)
 		((fig->begin_pos.z - c_p.z) / 2) + c_p.x;
 	fig->begin_pos.y = -((float)p.y - H_H) / H_H *
 		((fig->begin_pos.z - c_p.z) / 2) + c_p.y;
-	// fig->begin_pos.x *= RATIO;
+	fig->begin_pos.x *= RATIO;
 	fig->pos = set_vec3(fig->begin_pos);
 	fig->pos = minus_vec3(fig->pos, c_p);
 	mult_m3(&fig->pos, fig->pos, lst->camera_z);

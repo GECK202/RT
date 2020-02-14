@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:37:19 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/13 17:52:14 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/14 18:35:06 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,32 +60,8 @@ void	init_f_read(t_lst *lst)
 	init_f_read0(lst);
 }
 
-int		init_font(void)
+int		init_sdl0(t_lst *lst)
 {
-	if (TTF_Init() == -1)
-		return (0);
-	return (1);
-}
-
-int		init_sdl(t_lst *lst)
-{
-	int *data;
-
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		return (0);
-	if (!init_font())
-		return (0);
-	lst->win = 0;
-	lst->win = SDL_CreateWindow("RT", SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED, S_W, S_H, SDL_WINDOW_SHOWN);
-	if (!lst->win)
-		return (0);
-	lst->img = SDL_GetWindowSurface(lst->win);
-	lst->data = (int *)lst->img->pixels;
-	lst->mimg = SDL_CreateRGBSurface(0, S_W , S_H, 32, 0xff0000, 0x00ff00, 0x0000ff, 0xff000000);//IMG_Load("prgres/panel.png");
-	data = (int *)lst->mimg->pixels;
-	for (int h = 0; h < S_W / 5 * S_H; h++)
-		data[h] = 0x77ff0000;
 	set_rect(&lst->mrect, 10, 10);
 	lst->mrect.w = S_W;
 	lst->mrect.h = H_W;
@@ -95,6 +71,31 @@ int		init_sdl(t_lst *lst)
 	lst->shd = 3;
 	lst->show_menu = 1;
 	return (1);
+}
+
+int		init_sdl(t_lst *lst)
+{
+	int *data;
+	int h;
+
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		return (0);
+	if (TTF_Init() == -1)
+		return (0);
+	lst->win = 0;
+	lst->win = SDL_CreateWindow("RT", SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED, S_W, S_H, SDL_WINDOW_SHOWN);
+	if (!lst->win)
+		return (0);
+	lst->img = SDL_GetWindowSurface(lst->win);
+	lst->data = (int *)lst->img->pixels;
+	lst->mimg = SDL_CreateRGBSurface(0, S_W, S_H, 32,
+		0xff0000, 0x00ff00, 0x0000ff, 0xff000000);
+	data = (int *)lst->mimg->pixels;
+	h = -1;
+	while (++h < S_W / 5 * S_H)
+		data[h] = 0x77ff0000;
+	return (init_sdl0(lst));
 }
 
 int		scene_init(t_lst *lst, char *file)

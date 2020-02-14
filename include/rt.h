@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rt.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/13 22:18:51 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/14 18:13:29 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # define S_H 600
 # define H_W 400
 # define H_H 300
-# define RATIO 1.5
+# define RATIO 1.333333333
 # define POT 16
 
 # define INFINITY 1e99
@@ -226,8 +226,6 @@ typedef struct		s_lst
 	SDL_Surface		*mimg;
 	SDL_Rect		mrect;
 	int				show_menu;
-	SDL_Surface		*second_img;
-	int				*second_data;
 	int				*data;
 	int				depth;
 	SDL_Color		res_help;
@@ -280,6 +278,8 @@ typedef struct		s_l_prm
 	t_vec3			v;
 }					t_l_prm;
 
+void				hide_menu_for_screen(t_lst *lst);
+void				show_menu(t_lst *lst);
 SDL_Color			return_background(t_lst *lst, t_trc trc);
 SDL_Color			mix_color(SDL_Color c1, SDL_Color c2, float koef);
 SDL_Color			return_trace(t_lst *lst, t_vec3 fkt,
@@ -294,6 +294,11 @@ void				check_refr(t_lst *lst, t_trc *trc,
 						t_isec *ci, SDL_Color *tres);
 void				get_normal_from_file(t_isec *cisec);
 
+void				draw_cre_button(t_lst *l, int fig, SDL_Rect *d);
+void				draw_cam_pos(t_lst *l, int fsize, int x, int y);
+void				draw_type_lght(t_lst *l, int fsize, int x, int y);
+char				*c_lim(char *a);
+void				print_ttf(SDL_Surface *sdest, char *msg, int size, SDL_Rect *dest);
 t_isec				*check_inv_figs(t_lst *lst, t_trc trc, float t);
 void				set_inv_surf1(t_lst *lst, t_hit *h, t_fig *fig);
 t_isec				*set_isec_inv_sph(t_trc trc, t_fig *isph, float p);
@@ -451,12 +456,17 @@ void				multy_y(t_lst *lst, int tmp);
 void				multy_z(t_lst *lst, int tmp);
 void				ret(t_lst *lst);
 
+void				button_bg(int *data, SDL_Rect *d, int fig);
+void				draw_vec(t_lst *l, int fsize, SDL_Rect *d, t_vec3 *v);
+void				draw_col(t_lst *l, int fsize, SDL_Rect *d, SDL_Color *c);
+void				draw_type_fig(t_lst *l, int fsize, int x, int y);
 void				draw_text_menu1(t_lst *lst);
 void				draw_text_menu2(t_lst *lst);
 void				draw_text_menu3(t_lst *lst);
 void				draw_text_menu4(t_lst *l);
 SDL_Rect			*set_rect(SDL_Rect *rect, int x, int y);
 void				ft_exit(char *line);
+void				draw_shader(t_lst *l, int fsize, int x, int y);
 
 void				add_figure(t_lst *lst, int num_fig);
 void				next_mat(t_lst *lst);

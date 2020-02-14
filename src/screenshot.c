@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   screenshot.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 23:52:08 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/08 23:52:12 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/14 18:13:40 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ int			scrin(t_lst *lst)
 	char		*tmp;
 	int			fd;
 
+	hide_menu_for_screen(lst);
 	surface = scrin0(lst, -1, -1, 0);
 	while (1)
 	{
@@ -117,6 +118,8 @@ int			scrin(t_lst *lst)
 	free(tmp);
 	SDL_FreeSurface(surface);
 	lst->num_file_for_screen += 1;
+	if (lst->show_menu)
+		show_menu(lst);
 	return (0);
 }
 
