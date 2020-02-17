@@ -6,7 +6,7 @@
 /*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 23:22:12 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/12 21:26:00 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/18 00:19:22 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,40 +14,35 @@
 
 char	*get_inbr_to_string(int min, int num, char *s)
 {
-	char *c;
-	char *str;
-
-	c = malloc(sizeof(char) * 2);
-	if (num < 0)
-	{
-		min *= -1;
-		num *= -1;
-	}
-	*c = num % 10 + 48;
-	c[1] = '\0';
-	num /= 10;
-	str = ft_strjoin(c, s);
-	free(c);
-	if (num == 0)
-	{
-		if (min == -1)
-			return (ft_strjoin("-", str));
-		return (str);
-	}
-	return (get_inbr_to_string(min, num, str));
+	//////////here go kostyl
+	min = 1;
+	/////////kostl over
+	char *b = ft_itoa(num);
+	char *c = ft_strjoin(b, s);
+	printf("%s     %s\n", b, c);
+	free(b);
+	return(c);	
 }
 
 char	*get_fnbr_to_string(float num)
 {
 	float tmp;
+	char *result;
+	char *buf1;
+	char *buf2;
 
 	tmp = num - (float)(int)num;
 	if (tmp < 0)
 		tmp *= -1;
 	while (tmp != (float)(int)tmp)
 		tmp *= 10;
-	return (ft_strjoin(get_inbr_to_string(1, (int)num, "."),
-		get_inbr_to_string(1, (tmp), "")));
+	buf1 = get_inbr_to_string(1, (int)num, ".");
+	buf2 = get_inbr_to_string(1, (tmp), "");
+	if (!(result = ft_strjoin(buf1, buf2)))
+		ft_exit("STRJOIN FAILED IN FNBR");
+	free(buf1);
+	free(buf2);
+	return (result);
 }
 
 int		get_file_scene(void)
@@ -56,6 +51,7 @@ int		get_file_scene(void)
 	int		num_scene;
 	char	*str;
 	char	*str_scene;
+	char	*buf;
 
 	str = "scenes/scene";
 	num_scene = 0;
@@ -64,7 +60,9 @@ int		get_file_scene(void)
 	{
 		if (str_scene)
 			free(str_scene);
-		str_scene = ft_strjoin(str, get_inbr_to_string(1, num_scene, ""));
+		buf = get_inbr_to_string(1, num_scene, "");
+		str_scene = ft_strjoin(str, buf);
+		free(buf);
 		if ((fd = open(str_scene, O_WRONLY)) == -1)
 			break ;
 		close(fd);
@@ -72,6 +70,7 @@ int		get_file_scene(void)
 	}
 	fd = open(str_scene, O_WRONLY | O_CREAT);
 	ft_putstr(str_scene);
+	free(str_scene);
 	ft_putchar('\n');
 	return (fd);
 }
@@ -80,20 +79,27 @@ char	*get_thre_int(int x, int y, int z)
 {
 	char *s;
 	char *tmp;
+	char *buf;
 
-	s = "";
-	tmp = ft_strjoin(s, get_inbr_to_string(1, x, ""));
+	//s = "";
+	tmp = get_inbr_to_string(1, x, "");
+	//tmp = ft_strjoin(s, buf);
+	//free(buf);
 	s = tmp;
 	tmp = ft_strjoin(s, " ");
 	free(s);
 	s = tmp;
-	tmp = ft_strjoin(s, get_inbr_to_string(1, y, ""));
+	buf = get_inbr_to_string(1, y, "");
+	tmp = ft_strjoin(s, buf);
+	free(buf);
 	free(s);
 	s = tmp;
 	tmp = ft_strjoin(s, " ");
 	free(s);
 	s = tmp;
-	tmp = ft_strjoin(s, get_inbr_to_string(1, z, ""));
+	buf = get_inbr_to_string(1, z, "");
+	tmp = ft_strjoin(s, buf);
+	free(buf);
 	free(s);
 	return (tmp);
 }
@@ -102,20 +108,26 @@ char	*get_thre_float(float x, float y, float z)
 {
 	char *s;
 	char *tmp;
+	char *buf;
 
-	s = "";
-	tmp = ft_strjoin(s, get_fnbr_to_string(x));
+	//s = "";
+	//tmp = ft_strjoin(s, get_fnbr_to_string(x));
+	tmp = get_fnbr_to_string(x);
 	s = tmp;
 	tmp = ft_strjoin(s, " ");
 	free(s);
 	s = tmp;
-	tmp = ft_strjoin(s, get_fnbr_to_string(y));
+	buf = get_fnbr_to_string(y);
+	tmp = ft_strjoin(s, buf);
+	free(buf);
 	free(s);
 	s = tmp;
 	tmp = ft_strjoin(s, " ");
 	free(s);
 	s = tmp;
-	tmp = ft_strjoin(s, get_fnbr_to_string(z));
+	buf = get_fnbr_to_string(z);
+	tmp = ft_strjoin(s, buf);
+	free(buf);
 	free(s);
 	return (tmp);
 }

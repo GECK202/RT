@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   text_menu0.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 17:56:09 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/14 17:56:30 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/17 22:15:18 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ void		draw_shader(t_lst *l, int fsize, int x, int y)
 	if (!l->shd)
 		print_ttf(l->mimg, "SIMPLE", fsize, &d);
 	else if (l->shd == TEXTURE)
-		print_ttf(l->mimg, "TEXTURE", fsize, &d);
-	else if (l->shd == TRASPARENT)
 		print_ttf(l->mimg, "TRASPARE", fsize, &d);
+	else if (l->shd == TRASPARENT)
+		print_ttf(l->mimg, "TEXTURE", fsize, &d);
 	else if (l->shd == REFRLECT)
 		print_ttf(l->mimg, "REFRLECT", fsize, &d);
 	else if (l->shd == REFRACT)
@@ -87,11 +87,11 @@ void		draw_cam_pos(t_lst *l, int fsize, int x, int y)
 	a = c_lim(get_fnbr_to_string(l->scn->cam_pos0.x + l->scn->cam_pos.x));
 	print_ttf(l->mimg, a, fsize, &d);
 	free(a);
-	d.x += 35;
+	d.x += 50;
 	a = c_lim(get_fnbr_to_string(l->scn->cam_pos0.y + l->scn->cam_pos.y));
 	print_ttf(l->mimg, a, fsize, &d);
 	free(a);
-	d.x += 35;
+	d.x += 50;
 	a = c_lim(get_fnbr_to_string(l->scn->cam_pos0.z + l->scn->cam_pos.z));
 	print_ttf(l->mimg, a, fsize, &d);
 	free(a);

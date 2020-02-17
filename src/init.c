@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:37:19 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/14 18:35:06 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/17 22:07:34 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,6 @@ int		init_sdl0(t_lst *lst)
 	set_rect(&lst->mrect, 10, 10);
 	lst->mrect.w = S_W;
 	lst->mrect.h = H_W;
-	lst->scn->bgc.r = 0;
-	lst->scn->bgc.g = 0;
-	lst->scn->bgc.b = 0;
 	lst->shd = 3;
 	lst->show_menu = 1;
 	return (1);

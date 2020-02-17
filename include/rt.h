@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rt.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/14 18:13:29 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/17 22:42:19 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -466,6 +466,8 @@ void				draw_text_menu3(t_lst *lst);
 void				draw_text_menu4(t_lst *l);
 SDL_Rect			*set_rect(SDL_Rect *rect, int x, int y);
 void				ft_exit(char *line);
+int					find_me_clrs(t_isec *csc, t_lst *l,
+t_trc trc, SDL_Color *col);
 void				draw_shader(t_lst *l, int fsize, int x, int y);
 
 void				add_figure(t_lst *lst, int num_fig);

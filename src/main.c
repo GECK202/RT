@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:06 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/14 18:19:27 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/17 22:26:38 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,29 @@ void	rain(t_lst *lst)
 		rc = pthread_join(threads[lst->pot], &status);
 }
 
+static void	check_segv(char *file)
+{
+	int	fd;
+	int ret;
+	char buff[6];
+	
+	fd = open(file, O_RDONLY);
+	if (!fd)
+		ft_exit("U TRYINA SEGV ME?");
+	ret = read(fd, buff, 5);
+	if (!ret || ret < 0)
+		ft_exit("U GIVING BAD FILES ARENT YA");
+}
+
 int		main(int ac, char *av[])
 {
 	t_lst		*lst;
 
+	check_segv(av[1]);
 	if (ac == 2)
 	{
-		lst = (t_lst *)malloc(sizeof(t_lst));
+		if (!(lst = (t_lst *)ft_memalloc(sizeof(t_lst))))
+			ft_exit("Failed to alloc t_list");
 		if (scene_init(lst, av[1]) && init_sdl(lst))
 			sdl_cycle(lst);
 		else

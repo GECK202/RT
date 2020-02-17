@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   text_menu.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/12 19:15:01 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/14 17:57:23 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/17 23:52:36 by vkaron           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,23 @@ void		draw_vec(t_lst *l, int fsize, SDL_Rect *d, t_vec3 *v)
 
 void		draw_col(t_lst *l, int fsize, SDL_Rect *d, SDL_Color *c)
 {
+	// char		*a;
+
+	// a = get_thre_int(c->r, c->g, c->b);
+	// print_ttf(l->mimg, a, fsize, d);
+	// free(a);
+
 	char		*a;
 
-	a = get_thre_int(c->r, c->g, c->b);
+	a = c_lim(get_inbr_to_string(1, c->r, ""));
+	print_ttf(l->mimg, a, fsize, d);
+	free(a);
+	d->x += 50;
+	a = c_lim(get_inbr_to_string(1, c->g, ""));
+	print_ttf(l->mimg, a, fsize, d);
+	free(a);
+	d->x += 50;
+	a = c_lim(get_inbr_to_string(1, c->b, ""));
 	print_ttf(l->mimg, a, fsize, d);
 	free(a);
 }
