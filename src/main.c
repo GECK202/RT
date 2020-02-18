@@ -105,7 +105,7 @@ int			main(int ac, char *av[])
 			ft_exit("Failed to alloc t_list");
 	//	if (scene_init(lst, av[1]) && init_sdl(lst))
 	//		sdl_cycle(lst);
-		if (!scene_init(lst, av[12]))
+		if (!scene_init(lst, av[1]))
 			return (free_scene_init(lst));///////dew it
 		if (!init_sdl(lst))
 			return (free_init_sdl(lst));///

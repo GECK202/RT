@@ -470,6 +470,7 @@ SDL_Rect			*set_rect(SDL_Rect *rect, int x, int y);
 void				ft_exit(char *line);
 int		free_scene_init(t_lst *lst);////check
 int		free_init_sdl(t_lst *lst);/////check
+int 	check_split_len(char **split);//check
 int					find_me_clrs(t_isec **csc, t_lst *l,
 t_trc trc, SDL_Color *col);
 void				draw_shader(t_lst *l, int fsize, int x, int y);

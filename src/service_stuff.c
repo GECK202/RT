@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/12 22:26:30 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/18 22:05:46 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 23:56:54 by cyuriko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,16 @@ int		free_init_sdl(t_lst *lst)
 	free_l(lst);
 	ft_exit("BAD THINGS HAPPENING TO SDL");
 	return (-1);	
+}
+
+int 	check_split_len(char **split)
+{
+	int		i;
+
+	i = 0;
+	if (!split)
+		return (i);
+	while(split[i])
+		i++;
+	return(i);
 }

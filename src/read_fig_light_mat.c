@@ -75,7 +75,7 @@ int		cre_mat(t_lst *lst)
 	t_mat	*mat;
 	t_mat	*cur_mat;
 
-	if (!(mat = (t_mat*)malloc(sizeof(t_mat))))
+	if (!(mat = (t_mat*)ft_memalloc(sizeof(t_mat))))
 		return (0);
 	mat->next = NULL;
 	if (!lst->scn->mats)

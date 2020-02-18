@@ -15,6 +15,7 @@
 void	close_sdl(t_lst *lst)
 {
 	SDL_FreeSurface(lst->img);
+	SDL_FreeSurface(lst->mimg);
 	lst->img = 0;
 	SDL_DestroyWindow(lst->win);
 	lst->win = 0;

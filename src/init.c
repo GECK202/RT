@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:37:19 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/18 21:55:15 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 23:59:42 by cyuriko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,9 +86,12 @@ int		init_sdl(t_lst *lst)
 	if (!lst->win)
 		return (0);
 	lst->img = SDL_GetWindowSurface(lst->win);
+	if (!lst->img)
+		return (0);
 	lst->data = (int *)lst->img->pixels;
-	lst->mimg = SDL_CreateRGBSurface(0, S_W, S_H, 32,
-		0xff0000, 0x00ff00, 0x0000ff, 0xff000000);
+	if (!(lst->mimg = SDL_CreateRGBSurface(0, S_W, S_H, 32,
+		0xff0000, 0x00ff00, 0x0000ff, 0xff000000)))
+		return (0);
 	data = (int *)lst->mimg->pixels;
 	h = -1;
 	while (++h < S_W / 5 * S_H)

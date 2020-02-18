@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 15:16:15 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/18 21:57:31 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 22:25:13 by cyuriko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,15 @@ void	free_mats(t_mat *mats)
 	while (prev->next)
 	{
 		cur = prev->next;
+		free(prev->diff_map.name_map);
+		free(prev->norm_map.name_map);
+		free(prev->mask_map.name_map);
 		free(prev);
 		prev = cur;
 	}
+	free(prev->diff_map.name_map);
+	free(prev->norm_map.name_map);
+	free(prev->mask_map.name_map);
 	free(prev);
 }
 
@@ -75,6 +81,8 @@ void	free_l(t_lst *lst)
 			free_lghts(lst->scn->lghts);
 		if (lst->scn->mats)
 			free_mats(lst->scn->mats);
+		if (lst->scn->diff_map.name_map)
+			free(lst->scn->diff_map.name_map);
 		free(lst->scn);
 	}
 	if (lst->data_dop)
