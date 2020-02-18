@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rt.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/17 22:42:19 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/18 17:22:24 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,7 +336,7 @@ char				*get_thre_float(float x, float y, float z);
 char				*get_thre_int(int x, int y, int z);
 int					get_file_scene(void);
 char				*get_fnbr_to_string(float num);
-char				*get_inbr_to_string(int min, int num, char *s);
+char				*get_inbr_to_string(int num, char *s);
 
 SDL_Color			pixel_picture(int *data, int i, int pix_x, int pix_y);
 SDL_Color			blur(int *data, int i, float blur_x, float blur_y);

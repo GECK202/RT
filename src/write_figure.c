@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   write_figure.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 23:24:29 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/18 00:13:10 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/18 17:20:52 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	write_figure0(int fd, t_fig *fig)
 		fig->alpha.y, fig->alpha.z);
 	ft_putstr_fd(buf, fd);
 	ft_putstr_fd("\n4	radius:", fd);
+	free(buf);
 	buf = get_fnbr_to_string(fig->rad);
 	ft_putstr_fd(buf, fd);
 	free(buf);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   save_scene.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 16:07:50 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/18 00:07:05 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/18 17:23:21 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	write_scene(int fd, t_lst *lst)
 	ft_putstr_fd("\n5	diffuse map: ", fd);
 	ft_putstr_fd(lst->scn->diff_map.name_map, fd);
 	ft_putstr_fd("\n6	fog enable:", fd);
-	buf = get_inbr_to_string(1, lst->scn->fog.enable, "");
+	buf = get_inbr_to_string(lst->scn->fog.enable, "");
 	ft_putstr_fd(buf, fd);
 	free(buf);
 	ft_putstr_fd("\n7	fog near:", fd);
@@ -55,7 +55,7 @@ void	write_scene(int fd, t_lst *lst)
 	ft_putstr_fd(buf, fd);
 	free(buf);
 	ft_putstr_fd("\n10	invert intersect surface: ", fd);
-	buf = get_inbr_to_string(1, lst->scn->inv_surf, "");
+	buf = get_inbr_to_string(lst->scn->inv_surf, "");
 	ft_putstr_fd(buf, fd);
 	free(buf);
 	ft_putstr_fd("\n\n", fd);
@@ -80,7 +80,7 @@ void	write_materials(int fd, t_lst *lst, t_mat *mat)
 		ft_putstr_fd("\n4	mask: ", fd);
 		ft_putstr_fd(mat->mask_map.name_map, fd);
 		ft_putstr_fd("\n5	specular: ", fd);
-		buf = get_inbr_to_string(1, mat->spec, "");
+		buf = get_inbr_to_string(mat->spec, "");
 		ft_putstr_fd(buf, fd);
 		free(buf);
 		ft_putstr_fd("\n6	reflection: ", fd);

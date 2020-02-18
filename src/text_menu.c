@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   text_menu.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/12 19:15:01 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/17 23:52:36 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/18 17:23:35 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,15 @@ void		draw_col(t_lst *l, int fsize, SDL_Rect *d, SDL_Color *c)
 
 	char		*a;
 
-	a = c_lim(get_inbr_to_string(1, c->r, ""));
+	a = c_lim(get_inbr_to_string(c->r, ""));
 	print_ttf(l->mimg, a, fsize, d);
 	free(a);
 	d->x += 50;
-	a = c_lim(get_inbr_to_string(1, c->g, ""));
+	a = c_lim(get_inbr_to_string(c->g, ""));
 	print_ttf(l->mimg, a, fsize, d);
 	free(a);
 	d->x += 50;
-	a = c_lim(get_inbr_to_string(1, c->b, ""));
+	a = c_lim(get_inbr_to_string(c->b, ""));
 	print_ttf(l->mimg, a, fsize, d);
 	free(a);
 }
