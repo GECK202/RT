@@ -6,18 +6,18 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/18 21:01:16 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 22:06:21 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RT_H
 # define RT_H
 
-# define S_W 800
-# define S_H 600
-# define H_W 400
-# define H_H 300
-# define RATIO 1.333333333
+# define S_W 400
+# define S_H 200
+# define H_W 200
+# define H_H 100
+# define RATIO 2
 # define POT 16
 
 # define INFINITY 1e99
@@ -468,6 +468,8 @@ void				draw_text_menu3(t_lst *lst);
 void				draw_text_menu4(t_lst *l);
 SDL_Rect			*set_rect(SDL_Rect *rect, int x, int y);
 void				ft_exit(char *line);
+int		free_scene_init(t_lst *lst);////check
+int		free_init_sdl(t_lst *lst);/////check
 int					find_me_clrs(t_isec **csc, t_lst *l,
 t_trc trc, SDL_Color *col);
 void				draw_shader(t_lst *l, int fsize, int x, int y);

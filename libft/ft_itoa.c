@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/09 20:52:08 by vkaron            #+#    #+#             */
-/*   Updated: 2019/09/14 19:57:36 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/18 21:23:01 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static char	*return_str_from_buf(char *buf, int iter)
 	char	*tmp;
 	int		j;
 
-	tmp = (char *)malloc(sizeof(char) * (11 - iter));
+	tmp = (char *)ft_memalloc(sizeof(char) * (11 - iter));
 	if (!tmp)
 		return (0);
 	if (buf[10] == '-')
@@ -57,8 +57,12 @@ char		*ft_itoa(int nbr)
 {
 	char			buf[12];
 	int				i;
+	int				c;
 
+	c = -1;
 	i = 10;
+	while (++c < 12)
+		buf[c] = '\0';
 	ft_pad_left(buf, 0, 12);
 	if (nbr == 0)
 		buf[i--] = '0';

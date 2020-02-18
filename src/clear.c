@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clear.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 15:16:15 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/11 23:01:48 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/18 21:57:31 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ void	free_l(t_lst *lst)
 			free_mats(lst->scn->mats);
 		free(lst->scn);
 	}
+	if (lst->data_dop)
+		free(lst->data_dop);
 	free(lst);
 }
 

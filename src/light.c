@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   light.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 14:02:07 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/10 19:04:58 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 21:33:48 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,10 @@ t_vec3		get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght)
 		free_isec_list(shdw);
 		return (s);
 	}
-	free(shdw);
+	else if (shdw->fig != NULL)
+		free_isec_list(shdw);
+	else
+		free(shdw);
 	return (b_col);
 }
 

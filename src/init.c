@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:37:19 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/18 21:02:21 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 21:55:15 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,10 @@ int		init_sdl(t_lst *lst)
 
 int		scene_init(t_lst *lst, char *file)
 {
-	if (!(lst->set = (t_read*)malloc(sizeof(t_read))))
+	if (!(lst->set = (t_read*)ft_memalloc(sizeof(t_read))))
 		return (0);
 	init_f_read(lst);
-	if (!(lst->scn = (t_scn*)malloc(sizeof(t_scn))))
+	if (!(lst->scn = (t_scn*)ft_memalloc(sizeof(t_scn))))
 		return (0);
 	lst->scn->cur_fig = NULL;
 	lst->scn->cur_lght = NULL;
@@ -115,7 +115,8 @@ int		scene_init(t_lst *lst, char *file)
 	lst->scn->cam_pos0.y = 0;
 	lst->scn->cam_pos0.z = 0;
 	lst->post_effects = 0;
-	lst->data_dop = malloc(sizeof(int) * (S_H * S_W));
+	if (!(lst->data_dop = ft_memalloc(sizeof(int) * (S_H * S_W))))
+		return (0);
 	lst->num_file_for_screen = 0;
 	if (!(read_scene(lst, file)))
 		return (0);

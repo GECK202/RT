@@ -6,13 +6,13 @@
 #    By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/09/23 17:12:18 by vkaron            #+#    #+#              #
-#    Updated: 2020/02/18 19:01:16 by vabraham         ###   ########.fr        #
+#    Updated: 2020/02/18 21:51:54 by vabraham         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 .PHONY: all, clean, fclean, re, libr
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -Ofast -O3 -g
 #FLAGS = -g
 
 C_FILES =	key_press.c move_multy.c main.c light.c events.c scene.c trace.c\
