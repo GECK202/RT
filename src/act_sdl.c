@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   act_sdl.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 23:44:09 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/14 16:56:23 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 18:27:33 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
-#include <stdio.h>
 
 void	close_sdl(t_lst *lst)
 {

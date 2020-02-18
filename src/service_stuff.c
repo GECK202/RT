@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   service_stuff.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/12 22:26:30 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/17 22:49:03 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/18 18:47:04 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void		ft_exit(char *line)
 	exit(-1);
 }
 
-int		find_me_clrs(t_isec *csc, t_lst *l, t_trc trc, SDL_Color *col)
+int		find_me_clrs(t_isec **csc, t_lst *l, t_trc trc, SDL_Color *col)
 {
-	if (init_trace(l, &csc, trc, col))
+	if (init_trace(l, csc, trc, col))
 		return (1);
 	if (!l->shd)
 	{

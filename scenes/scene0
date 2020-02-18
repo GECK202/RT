@@ -2,21 +2,21 @@
 1	camera position: 0 8 -32
 2	camera rotation: 0 0 0
 3	camera focus_distance: 2.0
-4	background color: 255 0 255
-5	diffuse map: res/HDRI_sky.png1
+4	background color: 0 0 0
+5	diffuse map: res/HDRI_sky2.jpg1
 6	fog enable:0
-7	fog near:0.0
-8	fog max transparent:0.0
-9	fog color:0 0 0
+7	fog near:35.0
+8	fog max transparent:0.25
+9	fog color:125 155 155
 10	invert intersect surface: 0
 
 [material]:
 name: gray
-1	color: 255 230 196
+1	color: 196 196 196
 2	diffuse: res/fig1_dif.png1
-3	normal: res/wave_nm.jpg
+3	normal: res/wave_nm.png
 4	mask: res/fig1_mask.png1
-5	specular: 1
+5	specular: 100
 6	reflection: 0.0
 7	refraction: 1.0
 8	transpare: 0.0
@@ -47,7 +47,7 @@ name: mirror
 0	type:plane
 1	position:0.0 -5.0 0.0
 2	center:0.0 1.0 0.0
-3	rotation:0.0 45.0 0.0
+3	rotation:0.0 0.0 0.0
 4	radius:1.0
 5	angle:0.0
 6	limit:0.0 0.0
@@ -58,9 +58,9 @@ name: mirror
 
 [figure]:
 0	type:plane
-1	position:0.0 -5.0 135.0
-2	center:0.0 1.0 0.0
-3	rotation:0.0 0.0 0.0
+1	position:0.0 -6.61232376 34.61232376
+2	center:0.0 0.6123235 1.0
+3	rotation:90.0 0.0 0.0
 4	radius:1.0
 5	angle:0.0
 6	limit:0.0 0.0

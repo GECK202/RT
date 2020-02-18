@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   read_fig1.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:43:40 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/12 21:19:16 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/18 18:27:46 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
-#include <stdio.h>
 
 int		cre_fig(t_lst *lst)
 {

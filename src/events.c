@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   events.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 22:08:27 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/14 18:42:50 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 18:27:40 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
-#include <stdio.h>
 
 int		close_window(void *lst)
 {

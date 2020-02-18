@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   trace.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 21:30:06 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/17 22:47:03 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/18 18:47:58 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,14 +102,8 @@ SDL_Color	trace(t_lst *l, t_trc trc, int dep, t_isec *csc)
 	t_isec		*c_isc;
 	SDL_Color	col;
 
-//*
-	if (init_trace(l, &csc, trc, &col))
+	if (find_me_clrs(&csc, l, trc, &col))
 		return (col);
-	if (!l->shd)
-		col = (SDL_Color){0, 0, 0, 0};
-		//*/
-/*	if (find_me_clrs(csc, l, trc, &col))
-		return (col);*/
 	c_isc = csc;
 	init_trace0(l, dep, &fkt, &res);
 	while (c_isc)
