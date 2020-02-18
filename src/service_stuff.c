@@ -6,13 +6,13 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/12 22:26:30 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/18 18:47:04 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 19:09:34 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-void		ft_exit(char *line)
+void	ft_exit(char *line)
 {
 	ft_putstr(line);
 	ft_putchar('\n');

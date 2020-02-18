@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+         #
+#    By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/09/23 17:12:18 by vkaron            #+#    #+#              #
-#    Updated: 2020/02/14 18:07:25 by vabraham         ###   ########.fr        #
+#    Updated: 2020/02/18 19:01:16 by vabraham         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ C_FILES =	key_press.c move_multy.c main.c light.c events.c scene.c trace.c\
 			matrix.c init.c clear.c	read_fig1.c read_fig2.c read_light.c\
 			read_scn.c tools.c intersection.c vec1.c vec2.c read_material1.c\
 			read_material2.c post_effects.c save_scene.c blur_and_pp.c get.c\
-			write_figure.c act_sdl.c screenshot.c read_fig_light_mat.c\
+			write_figure_materials.c act_sdl.c screenshot.c read_fig_light_mat.c\
 			read_scn0.c scene0.c tools0.c vec3.c clear0.c light0.c read_uv.c\
 			cls_isec.c get_color.c get_refl_refr.c trace0.c bgc_mixcol.c\
 			isec_sphere.c isec_inv_sph.c isec_cyl.c isec_con.c isec_pln.c\

@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/12 19:15:01 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/18 17:23:35 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 19:08:58 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,6 @@ void		draw_vec(t_lst *l, int fsize, SDL_Rect *d, t_vec3 *v)
 
 void		draw_col(t_lst *l, int fsize, SDL_Rect *d, SDL_Color *c)
 {
-	// char		*a;
-
-	// a = get_thre_int(c->r, c->g, c->b);
-	// print_ttf(l->mimg, a, fsize, d);
-	// free(a);
-
 	char		*a;
 
 	a = c_lim(get_inbr_to_string(c->r, ""));

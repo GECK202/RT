@@ -6,35 +6,14 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 16:07:50 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/18 17:23:21 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 19:12:11 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-void	write_scene(int fd, t_lst *lst)
+void	write_scene0(int fd, t_lst *lst, char *buf)
 {
-	char *buf;
-
-	buf = get_thre_int((int)(lst->scn->cam_pos.x + lst->scn->cam_pos0.x),
-		(int)(lst->scn->cam_pos.y + lst->scn->cam_pos0.y),
-		(int)(lst->scn->cam_pos.z + lst->scn->cam_pos0.z));
-	ft_putstr_fd(buf, fd);
-	free(buf);
-	ft_putstr_fd("\n2	camera rotation: ", fd);
-	buf = get_thre_int((int)lst->alpha_cam.z,
-		(int)lst->alpha_cam.y, (int)lst->alpha_cam.z);
-	ft_putstr_fd(buf, fd);
-	free(buf);
-	ft_putstr_fd("\n3	camera focus_distance: ", fd);
-	buf = get_fnbr_to_string(lst->scn->cam_focus_dist);
-	ft_putstr_fd(buf, fd);
-	free(buf);
-	ft_putstr_fd("\n4	background color: ", fd);
-	buf = get_thre_int(lst->scn->bgc.r,
-		lst->scn->bgc.g, lst->scn->bgc.b);
-	ft_putstr_fd(buf, fd);
-	free(buf);
 	ft_putstr_fd("\n5	diffuse map: ", fd);
 	ft_putstr_fd(lst->scn->diff_map.name_map, fd);
 	ft_putstr_fd("\n6	fog enable:", fd);
@@ -61,49 +40,38 @@ void	write_scene(int fd, t_lst *lst)
 	ft_putstr_fd("\n\n", fd);
 }
 
-void	write_materials(int fd, t_lst *lst, t_mat *mat)
+void	write_scene(int fd, t_lst *lst)
 {
 	char *buf;
-	mat = lst->scn->mats->next;
-	while (mat)
-	{
-		ft_putstr_fd("[material]:\nname: ", fd);
-		ft_putstr_fd(mat->name, fd);
-		ft_putstr_fd("\n1	color: ", fd);
-		buf = get_thre_int(mat->col.r, mat->col.g, mat->col.b);
-		ft_putstr_fd(buf, fd);
-		free(buf);
-		ft_putstr_fd("\n2	diffuse: ", fd);
-		ft_putstr_fd(mat->diff_map.name_map, fd);
-		ft_putstr_fd("\n3	normal: ", fd);
-		ft_putstr_fd(mat->norm_map.name_map, fd);
-		ft_putstr_fd("\n4	mask: ", fd);
-		ft_putstr_fd(mat->mask_map.name_map, fd);
-		ft_putstr_fd("\n5	specular: ", fd);
-		buf = get_inbr_to_string(mat->spec, "");
-		ft_putstr_fd(buf, fd);
-		free(buf);
-		ft_putstr_fd("\n6	reflection: ", fd);
-		buf = get_fnbr_to_string(mat->refl);
-		ft_putstr_fd(buf, fd);
-		free(buf);
-		ft_putstr_fd("\n7	refraction: ", fd);
-		buf = get_fnbr_to_string(mat->refr);
-		ft_putstr_fd(buf, fd);
-		free(buf);
-		ft_putstr_fd("\n8	transpare: ", fd);
-		buf = get_fnbr_to_string(mat->transpare);
-		ft_putstr_fd(buf, fd);
-		free(buf);
-		ft_putstr_fd("\n\n", fd);
-		mat = mat->next;
-	}
+
+	buf = get_thre_int((int)(lst->scn->cam_pos.x + lst->scn->cam_pos0.x),
+		(int)(lst->scn->cam_pos.y + lst->scn->cam_pos0.y),
+		(int)(lst->scn->cam_pos.z + lst->scn->cam_pos0.z));
+	ft_putstr_fd(buf, fd);
+	free(buf);
+	ft_putstr_fd("\n2	camera rotation: ", fd);
+	buf = get_thre_int((int)lst->alpha_cam.z,
+		(int)lst->alpha_cam.y, (int)lst->alpha_cam.z);
+	ft_putstr_fd(buf, fd);
+	free(buf);
+	ft_putstr_fd("\n3	camera focus_distance: ", fd);
+	buf = get_fnbr_to_string(lst->scn->cam_focus_dist);
+	ft_putstr_fd(buf, fd);
+	free(buf);
+	ft_putstr_fd("\n4	background color: ", fd);
+	buf = get_thre_int(lst->scn->bgc.r,
+		lst->scn->bgc.g, lst->scn->bgc.b);
+	ft_putstr_fd(buf, fd);
+	free(buf);
+	write_scene0(fd, lst, buf);
 }
 
-void	write_light0(int fd, t_lght *light)
+void	write_light0(int fd, t_lght *light, char *buf)
 {
-	char *buf;
-
+	buf = get_thre_float(light->dir.x,
+		light->dir.y, light->dir.z);
+	ft_putstr_fd(buf, fd);
+	free(buf);
 	ft_putstr_fd("\n3	angle:", fd);
 	buf = get_fnbr_to_string(light->angle);
 	ft_putstr_fd(buf, fd);
@@ -143,11 +111,7 @@ void	write_light(int fd, t_lst *lst)
 		ft_putstr_fd(buf, fd);
 		free(buf);
 		ft_putstr_fd("\n2	direction:", fd);
-		buf = get_thre_float(light->dir.x,
-			light->dir.y, light->dir.z);
-		ft_putstr_fd(buf, fd);
-		free(buf);
-		write_light0(fd, light);
+		write_light0(fd, light, buf);
 		light = light->next;
 	}
 }
@@ -158,7 +122,7 @@ int		save_scene(t_lst *lst)
 	t_mat	*mat;
 
 	mat = NULL;
-	fd = get_file_scene();
+	fd = get_file_scene(NULL);
 	ft_putstr_fd("[scene]:\n1	camera position: ", fd);
 	write_scene(fd, lst);
 	write_materials(fd, lst, mat);

@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 23:22:12 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/18 18:20:24 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 19:14:37 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,21 @@
 
 char	*get_inbr_to_string(int num, char *s)
 {
-	char *b = ft_itoa(num);
-	char *c = ft_strjoin(b, s);
+	char *b;
+	char *c;
+
+	b = ft_itoa(num);
+	c = ft_strjoin(b, s);
 	free(b);
-	return(c);	
+	return (c);
 }
 
 char	*get_fnbr_to_string(float num)
 {
-	float tmp;
-	char *result;
-	char *buf1;
-	char *buf2;
+	float	tmp;
+	char	*result;
+	char	*buf1;
+	char	*buf2;
 
 	tmp = num - (float)(int)num;
 	if (tmp < 0)
@@ -41,17 +44,15 @@ char	*get_fnbr_to_string(float num)
 	return (result);
 }
 
-int		get_file_scene(void)
+int		get_file_scene(char *str_scene)
 {
 	int		fd;
 	int		num_scene;
 	char	*str;
-	char	*str_scene;
 	char	*buf;
 
 	str = "scenes/scene";
 	num_scene = 0;
-	str_scene = NULL;
 	while (1)
 	{
 		if (str_scene)
@@ -77,10 +78,7 @@ char	*get_thre_int(int x, int y, int z)
 	char *tmp;
 	char *buf;
 
-	//s = "";
 	tmp = get_inbr_to_string(x, "");
-	//tmp = ft_strjoin(s, buf);
-	//free(buf);
 	s = tmp;
 	tmp = ft_strjoin(s, " ");
 	free(s);
@@ -106,8 +104,6 @@ char	*get_thre_float(float x, float y, float z)
 	char *tmp;
 	char *buf;
 
-	//s = "";
-	//tmp = ft_strjoin(s, get_fnbr_to_string(x));
 	tmp = get_fnbr_to_string(x);
 	s = tmp;
 	tmp = ft_strjoin(s, " ");

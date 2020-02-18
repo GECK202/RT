@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/18 18:47:14 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 19:12:42 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,7 +334,7 @@ void				close_sdl(t_lst *lst);
 void				write_figure(int fd, t_lst *lst);
 char				*get_thre_float(float x, float y, float z);
 char				*get_thre_int(int x, int y, int z);
-int					get_file_scene(void);
+int					get_file_scene(char *str_scene);
 char				*get_fnbr_to_string(float num);
 char				*get_inbr_to_string(int num, char *s);
 
@@ -473,5 +473,6 @@ void				draw_shader(t_lst *l, int fsize, int x, int y);
 void				add_figure(t_lst *lst, int num_fig);
 void				next_mat(t_lst *lst);
 void				search_fig(t_lst *lst, int x, int y);
+void				write_materials(int fd, t_lst *lst, t_mat *mat);
 
 #endif

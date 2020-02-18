@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:06 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/17 22:26:38 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/18 19:10:40 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-void	mult(t_lst *lst, t_trc *trc, int x, int y)
+void		mult(t_lst *lst, t_trc *trc, int x, int y)
 {
 	SDL_Color	col;
 	t_isec		*cisec;
@@ -32,7 +32,7 @@ void	mult(t_lst *lst, t_trc *trc, int x, int y)
 		lst->data[(S_H - y - H_H - 1) * S_W + x + H_W];
 }
 
-void	*pixel(void *l)
+void		*pixel(void *l)
 {
 	t_lst	*lst;
 	int		x;
@@ -57,7 +57,7 @@ void	*pixel(void *l)
 	return (0);
 }
 
-void	rain(t_lst *lst)
+void		rain(t_lst *lst)
 {
 	t_lst			data[POT];
 	pthread_t		threads[POT];
@@ -82,10 +82,10 @@ void	rain(t_lst *lst)
 
 static void	check_segv(char *file)
 {
-	int	fd;
-	int ret;
-	char buff[6];
-	
+	int		fd;
+	int		ret;
+	char	buff[6];
+
 	fd = open(file, O_RDONLY);
 	if (!fd)
 		ft_exit("U TRYINA SEGV ME?");
@@ -94,7 +94,7 @@ static void	check_segv(char *file)
 		ft_exit("U GIVING BAD FILES ARENT YA");
 }
 
-int		main(int ac, char *av[])
+int			main(int ac, char *av[])
 {
 	t_lst		*lst;
 
