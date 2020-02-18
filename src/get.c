@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 23:22:12 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/18 19:14:37 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 20:55:20 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ char	*get_inbr_to_string(int num, char *s)
 
 	b = ft_itoa(num);
 	c = ft_strjoin(b, s);
+	printf("");
 	free(b);
 	return (c);
 }

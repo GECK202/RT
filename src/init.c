@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:37:19 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/17 22:07:34 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/18 21:02:21 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int		init_sdl0(t_lst *lst)
 	lst->mrect.h = H_W;
 	lst->shd = 3;
 	lst->show_menu = 1;
+	lst->show_help = 1;
 	return (1);
 }
 

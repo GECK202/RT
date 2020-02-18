@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   key_press.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 22:07:39 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/14 17:02:52 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 21:02:55 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,5 +133,7 @@ int		key_press(SDL_Keycode key, t_lst *lst)
 	}
 	else if (key == SDLK_F6)
 		lst->show_menu = (lst->show_menu == 1) ? 0 : 1;
+	else if (key == SDLK_x)
+		lst->show_help = (lst->show_help == 1) ? 0 : 1;
 	return (key_press_dop(key, lst));
 }

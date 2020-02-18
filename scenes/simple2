@@ -2,7 +2,7 @@
 1	camera position: -25 5 3
 2	camera rotation: 0 102 0
 3	camera focus_distance: 2.0
-4	background color: 2
+4	background color: 0 0 0
 5	diffuse map: res/HDRI_sky2.jpg1
 6	fog enable:0
 7	fog near:35

@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/18 19:12:42 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 21:01:16 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,6 +226,7 @@ typedef struct		s_lst
 	SDL_Surface		*mimg;
 	SDL_Rect		mrect;
 	int				show_menu;
+	int				show_help;
 	int				*data;
 	int				depth;
 	SDL_Color		res_help;
@@ -278,6 +279,7 @@ typedef struct		s_l_prm
 	t_vec3			v;
 }					t_l_prm;
 
+int					show_help(t_lst *lst, SDL_Rect *r);
 void				hide_menu_for_screen(t_lst *lst);
 void				show_menu(t_lst *lst);
 SDL_Color			return_background(t_lst *lst, t_trc trc);

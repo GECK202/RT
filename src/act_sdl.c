@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 23:44:09 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/18 18:27:33 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/18 21:02:00 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,8 @@ void	show_menu(t_lst *lst)
 {
 	SDL_Rect r;
 
-	r.x = 0;
-	r.y = 0;
-	r.w = 230;
-	r.h = 85;
-	lst->mrect.y = 10;
+	if (show_help(lst, &r))
+		return ;
 	draw_text_menu1(lst);
 	SDL_BlitSurface(lst->mimg, &r, lst->img, &lst->mrect);
 	if (lst->mouse_light)
