@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_uv.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/10 18:51:20 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/10 18:54:10 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/19 15:36:25 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int		set_uv_scale(t_lst *lst, char *word)
 	if (!word)
 		return (0);
 	fig = lst->scn->cur_fig;
-	scale = ft_strsplit(word, ' ');
+	if (!(scale = ft_strsplit(word, ' ')))
+		ft_exit("Not malloc");
 	if (scale[0] && scale[1])
 	{
 		fig->uvt.scale.x = 1.0 / ft_atof(scale[0]);
@@ -57,7 +58,8 @@ int		set_uv_move(t_lst *lst, char *word)
 	if (!word)
 		return (0);
 	fig = lst->scn->cur_fig;
-	move = ft_strsplit(word, ' ');
+	if (!(move = ft_strsplit(word, ' ')))
+		ft_exit("Not malloc");
 	if (move[0] && move[1])
 	{
 		fig->uvt.move.x = ft_atof(move[0]);

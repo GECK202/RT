@@ -6,7 +6,7 @@
 #    By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/09/23 17:12:18 by vkaron            #+#    #+#              #
-#    Updated: 2020/02/18 21:51:54 by vabraham         ###   ########.fr        #
+#    Updated: 2020/02/19 16:00:51 by vabraham         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ C_FILES =	key_press.c move_multy.c main.c light.c events.c scene.c trace.c\
 			cls_isec.c get_color.c get_refl_refr.c trace0.c bgc_mixcol.c\
 			isec_sphere.c isec_inv_sph.c isec_cyl.c isec_con.c isec_pln.c\
 			text_menu.c text_menu0.c text_menu1.c text_menu2.c service_stuff.c\
-			gui.c
+			gui.c get_shadow.c read_scene0.c free_get.c
 
 O_FILES =	$(C_FILES:.c=.o)
 

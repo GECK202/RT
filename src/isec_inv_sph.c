@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   isec_inv_sph.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/10 23:55:07 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/12 21:48:56 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/19 00:29:46 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ t_isec	*set_isec_inv_sph(t_trc trc, t_fig *isph, float p)
 {
 	t_isec	*isec;
 
-	isec = malloc(sizeof(t_isec));
+	if (!(isec = malloc(sizeof(t_isec))))
+		ft_exit("Not malloc");
 	isec->t = p;
 	trc.p = minus_vec3(isph->pos, plus_vec3(trc.o, mult_vec3f(trc.d, isec->t)));
 	trc.p = div_vec3f(trc.p, len_vec3(trc.p));

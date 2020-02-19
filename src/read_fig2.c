@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_fig2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:43:40 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/12 00:55:24 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/19 00:40:15 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,8 @@ int		set_lim_fig(t_lst *lst, char *word)
 	if (!word)
 		return (0);
 	fig = lst->scn->cur_fig;
-	limit = ft_strsplit(word, ' ');
+	if (!(limit = ft_strsplit(word, ' ')))
+		ft_exit("Not malloc");
 	if (limit[0] && limit[1])
 	{
 		fig->limit.x = ft_atof(limit[0]);

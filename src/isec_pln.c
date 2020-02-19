@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   isec_pln.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/11 00:03:35 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/12 21:49:09 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/19 00:30:02 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void	set_isec1_pln(t_hit *h, t_trc trc, t_fig *pln, t_trc t)
 	t_vec3	uv;
 
 	uv = t.o;
-	h->isec1 = malloc(sizeof(t_isec));
+	if (!(h->isec1 = malloc(sizeof(t_isec))))
+		ft_exit("Not malloc");
 	h->isec1->fig = pln;
 	h->isec1->t = t.min;
 	h->isec1->n = set_vec3(t.d);

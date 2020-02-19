@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   isec_cyl.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/10 23:59:41 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/11 00:00:17 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/19 00:28:51 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ t_isec	*ret_cyl_con_isec(t_trc trc, t_fig *cyl, float t, float m)
 	t_vec3	dir;
 
 	dir = mult_vec3f(cyl->dir, -1);
-	isec = malloc(sizeof(t_isec));
+	if (!(isec = malloc(sizeof(t_isec))))
+		ft_exit("Not malloc");
 	isec->fig = cyl;
 	isec->t = t;
 	p = plus_vec3(mult_vec3f(trc.d, isec->t), trc.o);

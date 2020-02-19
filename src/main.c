@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:06 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/18 22:04:53 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/19 15:52:49 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,15 +103,11 @@ int			main(int ac, char *av[])
 	{
 		if (!(lst = (t_lst *)ft_memalloc(sizeof(t_lst))))
 			ft_exit("Failed to alloc t_list");
-	//	if (scene_init(lst, av[1]) && init_sdl(lst))
-	//		sdl_cycle(lst);
 		if (!scene_init(lst, av[1]))
-			return (free_scene_init(lst));///////dew it
+			return (free_scene_init(lst));
 		if (!init_sdl(lst))
-			return (free_init_sdl(lst));///
-		sdl_cycle(lst);			
-	//	else
-	//		write(1, "Usage:./RT filename\n", 20);
+			return (free_init_sdl(lst));
+		sdl_cycle(lst);
 		close_sdl(lst);
 		free_l(lst);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   scene.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 00:01:56 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/14 16:21:03 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/19 15:57:42 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,16 +74,15 @@ int		read_scene(t_lst *l, char *file)
 
 	if (!cre_mat(l) || (fd = open(file, 0x0000)) < 0)
 		return (0);
-	line = malloc(sizeof(char*));
+	if (!(line = malloc(sizeof(char*))))
+		ft_exit("Not malloc");
 	reset_ctag(&ctag);
 	while ((ch = get_next_line(fd, line)) > 0)
 	{
-		word = ft_strsplit(*line, ':');
-		if (!(*line) || !(word[0]) || word[0][0] == '\0')
-		{
-			free_word_line(line, word);
+		if (!(word = ft_strsplit(*line, ':')))
+			ft_exit("Not malloc");
+		if (read_scene0(line, word))
 			continue ;
-		}
 		if (!(check_tag(l, word, &ctag)))
 			return (close_free(fd, line, word, 0));
 		free_word_line(line, word);

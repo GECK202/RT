@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_scn.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 15:30:34 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/14 16:47:30 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/19 00:42:15 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ int		set_diff_map_scn(t_lst *lst, char *word)
 
 	if (!word || !(*word))
 		return (0);
-	filename = ft_strsplit(word, ' ');
+	if (!(filename = ft_strsplit(word, ' ')))
+		ft_exit("Not malloc");
 	load_map(&(lst->scn->diff_map), filename[0]);
 	return (free_words(filename, 1));
 }
@@ -60,7 +61,8 @@ int		set_fog_color(t_lst *lst, char *word)
 	if (!word)
 		return (0);
 	fog = &lst->scn->fog;
-	col = ft_strsplit(word, ' ');
+	if (!(col = ft_strsplit(word, ' ')))
+		ft_exit("Not malloc");
 	if (col[0] && col[1] && col[2])
 	{
 		fog->col.r = clamp(ft_atoi(col[0]), 0, 255);

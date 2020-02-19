@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_fig_light_mat.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/09 17:29:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/12 21:28:49 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/19 00:38:48 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int		set_rot_fig(t_lst *lst, char *word)
 	if (!word)
 		return (0);
 	fig = lst->scn->cur_fig;
-	coord = ft_strsplit(word, ' ');
+	if (!(coord = ft_strsplit(word, ' ')))
+		ft_exit("Not malloc");
 	if (coord[0] && coord[1] && coord[2])
 	{
 		fig->alpha.x = ft_atof(coord[0]);
@@ -43,7 +44,8 @@ int		set_col_lght(t_lst *lst, char *word)
 	if (!word)
 		return (0);
 	lght = lst->scn->cur_lght;
-	col = ft_strsplit(word, ' ');
+	if (!(col = ft_strsplit(word, ' ')))
+		ft_exit("Not malloc");
 	if (col[0] && col[1] && col[2])
 	{
 		lght->col.r = clamp(ft_atoi(col[0]), 0, 255);

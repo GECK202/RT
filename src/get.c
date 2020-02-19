@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 23:22:12 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/18 21:22:29 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/19 15:57:24 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ char	*get_inbr_to_string(int num, char *s)
 	char *c;
 
 	b = ft_itoa(num);
-	c = ft_strjoin(b, s);
+	if (!(c = ft_strjoin(b, s)))
+		ft_exit("STRJOIN FAILED");
 	free(b);
 	return (c);
 }
@@ -58,7 +59,8 @@ int		get_file_scene(char *str_scene)
 		if (str_scene)
 			free(str_scene);
 		buf = get_inbr_to_string(num_scene, "");
-		str_scene = ft_strjoin(str, buf);
+		if (!(str_scene = ft_strjoin(str, buf)))
+			ft_exit("STRJOIN FAILED");
 		free(buf);
 		if ((fd = open(str_scene, O_WRONLY)) == -1)
 			break ;
@@ -80,21 +82,24 @@ char	*get_thre_int(int x, int y, int z)
 
 	tmp = get_inbr_to_string(x, "");
 	s = tmp;
-	tmp = ft_strjoin(s, " ");
+	if (!(tmp = ft_strjoin(s, " ")))
+		ft_exit("STRJOIN FAILED");
 	free(s);
 	s = tmp;
 	buf = get_inbr_to_string(y, "");
-	tmp = ft_strjoin(s, buf);
+	if (!(tmp = ft_strjoin(s, buf)))
+		ft_exit("STRJOIN FAILED");
 	free(buf);
 	free(s);
 	s = tmp;
-	tmp = ft_strjoin(s, " ");
+	if (!(tmp = ft_strjoin(s, " ")))
+		ft_exit("STRJOIN FAILED");
 	free(s);
 	s = tmp;
 	buf = get_inbr_to_string(z, "");
-	tmp = ft_strjoin(s, buf);
-	free(buf);
-	free(s);
+	if (!(tmp = ft_strjoin(s, buf)))
+		ft_exit("STRJOIN FAILED");
+	free_get(&buf, &s);
 	return (tmp);
 }
 
@@ -106,20 +111,23 @@ char	*get_thre_float(float x, float y, float z)
 
 	tmp = get_fnbr_to_string(x);
 	s = tmp;
-	tmp = ft_strjoin(s, " ");
+	if (!(tmp = ft_strjoin(s, " ")))
+		ft_exit("STRJOIN FAILED");
 	free(s);
 	s = tmp;
 	buf = get_fnbr_to_string(y);
-	tmp = ft_strjoin(s, buf);
+	if (!(tmp = ft_strjoin(s, buf)))
+		ft_exit("STRJOIN FAILED");
 	free(buf);
 	free(s);
 	s = tmp;
-	tmp = ft_strjoin(s, " ");
+	if (!(tmp = ft_strjoin(s, " ")))
+		ft_exit("STRJOIN FAILED");
 	free(s);
 	s = tmp;
 	buf = get_fnbr_to_string(z);
-	tmp = ft_strjoin(s, buf);
-	free(buf);
-	free(s);
+	if (!(tmp = ft_strjoin(s, buf)))
+		ft_exit("STRJOIN FAILED");
+	free_get(&buf, &s);
 	return (tmp);
 }

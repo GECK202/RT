@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 23:52:08 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/18 21:21:39 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/19 15:47:24 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,13 +101,12 @@ int			scrin(t_lst *lst)
 	char		*tmp;
 	int			fd;
 
-	hide_menu_for_screen(lst);
-	surface = scrin0(lst, -1, -1, 0);
+	surface = hide_menu_for_screen(lst);
 	while (1)
 	{
 		str = get_inbr_to_string(lst->num_file_for_screen, "");
-		tmp = ft_strjoin("screenshots/screen", str);
-		printf("%s\n", tmp);
+		if (!(tmp = ft_strjoin("screenshots/screen", str)))
+			ft_exit("Not malloc");
 		free(str);
 		if ((fd = open(tmp, O_RDONLY)) == -1)
 			break ;

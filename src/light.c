@@ -6,47 +6,11 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 14:02:07 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/18 21:33:48 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/19 00:33:56 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
-
-/*
-** calculate vector of reflection
-*/
-
-t_vec3		get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght)
-{
-	t_isec	*shdw;
-	t_vec3	s;
-	t_vec3	b_col;
-
-	b_col = cre_vec3(c_lght->col.r * c_lght->ints / 255.0, c_lght->col.g
-		* c_lght->ints / 255.0, c_lght->col.b * c_lght->ints / 255.0);
-	if (c_lght->type == point || c_lght->type == lconus)
-		trc_init(trc, c_lght, b);
-	else if (c_lght->type == direct)
-	{
-		trc->d.x = c_lght->dir.x;
-		trc->d.y = c_lght->dir.y;
-		trc->d.z = c_lght->dir.z;
-		trc->max = INFINITY;
-	}
-	shdw = malloc(sizeof(t_isec));
-	cls_isec(&shdw, lst, *trc);
-	if (lst->scn->shadow && shdw->fig != NULL)
-	{
-		s = transpare_shadow(shdw, b_col);
-		free_isec_list(shdw);
-		return (s);
-	}
-	else if (shdw->fig != NULL)
-		free_isec_list(shdw);
-	else
-		free(shdw);
-	return (b_col);
-}
 
 /*
 ** calculate brightness for point or directional light

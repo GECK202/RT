@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tools.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 15:14:53 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/09 18:24:38 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/19 15:50:40 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ float	ft_atof(char *f)
 	int		len;
 
 	res = 0.0f;
-	num = ft_strsplit(f, '.');
+	if (!(num = ft_strsplit(f, '.')))
+		ft_exit("Not malloc");
 	if (num[1])
 	{
 		len = ft_strlen(num[1]);

@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 13:43:40 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/18 18:27:46 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/19 00:39:46 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ int		set_pos_fig(t_lst *lst, char *word)
 	if (!word)
 		return (0);
 	fig = lst->scn->cur_fig;
-	coord = ft_strsplit(word, ' ');
+	if (!(coord = ft_strsplit(word, ' ')))
+		ft_exit("Not malloc");
 	if (coord[0] && coord[1] && coord[2])
 	{
 		fig->begin_pos.x = ft_atof(coord[0]);
@@ -87,7 +88,8 @@ int		set_dir_fig(t_lst *lst, char *word)
 	if (!word)
 		return (0);
 	fig = lst->scn->cur_fig;
-	coord = ft_strsplit(word, ' ');
+	if (!(coord = ft_strsplit(word, ' ')))
+		ft_exit("Not malloc");
 	if (coord[0] && coord[1] && coord[2])
 	{
 		fig->begin.x = ft_atof(coord[0]);

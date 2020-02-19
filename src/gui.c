@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gui.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/13 18:22:21 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/13 22:35:05 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/19 00:27:36 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ void	search_fig0(t_lst *lst, t_trc trc)
 	mult_m3(&trc.d, trc.d, lst->camera_z);
 	mult_m3(&trc.d, trc.d, lst->camera_x);
 	mult_m3(&trc.d, trc.d, lst->camera_y);
-	cisec = malloc(sizeof(t_isec));
+	if (!(cisec = malloc(sizeof(t_isec))))
+		ft_exit("Not malloc");
 	cls_isec(&cisec, lst, trc);
 	if (cisec->fig)
 	{

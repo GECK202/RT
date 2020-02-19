@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_light.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/21 14:44:55 by vkaron            #+#    #+#             */
-/*   Updated: 2020/01/09 18:24:29 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/19 00:40:39 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ int		set_pos_lght(t_lst *lst, char *word)
 	lght = lst->scn->cur_lght;
 	if (!word)
 		return (0);
-	coord = ft_strsplit(word, ' ');
+	if (!(coord = ft_strsplit(word, ' ')))
+		ft_exit("Not malloc");
 	if (coord[0] && coord[1] && coord[2])
 	{
 		lght->begin_pos.x = ft_atof(coord[0]);
@@ -87,7 +88,8 @@ int		set_dir_lght(t_lst *lst, char *word)
 	if (!word)
 		return (0);
 	lght = lst->scn->cur_lght;
-	coord = ft_strsplit(word, ' ');
+	if (!(coord = ft_strsplit(word, ' ')))
+		ft_exit("Not malloc");
 	if (coord[0] && coord[1] && coord[2])
 	{
 		lght->dir.x = ft_atof(coord[0]);

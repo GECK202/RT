@@ -6,13 +6,13 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 18:06:26 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/18 21:04:02 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/19 15:48:06 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-void	draw_type_lght(t_lst *l, int fsize, int x, int y)
+void		draw_type_lght(t_lst *l, int fsize, int x, int y)
 {
 	SDL_Rect d;
 
@@ -28,16 +28,20 @@ void	draw_type_lght(t_lst *l, int fsize, int x, int y)
 		print_ttf(l->mimg, "CONUS", fsize, &d);
 }
 
-void	hide_menu_for_screen(t_lst *lst)
+SDL_Surface	*hide_menu_for_screen(t_lst *lst)
 {
+	SDL_Surface	*surface;
+
 	if (lst->show_menu)
 	{
 		rain(lst);
 		post_effects(lst);
 	}
+	surface = scrin0(lst, -1, -1, 0);
+	return (surface);
 }
 
-void	draw_text_help0(t_lst *l)
+void		draw_text_help0(t_lst *l)
 {
 	SDL_Rect	d;
 
@@ -65,7 +69,7 @@ void	draw_text_help0(t_lst *l)
 ** help panel
 */
 
-void	draw_text_help(t_lst *l)
+void		draw_text_help(t_lst *l)
 {
 	SDL_Rect	d;
 	int			*data;
@@ -94,7 +98,7 @@ void	draw_text_help(t_lst *l)
 	draw_text_help0(l);
 }
 
-int		show_help(t_lst *lst, SDL_Rect *r)
+int			show_help(t_lst *lst, SDL_Rect *r)
 {
 	r->x = 0;
 	r->y = 0;

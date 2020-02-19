@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/18 22:06:21 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/19 16:00:21 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -279,8 +279,12 @@ typedef struct		s_l_prm
 	t_vec3			v;
 }					t_l_prm;
 
+SDL_Surface			*scrin0(t_lst *lst, int i, int j, Uint8 red);
+int					read_scene0(char **line, char **word);
+void				free_get(char **buf, char **s);
+t_vec3				get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght);
 int					show_help(t_lst *lst, SDL_Rect *r);
-void				hide_menu_for_screen(t_lst *lst);
+SDL_Surface			*hide_menu_for_screen(t_lst *lst);
 void				show_menu(t_lst *lst);
 SDL_Color			return_background(t_lst *lst, t_trc trc);
 SDL_Color			mix_color(SDL_Color c1, SDL_Color c2, float koef);

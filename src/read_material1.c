@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_material1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <vabraham@42.fr>                  +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/09 17:33:08 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/18 23:49:57 by cyuriko          ###   ########.fr       */
+/*   Updated: 2020/02/19 00:41:24 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	load_map(t_map *map, char *filename)
 {
 	map->map = 0;
 	map->data = 0;
-
 	if (!(map->name_map = ft_strdup("none")))
 		ft_exit("STRDUP FAILED AGAIN");
 	if (!filename)
@@ -48,7 +47,8 @@ int		set_diff_map_mat(t_lst *lst, char *word)
 
 	if (!word || !(*word))
 		return (0);
-	filename = ft_strsplit(word, ' ');
+	if (!(filename = ft_strsplit(word, ' ')))
+		ft_exit("Not malloc");
 	load_map(&(lst->scn->cur_mat->diff_map), filename[0]);
 	return (free_words(filename, 1));
 }
@@ -71,7 +71,8 @@ int		set_mask_map_mat(t_lst *lst, char *word)
 
 	if (!word || !(*word))
 		return (0);
-	filename = ft_strsplit(word, ' ');
+	if (!(filename = ft_strsplit(word, ' ')))
+		ft_exit("Not malloc");
 	load_map(&(lst->scn->cur_mat->mask_map), filename[0]);
 	return (free_words(filename, 1));
 }

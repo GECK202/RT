@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   isec_sphere.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkaron <vkaron@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/10 23:42:47 by vkaron            #+#    #+#             */
-/*   Updated: 2020/02/11 20:34:55 by vkaron           ###   ########.fr       */
+/*   Updated: 2020/02/19 00:30:31 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void	set_isec1_sph(t_hit *h, t_trc t, t_fig *s, float tr)
 {
 	float x;
 
-	h->isec1 = malloc(sizeof(t_isec));
+	if (!(h->isec1 = malloc(sizeof(t_isec))))
+		ft_exit("Not malloc");
 	h->isec1->fig = s;
 	h->isec1->t = tr;
 	t.p = minus_vec3(s->pos, plus_vec3(t.o, mult_vec3f(t.d, h->isec1->t)));
@@ -68,7 +69,8 @@ void	set_isec2_sph(t_hit *h, t_trc t, t_fig *s, float tr)
 {
 	float x;
 
-	h->isec2 = malloc(sizeof(t_isec));
+	if (!(h->isec2 = malloc(sizeof(t_isec))))
+		ft_exit("Not malloc");
 	h->isec2->fig = s;
 	h->isec2->t = tr;
 	t.p = minus_vec3(s->pos, plus_vec3(t.o, mult_vec3f(t.d, h->isec2->t)));

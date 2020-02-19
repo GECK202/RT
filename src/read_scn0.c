@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_scn0.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabraham <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/09 17:39:22 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/09 17:39:23 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/19 00:42:40 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ int		set_pos_cam(t_lst *lst, char *word)
 
 	if (!word)
 		return (0);
-	coord = ft_strsplit(word, ' ');
+	if (!(coord = ft_strsplit(word, ' ')))
+		ft_exit("Not malloc");
 	if (coord[0] && coord[1] && coord[2])
 	{
 		lst->scn->cam_pos.x = ft_atof(coord[0]);
@@ -35,7 +36,8 @@ int		set_rot_cam(t_lst *lst, char *word)
 
 	if (!word)
 		return (0);
-	coord = ft_strsplit(word, ' ');
+	if (!(coord = ft_strsplit(word, ' ')))
+		ft_exit("Not malloc");
 	if (coord[0] && coord[1] && coord[2])
 	{
 		lst->alpha_cam.x = ft_atof(coord[0]);
@@ -63,7 +65,8 @@ int		set_col_bgc(t_lst *lst, char *word)
 
 	if (!word)
 		return (0);
-	col = ft_strsplit(word, ' ');
+	if (!(col = ft_strsplit(word, ' ')))
+		ft_exit("Not malloc");
 	if (col[0] && col[1] && col[2])
 	{
 		lst->scn->bgc.r = clamp(ft_atoi(col[0]), 0, 255);
