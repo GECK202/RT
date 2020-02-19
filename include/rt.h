@@ -6,7 +6,7 @@
 /*   By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 14:24:16 by vabraham          #+#    #+#             */
-/*   Updated: 2020/02/19 16:00:21 by vabraham         ###   ########.fr       */
+/*   Updated: 2020/02/19 16:04:37 by vabraham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,7 +282,8 @@ typedef struct		s_l_prm
 SDL_Surface			*scrin0(t_lst *lst, int i, int j, Uint8 red);
 int					read_scene0(char **line, char **word);
 void				free_get(char **buf, char **s);
-t_vec3				get_shadow(t_lst *lst, t_trc *trc, t_l_prm b, t_lght *c_lght);
+t_vec3				get_shadow(t_lst *lst,
+						t_trc *trc, t_l_prm b, t_lght *c_lght);
 int					show_help(t_lst *lst, SDL_Rect *r);
 SDL_Surface			*hide_menu_for_screen(t_lst *lst);
 void				show_menu(t_lst *lst);
@@ -304,7 +305,8 @@ void				draw_cre_button(t_lst *l, int fig, SDL_Rect *d);
 void				draw_cam_pos(t_lst *l, int fsize, int x, int y);
 void				draw_type_lght(t_lst *l, int fsize, int x, int y);
 char				*c_lim(char *a);
-void				print_ttf(SDL_Surface *sdest, char *msg, int size, SDL_Rect *dest);
+void				print_ttf(SDL_Surface *sdest,
+						char *msg, int size, SDL_Rect *dest);
 t_isec				*check_inv_figs(t_lst *lst, t_trc trc, float t);
 void				set_inv_surf1(t_lst *lst, t_hit *h, t_fig *fig);
 t_isec				*set_isec_inv_sph(t_trc trc, t_fig *isph, float p);
@@ -472,9 +474,9 @@ void				draw_text_menu3(t_lst *lst);
 void				draw_text_menu4(t_lst *l);
 SDL_Rect			*set_rect(SDL_Rect *rect, int x, int y);
 void				ft_exit(char *line);
-int		free_scene_init(t_lst *lst);////check
-int		free_init_sdl(t_lst *lst);/////check
-int 	check_split_len(char **split);//check
+int					free_scene_init(t_lst *lst);
+int					free_init_sdl(t_lst *lst);
+int					check_split_len(char **split);
 int					find_me_clrs(t_isec **csc, t_lst *l,
 t_trc trc, SDL_Color *col);
 void				draw_shader(t_lst *l, int fsize, int x, int y);
