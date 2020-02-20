@@ -6,13 +6,13 @@
 #    By: vabraham <vabraham@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/09/23 17:12:18 by vkaron            #+#    #+#              #
-#    Updated: 2020/02/19 16:00:51 by vabraham         ###   ########.fr        #
+#    Updated: 2020/02/20 20:45:18 by cyuriko          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 .PHONY: all, clean, fclean, re, libr
 
-FLAGS = -Wall -Wextra -Werror -Ofast -O3 -g
+FLAGS = -Wall -Wextra -Werror -Ofast -g
 #FLAGS = -g
 
 C_FILES =	key_press.c move_multy.c main.c light.c events.c scene.c trace.c\
@@ -28,14 +28,17 @@ C_FILES =	key_press.c move_multy.c main.c light.c events.c scene.c trace.c\
 
 O_FILES =	$(C_FILES:.c=.o)
 
-H_DIR =		-Ilibft -Iusr/L -Iinclude
+H_DIR =		-I libft -I usr/L -I include -I ./ \
+            -I src/ \
+            -I Frameworks/SDL2.framework/Headers -I Frameworks/SDL2_image.framework/Headers -I Frameworks/SDL2_ttf.framework/Headers -F Frameworks/
+
 
 LIBS =		-Llibft -lft
 #-Llib -lSDL2 -lSDL2_image -lSDL2_ttf
 #-dynamiclib -o lib/libSDL2.dylib -o lib/libSDL2_image.dylib
 
 FRAME =		-F ./Frameworks/ -framework SDL2 -framework SDL2_image\
-			-framework SDL2_ttf 
+			-framework SDL2_ttf -rpath Frameworks/
 
 LIBS = -Llibft -lft 
 #-Llib 
